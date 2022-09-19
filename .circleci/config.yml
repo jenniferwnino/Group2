@@ -10,8 +10,8 @@ jobs:
     steps:
       - checkout 
       - run:
-          working_directory: "~/project/Group 2"
-          command: echo ${working_directory}
+          working_directory: ~/project/Group 2
+          command: echo changed
           shell: cmd.exe
       - run:
           command: dir
