@@ -9,8 +9,5 @@ jobs:
       name: win/default
     steps:
       - run:
-          command: CD C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Current\Bin\
-          shell: cmd.exe
-      - run:
-          command: MSBuild.exe "C:\Users\circleci\project\Group 2\Group 2.sln"
+          command: CD "C:\Program Files C:\Program Files\Microsoft Visual Studio\2022\Community\Msbuild\Current\Bin"
           shell: cmd.exe
