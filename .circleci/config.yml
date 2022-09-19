@@ -10,7 +10,7 @@ jobs:
     steps:
       - checkout
       - run:
-          command: echo %username%
+          command: cd "c:\users\%username%\project\Group 2"
           shell: cmd.exe
       - run:
           command: dir
