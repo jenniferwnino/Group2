@@ -7,6 +7,60 @@ orbs:
   msix: circleci/microsoft-msix@1.1.1
   # Gives us easy access to Windows execution environments.
   win: circleci/windows@5.0.0
+parameters:
+  certificate-password:
+    default: MSIX_CERTIFICATE_PASSWORD
+    description: |
+      Environment variable containing the password used to decrypt the
+      certificate file.
+    type: env_var_name
+  import-cert:
+    default: true
+    description: |
+      Automatically import a certificate into the machine's store based on the
+      values of signing-cert and certificate-password. Set this to false if you
+      will be importing your certificate in some other way (e.g Hashicorp
+      Vault).
+    type: boolean
+  manifest-file:
+    default: ''
+    description: Manifest file to use when building MSIX without source code.
+    type: string
+  mapping-file:
+    default: ''
+    description: Mapping file to use when building MSIX without source code.
+    type: string
+  package-name:
+    default: package
+    description: Output package name
+    type: string
+  parameters:
+    default: ''
+    description: |
+      Parameters to pass to either Makeappx.exe or MSBuild.exe, depending on the
+      value of using-sln.
+    type: string
+  sdk-version:
+    default: 10.0.17763.0
+    description: Windows SDK version to use when invoking Makeappx.exe.
+    type: string
+  signing-cert:
+    default: MSIX_SIGNING_CERTIFICATE
+    description: |
+      Environment variable name for the base64-encoded signing certificate.
+    type: env_var_name
+  using-sln:
+    default: true
+    description: |
+      Build an MSIX package from a solution file. Set this to false if you have
+      a prebuilt or existing executable file. This determine whether your
+      package is built using msbuild or makeappx.
+    type: boolean
+  working-dir:
+    default: ~/project/Group 2
+    description: Working directory
+    type: string
+    
 jobs:
   using-sln:
     executor:
@@ -19,3 +73,4 @@ workflows:
   demo:
     jobs:
       - using-sln
+      
