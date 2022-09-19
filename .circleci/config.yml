@@ -7,8 +7,7 @@ orbs:
   msix: circleci/microsoft-msix@1.1.1
   # Gives us easy access to Windows execution environments.
   win: circleci/windows@5.0.0
-  commands:
-    working-dir: ~/project/Group 2
+
   
 jobs:
   using-sln:
@@ -22,4 +21,3 @@ workflows:
   demo:
     jobs:
       - using-sln
-      
