@@ -10,7 +10,7 @@ jobs:
     steps:
       - checkout
       - run:
-          command: CD "Group 2"
+          command: CD "${CIRCLE_WORKING_DIRECTORY}\Group 2"
           shell: cmd.exe
       - run:
           command: dir
