@@ -9,7 +9,7 @@ jobs:
       name: win/default
     steps:
       - run:
-          command: cd "C:\Users"
+          command: cd "C:\Users\%Username%"
           shell: cmd.exe
       - run:
           command: dir
