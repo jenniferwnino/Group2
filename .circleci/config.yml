@@ -8,9 +8,9 @@ jobs:
     executor:
       name: win/server-2022
     steps:
-      - checkout
+      #- checkout
       - run:
-          command: CD "${CIRCLE_WORKING_DIRECTORY}\Group 2"
+          command: echo ${CIRCLE_WORKING_DIRECTORY}
           shell: cmd.exe
       - run:
           command: dir
