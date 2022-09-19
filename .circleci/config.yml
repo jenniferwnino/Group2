@@ -9,7 +9,7 @@ jobs:
       name: win/default
     steps:
       - run:
-          command: echo $CIRCLE_WORKING_DIRECTORY
+          command: cd "C:\Users\circleci.PACKER-631B74C9\"
           shell: cmd.exe
       - run:
           command: dir .
