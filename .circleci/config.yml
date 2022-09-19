@@ -18,5 +18,5 @@ jobs:
           command: dir
           shell: cmd.exe
       - run:
-          command: MSBuild "Group 2.sln" /t:Build  /p:Platform=x64 /p:Configuration=Release
+          command: MSBuild.exe /t:Build /p:Platform=x64 /p:Configuration=Release
           shell: cmd.exe
