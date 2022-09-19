@@ -10,7 +10,7 @@ jobs:
     steps:
       - checkout
       - run:
-          command: MSBuild.exe
+          command: MSBuild.exe "Group 2/Group 2.sln"
           shell: cmd.exe
       - run:
           command: dir
