@@ -8,9 +8,10 @@ jobs:
     executor:
       name: win/server-2022
     steps:
-      - checkout
+      - checkout 
       - run:
-          command: cd "~/project/Group 2"
+          working_directory: "~/project/Group 2"
+          command: echo ${working_directory}
           shell: cmd.exe
       - run:
           command: dir
