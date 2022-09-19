@@ -9,5 +9,6 @@ jobs:
       - checkout
       # Whatever you want to do
       - run: apt-cache search sfml
-      #- run: sudo apt-get install libsfml-dev
+      - run: sudo sed -i 's|http://us.|http://|g' /etc/apt/sources.list
+      - run: sudo apt-get install libsfml-dev
       - run: apt list --installed
