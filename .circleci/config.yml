@@ -9,8 +9,8 @@ jobs:
       name: win/default
     steps:
       - run:
-          command: cd "C:\Users\%Username%"
+          command: echo start
           shell: cmd.exe
       - run:
-          command: dir
+          command: dir .
           shell: cmd.exe
