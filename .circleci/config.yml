@@ -6,11 +6,12 @@ orbs:
 jobs:
   build:
     executor:
-      name: win/default
+      name: win/server-2022
     steps:
+      - checkout
       - run:
-          command: cd "C:\Users\circleci.PACKER-631B74C9\"
+          command: cd C:\Users\circleci.PACKER-631B74C9\project
           shell: cmd.exe
       - run:
-          command: dir .
+          command: dir
           shell: cmd.exe
