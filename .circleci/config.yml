@@ -6,12 +6,12 @@ orbs:
 jobs:
   using-sln:
     executor:
-      name: win/server-2022
+      name: win/server-2019
     steps:
       - checkout
       - msix/pack:
           import-cert: true
-          parameters: '/p:Platform=x86'
+          parameters: '/p:Platform=x64'
           working-dir: '~/project/Group 2'
           #sdk-version: '10.0.22621'
 workflows:
