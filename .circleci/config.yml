@@ -17,3 +17,6 @@ jobs:
       - run:
           command: dir
           shell: cmd.exe
+      - run:
+          command: MSBuild.exe
+          shell: cmd.exe
