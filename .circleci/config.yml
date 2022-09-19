@@ -10,7 +10,7 @@ jobs:
     steps:
       - checkout
       - run:
-          command: cd "C:\\Users\\circleci.PACKER-631B74C9\\project\\Group 2"
+          command: echo %username%
           shell: cmd.exe
       - run:
           command: dir
