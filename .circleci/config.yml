@@ -10,7 +10,7 @@ orbs:
 jobs:
   using-sln:
     executor:
-      name: server-2019
+      name: win/server-2019
     steps:
       - checkout
       - msix/pack
