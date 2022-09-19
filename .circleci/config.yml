@@ -5,12 +5,13 @@ orbs:
   
 jobs:
   build:
+    working_directory: "~/project/Group 2"
     executor:
       name: win/server-2022
     steps:
-      - checkout 
+      - checkout:
+          path: ~/project/ 
       - run:
-          working_directory: ~/project/Group 2
           command: echo changed
           shell: cmd.exe
       - run:
