@@ -9,7 +9,7 @@ jobs:
       name: win/default
     steps:
       - run:
-          command: echo start
+          command: echo $CIRCLE_WORKING_DIRECTORY
           shell: cmd.exe
       - run:
           command: dir .
