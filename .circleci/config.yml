@@ -1,20 +1,20 @@
-# Use the latest 2.1 version of CircleCI pipeline process engine.
-# See: https://circleci.com/docs/2.0/configuration-reference
+# .circleci/config.yml
 version: 2.1
-
 orbs:
   msix: circleci/microsoft-msix@1.1.1
   win: circleci/windows@5.0.0
-  
- jobs:
+jobs:
   using-sln:
     executor:
-      name: win/default
+      name: win/server-2022
     steps:
       - checkout
-      - msix/pack
-
+      - msix/pack:
+          import-cert: true
+          parameters: '/p:Platform=x86'
+          working-dir: '~/project/Group 2'
+          #sdk-version: '10.0.22621'
 workflows:
-  demo:
+  build:
     jobs:
       - using-sln
