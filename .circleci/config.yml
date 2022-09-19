@@ -9,7 +9,7 @@ jobs:
       name: win/default
     steps:
       - run:
-          command: cd ..
+          command: cd "C:\Program Files (x86)"
           shell: cmd.exe
       - run:
           command: dir
