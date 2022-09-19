@@ -9,5 +9,5 @@ jobs:
       name: win/default
     steps:
       - run:
-          command: CD "C:\Program Files\Microsoft Visual Studio\2022\Community\Msbuild\Current\Bin"
+          command: dir
           shell: cmd.exe
