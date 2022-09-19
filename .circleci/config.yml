@@ -1,22 +1,13 @@
 # .circleci/config.yml
 version: 2.1
-orbs:
-  win: circleci/windows@5.0.0
   
 jobs:
   build:
-    working_directory: "~/project/Group_2"
-    executor:
-      name: win/server-2022
+    machine:
+      image: ubuntu-2204:2022.07.1
     steps:
-      - checkout:
-          path: ~/project/ 
-      - run:
-          command: echo changed
-          shell: cmd.exe
-      - run:
-          command: dir
-          shell: cmd.exe
-      - run:
-          command: MSBuild.exe /t:Build /p:Platform=x64 /p:Configuration=Release
-          shell: cmd.exe
+      - checkout
+      # Whatever you want to do
+      - run: apt-cache search sfml
+      - run: sudo apt-get install libsfml-dev
+      - run: apt list --installed
