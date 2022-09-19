@@ -11,7 +11,7 @@ jobs:
       - checkout
       - msix/pack:
           import-cert: true
-          parameters: '/p:Platform=x64''/p:Configuration=Release'
+          parameters: '/p:Platform=x64 /p:Configuration=Release'
           working-dir: '~/project/Group 2'
           #sdk-version: '10.0.22621'
 workflows:
