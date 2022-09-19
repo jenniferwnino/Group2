@@ -13,6 +13,7 @@ jobs:
           import-cert: true
           parameters: '/p:Platform=x86'
           working-dir: '~/project/Group 2'
+          sdk-version: '10.0.22621'
 workflows:
   build:
     jobs:
