@@ -33,7 +33,7 @@ jobs:
             7z a -tzip out.zip win 
 
       - store_artifacts:
-          path: ~/project/TLTQ/bin/win
+          path: ~/project/TLTQ/bin/out.zip
           destination: artifact-file
   
   cppcheck:
