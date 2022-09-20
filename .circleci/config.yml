@@ -1,11 +1,10 @@
-# .circleci/config.yml
 version: 2.1
 orbs:
   win: circleci/windows@5.0.0
-  
+
 jobs:
   build:
-    working_directory: "~/project/Group 2"
+    working_directory: "~/project/Group_2"
     executor:
       name: win/server-2022
     steps:
