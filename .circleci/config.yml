@@ -5,5 +5,5 @@ jobs:
       image: ubuntu-2204:2022.07.1
     steps:
       - checkout
-      - run: cd ~/project/TLTQ/src
+      - run: cd TLTQ/src
       - run: ls
