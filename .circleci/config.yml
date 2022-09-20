@@ -28,9 +28,9 @@ jobs:
             cd ..
             cd bin/win
             del gitkeep
-            tar.exe -a -c -f out.zip *.*
+            
       - store_artifacts:
-          path: ~/project/TLTQ/bin/win/out.zip
+          path: ~/project/TLTQ/bin/win
           destination: artifact-file
   
   cppcheck:
