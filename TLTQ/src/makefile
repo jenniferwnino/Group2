@@ -8,7 +8,7 @@ linux-compile:
 	g++ -c main.cpp -I../Dependencies/SFML-Linux/include
 
 linux-build:
-	g++ main.cpp -o ../bin/linux/app -I..Dependencies/SFML-Linux/include -L../Dependencies/SFML-Linux/lib -lsfml-graphics -lsfml-window -lsfml-system
+	g++ main.cpp -o ../bin/linux/app -I../Dependencies/SFML-Linux/include -L../Dependencies/SFML-Linux/lib -lsfml-graphics -lsfml-window -lsfml-system
 	
 clean:
 	rm *.o
