@@ -19,3 +19,8 @@ jobs:
           path: ~/project
       - run: sudo apt install cppcheck
       - run: cppcheck .
+workflows:
+    linux:
+        jobs:
+            - build
+            - cppcheck
