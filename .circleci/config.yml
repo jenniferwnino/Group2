@@ -6,4 +6,4 @@ jobs:
     steps:
       - checkout
       - run: cd ~/project/TLTQ/src
-      - run: make linux-build
+      - run: ls
