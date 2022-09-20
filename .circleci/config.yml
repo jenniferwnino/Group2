@@ -21,6 +21,7 @@ jobs:
           path: ~/project
       - run: choco install make -y
       - run: choco install mingw -y
+      - run: choco install 7zip.install -y
       - run: make windows-build
       - run:
           name: delete gitkeep
@@ -28,7 +29,9 @@ jobs:
             cd ..
             cd bin/win
             del gitkeep
-            
+            cd ..
+            7z a -tzip out.zip win 
+
       - store_artifacts:
           path: ~/project/TLTQ/bin/win
           destination: artifact-file
