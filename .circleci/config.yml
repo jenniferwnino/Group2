@@ -1,6 +1,8 @@
 version: 2.1
+orbs: 
+   win: circleci/windows@5.0
 jobs:
-  build:
+  build-linux:
     working_directory: ~/project/TLTQ/src
     machine:
       image: ubuntu-2204:2022.07.1
@@ -10,6 +12,14 @@ jobs:
       #- run: sudo apt-get install libsfml-dev
       #- run: cd .. && mkdir bin && cd bin && mkdir linux
       - run: make linux-compile
+  build-windows:
+    working_directory: ~/project/TLTQ/src
+    executor: win/default
+    steps:
+      - checkout:
+          path: ~/project
+      - run: choco install mingw
+      - run: make windows-build
   cppcheck:
     working_directory: ~/project/TLTQ/src
     machine:
@@ -22,5 +32,8 @@ jobs:
 workflows:
     linux:
         jobs:
-            - build
+            - build-linux
             - cppcheck
+    windows:
+      jobs:
+        - build-windows
