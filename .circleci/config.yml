@@ -18,7 +18,7 @@ jobs:
       - checkout:
           path: ~/project
       - run: sudo apt install cppcheck
-      - run: cppcheck .
+      - run: cppcheck --enable=all --error-exitcode=1 .
 workflows:
     linux:
         jobs:
