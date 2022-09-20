@@ -1,0 +1,14 @@
+windows-compile:
+	g++ -c main.cpp -I../Dependencies/SFML-Win/SFML-2.5.1-windows-gcc-7.3.0-mingw-64-bit/include
+	
+windows-build: 
+	g++ main.cpp -o ../bin/win/app.exe -I../Dependencies/SFML-Win/SFML-2.5.1-windows-gcc-7.3.0-mingw-64-bit/include -L../Dependencies/SFML-Win/SFML-2.5.1-windows-gcc-7.3.0-mingw-64-bit/lib -lsfml-graphics -lsfml-window -lsfml-system
+	
+linux-compile: 
+	g++ -c main.cpp -I../Dependencies/SFML-Linux/include
+
+linux-build:
+	g++ main.cpp -o ../bin/linux/app -I..Dependencies/SFML-Linux/include -L../Dependencies/SFML-Linux/lib -lsfml-graphics -lsfml-window -lsfml-system
+	
+clean:
+	rm *.o
