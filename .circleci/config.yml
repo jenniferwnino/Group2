@@ -7,4 +7,5 @@ jobs:
     steps:
       - checkout:
           path: ~/project
+      - run: cd .. && mkdir bin && cd bin && mkdir linux
       - run: make linux-build
