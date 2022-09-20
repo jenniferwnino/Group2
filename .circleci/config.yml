@@ -7,5 +7,6 @@ jobs:
     steps:
       - checkout:
           path: ~/project
+      - run: sudo apt-get install libsfml-dev
       - run: cd .. && mkdir bin && cd bin && mkdir linux
       - run: make linux-build
