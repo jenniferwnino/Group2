@@ -4,9 +4,7 @@ jobs:
     machine:
       image: ubuntu-2204:2022.07.1
     steps:
-      #- checkout
-      - run: sudo apt-get install libsfml-dev
-      - run: sudo apt clean
-      - run: sudo apt autoclean
-      - run: sudo apt update
-      - run: app list --installed
+      - checkout
+      - run: cd TLTQ
+      - run: cd src
+      - run: ls
