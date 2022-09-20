@@ -5,6 +5,4 @@ jobs:
       image: ubuntu-2204:2022.07.1
     steps:
       - checkout
-      - run: cd TLTQ
-      - run: cd src
-      - run: ls
+      - run: cd TLTQ/src $$ make linux-build
