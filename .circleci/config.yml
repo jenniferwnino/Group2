@@ -7,8 +7,15 @@ jobs:
     steps:
       - checkout:
           path: ~/project
-      - run: sudo apt install cppcheck
       #- run: sudo apt-get install libsfml-dev
       #- run: cd .. && mkdir bin && cd bin && mkdir linux
-      - run: cppcheck .
       - run: make linux-compile
+  cppcheck:
+    working_directory: ~/project/TLTQ/src
+    machine:
+      image: ubuntu-2204:2022.07.1
+    steps:
+      - checkout:
+          path: ~/project
+      - run: sudo apt install cppcheck
+      - run: cppcheck .
