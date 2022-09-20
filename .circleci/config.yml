@@ -1,8 +1,10 @@
 version: 2.1
 jobs:
   build:
+    working_directory: ~/project/TLTQ/src
     machine:
       image: ubuntu-2204:2022.07.1
     steps:
-      - checkout
-      - run: cd TLTQ/src && make linux-build
+      - checkout:
+          path: ~/project
+      - run: make linux-build
