@@ -18,7 +18,7 @@ jobs:
     steps:
       - checkout:
           path: ~/project
-      - run: choco install mingw
+      - run: choco install mingw -y
       - run: make windows-build
   cppcheck:
     working_directory: ~/project/TLTQ/src
