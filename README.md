@@ -1,4 +1,4 @@
-# Project Name
+# Climate Stompers
 This project aims at educating young children about climate change and how they can help. 
 
 ---
