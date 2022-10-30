@@ -1,5 +1,5 @@
 # Climate Stompers
-This project aims at educating young children about climate change and how they can help. 
+This project aims to educate young children about climate change and how they can help. 
 
 ---
 
