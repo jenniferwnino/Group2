@@ -5,11 +5,11 @@ int main()
 {
     int windowStatus = 0;
 
-    sf::RenderWindow window(sf::VideoMode(480, 270), "Climate Stompers");
+    sf::RenderWindow window(sf::VideoMode(1920, 1080), "Climate Stompers");
     sf::Vector2i position;
 
     sf::Texture mainTexture;
-    mainTexture.loadFromFile("graphics/climateStompersMainMenu.png");
+    mainTexture.loadFromFile("../TLTQ/graphics/climateStompersMainMenu.png");
     sf::Sprite mainSprite(mainTexture);
 
     Game1 game1;
