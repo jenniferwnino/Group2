@@ -20,5 +20,8 @@
 *.out
 *.app
 
-#CMake Files
+# CMake Files
 CMakeLists.txt
+
+# VS Project File
+*.vs

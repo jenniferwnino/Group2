@@ -9,7 +9,7 @@ int main()
     sf::Vector2i position;
 
     sf::Texture mainTexture;
-    mainTexture.loadFromFile("../TLTQ/graphics/climateStompersMainMenu.png");
+    mainTexture.loadFromFile("./graphics/climateStompersMainMenu.png");
     sf::Sprite mainSprite(mainTexture);
 
     Game1 game1;

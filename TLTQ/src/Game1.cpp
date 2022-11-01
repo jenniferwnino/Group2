@@ -7,9 +7,9 @@ Game1::Game1() {
     questionResponse = false;
     leftAnswer = false;
 
-    game1Texture.loadFromFile("../TLTQ/graphics/climateStompersInGame-export.png");
+    game1Texture.loadFromFile("./graphics/climateStompersInGame.png");
     game1Sprite.setTexture(game1Texture);
-    font.loadFromFile("../TLTQ/fonts/Square.ttf");
+    font.loadFromFile("./fonts/Square.ttf");
 
     // Load question 1 assets
     question1.setFont(font);
