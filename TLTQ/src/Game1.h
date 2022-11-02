@@ -9,6 +9,7 @@ public:
     public:
         sf::Text correctText;
         sf::Text incorrectText;
+        bool answered;
         bool answeredCorrectly;
         bool leftCorrect;
 
@@ -24,22 +25,23 @@ public:
 
 
 private:
+    int numCorrect;
     int questionNumber;
-    int maxNumQs;
-    int questionFontSize;
-    int answerFontSize;
-    sf::Vector2f questionPos;
-    sf::Vector2f answerPos;
+    float winCondition;
 
-    //bool questionResponse;
     bool leftAnswer;
     bool rightAnswer;
     bool next;
 
+    int questionFontSize;
+    int answerFontSize;
+    sf::Vector2f questionPos;
+    sf::Vector2f answerPos;
+    sf::Font font;
+    sf::Text question;
+
     std::string correctTemp;
     std::string incorrectTemp;
-
-    sf::Event event;
 
     sf::Texture game1Texture;
     sf::Sprite game1Sprite;
@@ -48,10 +50,9 @@ private:
     sf::Texture game1LoseTexture;
     sf::Sprite game1LoseSprite;
 
-    sf::Font font;
-    sf::Text question;
-
-    sf::Vector2i m_position;
-
     std::vector<Game1Question> questions;
+
+    // Private functions
+    void correctResponse(sf::RenderWindow &window, Game1Question& question, int& numCorrect);
+    void incorrectResponse(sf::RenderWindow &window, Game1Question& question);
 };

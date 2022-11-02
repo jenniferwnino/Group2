@@ -9,6 +9,7 @@ Game1Question::Game1Question(std::string correct, std::string incorrect, sf::Fon
     correctText.setColor(sf::Color::Black);
     correctText.setPosition(pos.x, pos.y);
 
+    // Set sf::Text attributes for the incorrect answer
     incorrectText.setString(incorrect);
     incorrectText.setFont(font);
     incorrectText.setCharacterSize(fontSize);
@@ -17,7 +18,7 @@ Game1Question::Game1Question(std::string correct, std::string incorrect, sf::Fon
 }
 
 
-// Constructor
+// Constructor for Game 1
 Game1::Game1() {
     // Set default values
     questionNumber = 1;
@@ -35,7 +36,7 @@ Game1::Game1() {
     game1Sprite.setTexture(game1Texture);
     font.loadFromFile("./fonts/Square.ttf");
 
-    // Set main questions assests
+    // Load & set main questions assests
     question.setFont(font);
     question.setCharacterSize(questionFontSize);
     question.setColor(sf::Color::Black);
@@ -115,12 +116,14 @@ void Game1::update(sf::RenderWindow &window, sf::Vector2i position) {
     if (position.x >= 578 && position.x <= 832 && position.y >= 460 && position.y <= 712) {
         leftAnswer = true;
         rightAnswer = false;
+        next = false;
     }
 
         // Click identified in right answer area
     else if (position.x >= 1090 && position.x <= 1344 && position.y >= 460 && position.y <= 712) {
         rightAnswer = true;
         leftAnswer = false;
+        next = false;
     }
 
         // Click identified on next button
@@ -128,22 +131,20 @@ void Game1::update(sf::RenderWindow &window, sf::Vector2i position) {
         next = true;
     }
 
-        // Click somewhere other than boxes
+    // Click some undefined area of the screen
     else {
         // Reset click bools
         leftAnswer = false;
         rightAnswer = false;
         next = false;
     }
-
-    //temp - for tracking mouse location to set button positions
-    //std::cout << position.x << " " << position.y << std::endl;
 }
 
 void Game1::draw(sf::RenderWindow &window) {
     window.clear();
 
-    if (questionNumber == 1) {
+    // If all questions have not been answered
+    if (questionNumber < questions.size()) {
         window.draw(game1Sprite);
         window.draw(question);
 
@@ -159,10 +160,9 @@ void Game1::draw(sf::RenderWindow &window) {
             //window.draw(questions[0].incorrectText);
         }
 
-        if (next) {
-            questionNumber++;
-
-            // Reset click bools
+        // If next is clicked and the question has been answered
+        if (next && questions[questionNumber].answered) {
+            next = false;
             leftAnswer = false;
             rightAnswer = false;
             next = false;
@@ -186,9 +186,31 @@ void Game1::draw(sf::RenderWindow &window) {
 
     }
 
+    // All questions have been answered
     else {
         window.draw(game1Sprite);
     }
 
     window.display();
+}
+
+// Private Functions
+void Game1::correctResponse(sf::RenderWindow &window, Game1Question& question, int& numCorrect) {
+    // Display the correct answer text on the screen
+    window.draw(question.correctText);
+
+    // Mark that the question was answered correctly if not previously answered incorrectly
+    if (!question.answered) {
+        question.answeredCorrectly = true;
+        question.answered = true;
+        numCorrect++;
+    }
+}
+
+void Game1::incorrectResponse(sf::RenderWindow &window, Game1Question& question) {
+    // Display the correct answer text on the screen
+    window.draw(question.incorrectText);
+
+    // Mark the question as answered
+    question.answered = true;
 }
