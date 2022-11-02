@@ -6,13 +6,13 @@ class Game1 {
 public:
     // For individual question characteristics
     struct Game1Question {
-        public:
-            sf::Text correctText;
-            sf::Text incorrectText;
-            bool answeredCorrectly;
-            bool leftCorrect;
+    public:
+        sf::Text correctText;
+        sf::Text incorrectText;
+        bool answeredCorrectly;
+        bool leftCorrect;
 
-            Game1Question(std::string& correct, std::string& incorrect, bool left, sf::Font& font, int& fontSize, sf::Vector2f& pos);
+        Game1Question(std::string& correct, std::string& incorrect, bool left, sf::Font& font, int& fontSize, sf::Vector2f& pos);
     };
 
     // Constructor

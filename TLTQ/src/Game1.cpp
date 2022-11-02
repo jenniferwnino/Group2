@@ -41,43 +41,33 @@ Game1::Game1() {
     question.setColor(sf::Color::Black);
     question.setPosition(questionPos.x, questionPos.y);
     question.setString("Choose the option that is best \n"
-                        "for the environment!");
+                       "for the environment!");
 
     // Load question 1 assets
     correctTemp = "That's correct! \n"
-                           "Choosing to recycle is the best option for the planet! \n"
-                           "Lots of things, like cans and cardboard, can be recycled \n"
-                           "and made into new things! It takes less energy and less \n"
-                           "resources to make products from recycled materials.";
+                  "Choosing to recycle is the best option for the planet! \n"
+                  "Lots of things, like cans and cardboard, can be recycled \n"
+                  "and made into new things! It takes less energy and less \n"
+                  "resources to make products from recycled materials.";
     incorrectTemp = "That is not correct. \n"
-                             "Throwing a recyclable item in the trash is not the \n"
-                             "best choice for the planet. Lots of things, like cans \n"
-                             "and cardboard, can be recycled and made into new things! \n"
-                             "It takes less energy and less resources to make products \n"
-                             "from recycled materials.";
-    questions.push_back(Game1Question(correctTemp, incorrectTemp, font, answerFontSize, answerPos));
+                    "Throwing a recyclable item in the trash is not the \n"
+                    "best choice for the planet. Lots of things, like cans \n"
+                    "and cardboard, can be recycled and made into new things! \n"
+                    "It takes less energy and less resources to make products \n"
+                    "from recycled materials.";
+    questions.push_back(Game1Question(correctTemp, incorrectTemp, true, font, answerFontSize, answerPos));
 
     // Load question 2 assets
     correctTemp = "That's correct! \n"
-                           "Choosing solar power, or another renewable energy source, \n"
-                           "is the the best choice for the planet! Choosing solar power \n"
-                           "means less greenhouse gasses, like carbon dioxide, and \n"
-                           "other air pollutants.";
+                  "Choosing solar power, or another renewable energy source, \n"
+                  "is the the best choice for the planet! Choosing solar power \n"
+                  "means less greenhouse gasses, like carbon dioxide, and \n"
+                  "other air pollutants.";
     incorrectTemp = "That is not correct. \n"
-                             "Coal, or other fossil fuels, are not the best choice for \n"
-                             "the planet. Choosing solar power means less greenhouse \n"
-                             "gasses, like carbon dioxide, and other air pollutants.";
-    questions.push_back(Game1Question(correctTemp, incorrectTemp, font, answerFontSize, answerPos));
-/*
-    correctText1.setFont(font);
-    correctText1.setCharacterSize(answerFontSize);
-    correctText1.setColor(sf::Color::Black);
-    correctText1.setPosition(answerPos.x, answerPos.y);
-    correctText1.setString("That's correct! \n"
-                           "Choosing to recycle is the best option for the planet! \n"
-                           "Lots of things, like cans and cardboard, can be recycled \n"
-                           "and made into new things! It takes less energy and less \n"
-                           "resources to make products from recycled materials.");
+                    "Coal, or other fossil fuels, are not the best choice for \n"
+                    "the planet. Choosing solar power means less greenhouse \n"
+                    "gasses, like carbon dioxide, and other air pollutants.";
+    questions.push_back(Game1Question(correctTemp, incorrectTemp, true, font, answerFontSize, answerPos));
 
     incorrectText1.setFont(font);
     incorrectText1.setCharacterSize(answerFontSize);
@@ -138,7 +128,7 @@ void Game1::update(sf::RenderWindow &window, sf::Vector2i position) {
         next = true;
     }
 
-    // Click somewhere other than boxes
+        // Click somewhere other than boxes
     else {
         // Reset click bools
         leftAnswer = false;
