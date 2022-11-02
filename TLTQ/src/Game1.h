@@ -2,26 +2,36 @@
 #include <SFML/Graphics.hpp>
 #include <vector>
 
-// Set individual question characteristics
-struct Game1Question {
-    sf::Text correctText;
-    sf::Text incorrectText;
-
-    bool leftCorrect;
-
-    Game1Question(std::string correct, std::string incorrect, sf::Font font, int fontSize, sf::Vector2f pos);
-};
-
-
 class Game1 {
+public:
+    // For individual question characteristics
+    struct Game1Question {
+        public:
+            sf::Text correctText;
+            sf::Text incorrectText;
+            bool answeredCorrectly;
+            bool leftCorrect;
+
+            Game1Question(std::string& correct, std::string& incorrect, bool left, sf::Font& font, int& fontSize, sf::Vector2f& pos);
+    };
+
+    // Constructor
+    Game1();
+
+    // Public Functions
+    void update(sf::RenderWindow &window, sf::Vector2i position);
+    void draw(sf::RenderWindow &window);
+
+
 private:
     int questionNumber;
+    int maxNumQs;
     int questionFontSize;
     int answerFontSize;
     sf::Vector2f questionPos;
     sf::Vector2f answerPos;
 
-    bool questionResponse;
+    //bool questionResponse;
     bool leftAnswer;
     bool rightAnswer;
     bool next;
@@ -33,27 +43,15 @@ private:
 
     sf::Texture game1Texture;
     sf::Sprite game1Sprite;
+    sf::Texture game1WinTexture;
+    sf::Sprite game1WinSprite;
+    sf::Texture game1LoseTexture;
+    sf::Sprite game1LoseSprite;
 
     sf::Font font;
     sf::Text question;
 
-    sf::Text correctText1;
-    sf::Text incorrectText1;
-    sf::Text correctText2;
-    sf::Text incorrectText2;
-
     sf::Vector2i m_position;
 
     std::vector<Game1Question> questions;
-
-
-public:
-    // Constructor
-    Game1();
-
-    // Public Functions
-    void update(sf::RenderWindow &window, sf::Vector2i position);
-    void draw(sf::RenderWindow &window);
 };
-
-
