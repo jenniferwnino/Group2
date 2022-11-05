@@ -161,14 +161,13 @@ void Game::eventHandler()
 	}
 }
 
-
 void Game::loadQuestions() {
     // Create temp variables for reading .csv file
     std::string dataLine, correctTemp, incorrectTemp, temp;
     bool l = false;
 
     // Read the .csv file
-    std::ifstream infile ("./csv_files/game1input.csv");
+    std::ifstream infile("./csv_files/game1input.csv");
     if (infile.is_open()) {
         // Throw out the first line with the headers
         getline(infile, dataLine);
@@ -191,6 +190,7 @@ void Game::loadQuestions() {
             questions.emplace_back(m_Questions{ correctTemp, incorrectTemp, false, false, l });
         }
     }
+}
 
 void Game::updateProgressSprite()
 {
