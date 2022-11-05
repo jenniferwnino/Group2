@@ -34,12 +34,14 @@ private:
     sf::Sprite loseSprite;
     sf::Font mainFont;
     sf::Vector2i mousePosition;
+    sf::Texture progressTexture;
+    sf::Sprite progressSprite;
 
 private:
     void eventHandler();
     void update();
     void draw();
-
+    void updateProgressSprite();
     void loadQuestions(std::vector<m_Questions>& qs);
 
 

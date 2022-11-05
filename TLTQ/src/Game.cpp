@@ -35,15 +35,28 @@ void Game::draw()
             incorrectAnswer.setPosition(584.0f, 788.0f);
             incorrectAnswer.setFillColor(sf::Color::White);
 
+            if (questionNum == 0 && numCorrect == 0)
+            {
+                progressTexture.loadFromFile("./graphics/sunSprite4of7.png");
+                progressSprite.setTexture(progressTexture);
+                progressSprite.setPosition(1512.5f, 15.5f);
+                progressSprite.setScale(4.0f, 4.0f);
+                window.draw(progressSprite);
+            }
+
             if (questions[questionNum].answered && questions[questionNum].answeredCorrect)
             {
                 window.draw(correctAnswer);
+                updateProgressSprite();
             }
 
             else if (questions[questionNum].answered && !questions[questionNum].answeredCorrect)
             {
                 window.draw(incorrectAnswer);
+                updateProgressSprite();
             }
+
+            window.draw(progressSprite);
         }
         // All questions answered - display win or lose
         else
@@ -109,7 +122,7 @@ void Game::update()
             else if (mousePosition.x >= 1696 && mousePosition.x <= 1886 && mousePosition.y >= 978 &&
                      mousePosition.y <= 1052 && questions[questionNum].answered) {
                 ++questionNum;
-                std::cout << questionNum << std::endl;
+                //std::cout << questionNum << std::endl;
             }
         }
         // All questions have been answered
@@ -150,4 +163,49 @@ void Game::loadQuestions(std::vector<m_Questions>& qs) {
     // Will update to read .csv file
     questions.emplace_back(m_Questions{ "Correct", "Incorrect", false, false, true });
     questions.emplace_back(m_Questions{ "Correct2", "Incorrect2", false, false, true });
+    questions.emplace_back(m_Questions{ "Correct3", "Incorrect3", false, false, true });
+    questions.emplace_back(m_Questions{ "Correct4", "Incorrect4", false, false, true });
+    questions.emplace_back(m_Questions{ "Correct5", "Incorrect5", false, false, true });
+    questions.emplace_back(m_Questions{ "Correct6", "Incorrect6", false, false, true });
+}
+
+void Game::updateProgressSprite()
+{
+    std::string texturePath{ "./graphics/" };
+    float percentCorrect{ (static_cast<float>(numCorrect) / (questionNum + 1)) };
+
+    if (percentCorrect < 0.15f)
+    {
+        texturePath.append("sunSprite1of7.png");
+    }
+    else if (0.15f <= percentCorrect < 0.30f)
+    {
+        texturePath.append("sunSprite2of7.png");
+    }
+    else if (0.30f <= percentCorrect < 0.45f)
+    {
+        texturePath.append("sunSprite3of7.png");
+    }
+    else if (0.45f <= percentCorrect < 0.60f)
+    {
+        texturePath.append("sunSprite4of7.png");
+    }
+    else if (0.60f <= percentCorrect < 0.75f)
+    {
+        texturePath.append("sunSprite5of7.png");
+    }
+    else if (0.75f <= percentCorrect < 0.90f)
+    {
+        texturePath.append("sunSprite6of7.png");
+    }
+    else
+    {
+        texturePath.append("sunSprite7of7.png");
+    }
+
+    progressTexture.loadFromFile(texturePath);
+    progressSprite.setTexture(progressTexture);
+    progressSprite.setPosition(1512.5f, 15.5f);
+    progressSprite.setScale(4.0f, 4.0f);
+    window.draw(progressSprite);
 }
