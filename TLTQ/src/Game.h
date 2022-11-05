@@ -40,7 +40,7 @@ private:
     void update();
     void draw();
 
-    void loadQuestions(std::vector<m_Questions>& qs);
+    void loadQuestions();
 
 
 public:
@@ -49,7 +49,7 @@ public:
     {
         window.create({ 1920, 1080 }, "Climate Stompers");
         state = m_GameState::Menu;
-        loadQuestions(questions);
+        loadQuestions();
     }
     void run()
     {
