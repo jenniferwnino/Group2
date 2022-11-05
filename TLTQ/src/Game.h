@@ -23,10 +23,15 @@ private:
     const uint32_t defaultFontSize = 24;
     uint32_t numCorrect{ 0 };
     uint32_t questionNum{ 0 };
+    float winCondition{0.75f};
     std::vector<m_Questions> questions;
 
     sf::Texture mainTexture;
     sf::Sprite mainSprite;
+    sf::Texture winTexture;
+    sf::Sprite winSprite;
+    sf::Texture loseTexture;
+    sf::Sprite loseSprite;
     sf::Font mainFont;
     sf::Vector2i mousePosition;
 
@@ -35,6 +40,7 @@ private:
     void update();
     void draw();
 
+    void loadQuestions(std::vector<m_Questions>& qs);
 
 
 public:
@@ -43,6 +49,7 @@ public:
     {
         window.create({ 1920, 1080 }, "Climate Stompers");
         state = m_GameState::Menu;
+        loadQuestions(questions);
     }
     void run()
     {
