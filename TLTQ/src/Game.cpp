@@ -1,5 +1,7 @@
 #include "Game.h"
 #include <iostream>
+#include <fstream>
+#include <sstream>
 
 void Game::draw()
 {
@@ -159,15 +161,36 @@ void Game::eventHandler()
 	}
 }
 
-void Game::loadQuestions(std::vector<m_Questions>& qs) {
-    // Will update to read .csv file
-    questions.emplace_back(m_Questions{ "Correct", "Incorrect", false, false, true });
-    questions.emplace_back(m_Questions{ "Correct2", "Incorrect2", false, false, true });
-    questions.emplace_back(m_Questions{ "Correct3", "Incorrect3", false, false, true });
-    questions.emplace_back(m_Questions{ "Correct4", "Incorrect4", false, false, true });
-    questions.emplace_back(m_Questions{ "Correct5", "Incorrect5", false, false, true });
-    questions.emplace_back(m_Questions{ "Correct6", "Incorrect6", false, false, true });
-}
+
+void Game::loadQuestions() {
+    // Create temp variables for reading .csv file
+    std::string dataLine, correctTemp, incorrectTemp, temp;
+    bool l = false;
+
+    // Read the .csv file
+    std::ifstream infile ("./csv_files/game1input.csv");
+    if (infile.is_open()) {
+        // Throw out the first line with the headers
+        getline(infile, dataLine);
+
+        // Get question values
+        while (getline(infile, dataLine)) {
+            std::istringstream stream(dataLine);
+
+            // Break up line
+            getline(stream, correctTemp, ',');
+            std::cout << correctTemp << std::endl;
+            getline(stream, incorrectTemp, ',');
+            std::cout << incorrectTemp << std::endl;
+            getline(stream, temp, ',');
+            if (stoi(temp) == 1) {
+                l = true;
+            }
+
+            // Create question
+            questions.emplace_back(m_Questions{ correctTemp, incorrectTemp, false, false, l });
+        }
+    }
 
 void Game::updateProgressSprite()
 {
