@@ -8,14 +8,14 @@ void Game::draw()
 	{
 	    mainTexture.loadFromFile("./graphics/mainMenu.png");
 		mainSprite.setTexture(mainTexture);
-		mainSprite.setScale(4.f, 4.f);
+		mainSprite.setScale(4.0f, 4.0f);
 		window.draw(mainSprite);
 	}
 	else if (state == m_GameState::MainGame)
 	{
 		mainTexture.loadFromFile("./graphics/inGame.png");
 		mainSprite.setTexture(mainTexture);
-        mainSprite.setScale(4.f, 4.f);
+        mainSprite.setScale(4.0f, 4.0f);
 		window.draw(mainSprite);
 
 		mainFont.loadFromFile("./fonts/Square.ttf");
@@ -25,16 +25,16 @@ void Game::draw()
 		mainText.setFillColor(sf::Color::White);
 		window.draw(mainText);
 
-		sf::Text correctAnswer(questions[questionNum].correctText, mainFont, defaultFontSize);
-		correctAnswer.setPosition(584.0f, 788.0f);
-		correctAnswer.setFillColor(sf::Color::White);
-		sf::Text incorrectAnswer(questions[questionNum].incorrectText, mainFont, defaultFontSize);
-		incorrectAnswer.setPosition(584.0f, 788.0f);
-		incorrectAnswer.setFillColor(sf::Color::White);
-
         // All questions haven't been answered
         if (questionNum < questions.size())
         {
+            sf::Text correctAnswer(questions[questionNum].correctText, mainFont, defaultFontSize);
+            correctAnswer.setPosition(584.0f, 788.0f);
+            correctAnswer.setFillColor(sf::Color::White);
+            sf::Text incorrectAnswer(questions[questionNum].incorrectText, mainFont, defaultFontSize);
+            incorrectAnswer.setPosition(584.0f, 788.0f);
+            incorrectAnswer.setFillColor(sf::Color::White);
+
             if (questions[questionNum].answered && questions[questionNum].answeredCorrect)
             {
                 window.draw(correctAnswer);
@@ -52,14 +52,14 @@ void Game::draw()
             {
                 winTexture.loadFromFile("./graphics/winScreen.png");
                 winSprite.setTexture(winTexture);
-                winSprite.setScale(4.f, 4.f);
+                winSprite.setScale(4.0f, 4.0f);
                 window.draw(winSprite);
             }
             else
             {
                 loseTexture.loadFromFile("./graphics/loseScreen.png");
                 loseSprite.setTexture(loseTexture);
-                loseSprite.setScale(4.f, 4.f);
+                loseSprite.setScale(4.0f, 4.0f);
                 window.draw(loseSprite);
             }
         }
@@ -93,7 +93,7 @@ void Game::update()
                     questions[questionNum].answeredCorrect = false;
                 }
             }
-            // If left answer selected and question not already answered
+            // If right answer selected and question not already answered
             else if (mousePosition.x >= 1090 && mousePosition.x <= 1344 && mousePosition.y >= 460 &&
                      mousePosition.y <= 712 && !questions[questionNum].answered) {
                 questions[questionNum].answered = true;
@@ -108,10 +108,8 @@ void Game::update()
             // If next button clicked and question already answered
             else if (mousePosition.x >= 1696 && mousePosition.x <= 1886 && mousePosition.y >= 978 &&
                      mousePosition.y <= 1052 && questions[questionNum].answered) {
-                if (++questionNum >= questions.size())
-                {
-                    // Leaving this in if statement since it's not working right if take it out
-                }
+                ++questionNum;
+                std::cout << questionNum << std::endl;
             }
         }
         // All questions have been answered

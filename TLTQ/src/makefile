@@ -3,6 +3,9 @@ windows-compile:
 	
 windows-build: 
 	g++ main.cpp Game.h Game.cpp -mwindows -o ../bin/win/app.exe -I../Dependencies/SFML-Win/SFML-2.5.1-windows-gcc-7.3.0-mingw-64-bit/include -L../Dependencies/SFML-Win/SFML-2.5.1-windows-gcc-7.3.0-mingw-64-bit/lib -lsfml-graphics -lsfml-window -lsfml-system
+
+win-debug: 
+	g++ main.cpp Game.h Game.cpp -g -o ../bin/win/app-d.exe -I../Dependencies/SFML-Win/SFML-2.5.1-windows-gcc-7.3.0-mingw-64-bit/include -L../Dependencies/SFML-Win/SFML-2.5.1-windows-gcc-7.3.0-mingw-64-bit/lib -lsfml-graphics -lsfml-window -lsfml-system
 	
 linux-compile: 
 	g++ -c main.cpp Game.h Game.cpp -I../Dependencies/SFML-Linux/include
