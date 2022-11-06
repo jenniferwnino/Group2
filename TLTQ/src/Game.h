@@ -21,6 +21,7 @@ private:
 
     m_GameState state;
     const uint32_t defaultFontSize{ 24 };
+    const uint32_t charsPerLine{ 56 };                // Set number of characters per line for text wrapping answers
     uint32_t numCorrect{ 0 };
     uint32_t questionNum{ 0 };
     float winCondition{ 0.75f };
@@ -44,6 +45,7 @@ private:
 
 
     void loadQuestions();
+    void textWrapper(std::string& s);
     void updateProgressSprite();
 
 
@@ -57,7 +59,7 @@ public:
     }
     void run()
     {
-        while (window.isOpen())
+        while(window.isOpen())
         {
             eventHandler();
             update();
