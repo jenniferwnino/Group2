@@ -65,17 +65,17 @@ void Game::draw()
         {
             if (numCorrect >= (questions.size()  * winCondition))
             {
-                winTexture.loadFromFile("./graphics/winScreen.png");
-                winSprite.setTexture(winTexture);
-                winSprite.setScale(4.0f, 4.0f);
-                window.draw(winSprite);
+//                winTexture.loadFromFile("./graphics/winScreen.png");
+//                winSprite.setTexture(winTexture);
+//                winSprite.setScale(4.0f, 4.0f);
+//                window.draw(winSprite);
             }
             else
             {
-                loseTexture.loadFromFile("./graphics/loseScreen.png");
-                loseSprite.setTexture(loseTexture);
-                loseSprite.setScale(4.0f, 4.0f);
-                window.draw(loseSprite);
+//                loseTexture.loadFromFile("./graphics/loseScreen.png");
+//                loseSprite.setTexture(loseTexture);
+//                loseSprite.setScale(4.0f, 4.0f);
+//                window.draw(loseSprite);
             }
         }
 	}
@@ -90,7 +90,19 @@ void Game::update()
 {
 	if (state == m_GameState::Menu)
 	{
-
+        // If they clicked on NEW GAME
+       if (mousePosition.x >= 32 && mousePosition.x <= 426 && mousePosition.y >= 26 && mousePosition.y <= 104) {
+           state = m_GameState::MainGame;
+       }
+       // If they clicked on LOAD GAME
+       if (mousePosition.x >= 32 && mousePosition.x <= 426 && mousePosition.y >= 139 && mousePosition.y <= 216) {
+           //TODO: implement functionality for loading a game 
+       } 
+       // If they clicked on OPTIONS
+       if (mousePosition.x >= 32 && mousePosition.x <= 426 && mousePosition.y >= 251 && mousePosition.y <= 316) {
+           //TODO: implement functionality for set of options available to user (perhaps music mute and difficulty bar?)
+       }
+       //TODO (not neccessary): Perhaps if the sun is clicked on, he twitches or moves suddenly as a small easter egg
 	}
 	else if (state == m_GameState::MainGame)
 	{
@@ -154,9 +166,9 @@ void Game::eventHandler()
 			window.close();
 		else if (event.type == sf::Event::MouseButtonPressed)
 		{
-			state = m_GameState::MainGame;
+			//state = m_GameState::MainGame;   // bug: shouldnt always go to main game after a mouse click
 			mousePosition = sf::Mouse::getPosition(window);
-			std::cout << "Clicked\n";
+            std::cout << "Clicked at: " << mousePosition.x << " and " << mousePosition.y << std::endl;
 		}
 	}
 }
