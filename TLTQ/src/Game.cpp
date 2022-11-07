@@ -90,7 +90,26 @@ void Game::update()
 {
 	if (state == m_GameState::Menu)
 	{
-
+        // If they clicked on NEW GAME
+       if (mousePosition.x >= 32 && mousePosition.x <= 426 && mousePosition.y >= 26 && mousePosition.y <= 104) {
+           state = m_GameState::MainGame;
+           questionNum = 0;
+           numCorrect = 0;
+           for (int i = 0; i < questions.size(); i++)
+           {
+               questions[i].answered = false;
+               questions[i].answeredCorrect = false;
+           }
+       }
+       // If they clicked on LOAD GAME
+       if (mousePosition.x >= 32 && mousePosition.x <= 426 && mousePosition.y >= 139 && mousePosition.y <= 216) {
+           //TODO: implement functionality for loading a game 
+       } 
+       // If they clicked on OPTIONS
+       if (mousePosition.x >= 32 && mousePosition.x <= 426 && mousePosition.y >= 251 && mousePosition.y <= 316) {
+           //TODO: implement functionality for set of options available to user (perhaps music mute and difficulty bar?)
+       }
+       //TODO (not neccessary): Perhaps if the sun is clicked on, he twitches or moves suddenly as a small easter egg
 	}
 	else if (state == m_GameState::MainGame)
 	{
@@ -124,7 +143,6 @@ void Game::update()
             else if (mousePosition.x >= 1696 && mousePosition.x <= 1886 && mousePosition.y >= 978 &&
                      mousePosition.y <= 1052 && questions[questionNum].answered) {
                 ++questionNum;
-                //std::cout << questionNum << std::endl;
             }
         }
         // All questions have been answered
@@ -154,9 +172,8 @@ void Game::eventHandler()
 			window.close();
 		else if (event.type == sf::Event::MouseButtonPressed)
 		{
-			state = m_GameState::MainGame;
 			mousePosition = sf::Mouse::getPosition(window);
-			std::cout << "Clicked\n";
+            //std::cout << "Clicked at: " << mousePosition.x << " and " << mousePosition.y << std::endl;
 		}
 	}
 }
