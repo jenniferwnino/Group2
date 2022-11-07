@@ -93,8 +93,13 @@ void Game::update()
         // If they clicked on NEW GAME
        if (mousePosition.x >= 32 && mousePosition.x <= 426 && mousePosition.y >= 26 && mousePosition.y <= 104) {
            state = m_GameState::MainGame;
-           numCorrect = 0;
            questionNum = 0;
+           numCorrect = 0;
+           for (int i = 0; i < questions.size(); i++)
+           {
+               questions[i].answered = false;
+               questions[i].answeredCorrect = false;
+           }
        }
        // If they clicked on LOAD GAME
        if (mousePosition.x >= 32 && mousePosition.x <= 426 && mousePosition.y >= 139 && mousePosition.y <= 216) {
@@ -138,7 +143,6 @@ void Game::update()
             else if (mousePosition.x >= 1696 && mousePosition.x <= 1886 && mousePosition.y >= 978 &&
                      mousePosition.y <= 1052 && questions[questionNum].answered) {
                 ++questionNum;
-                //std::cout << questionNum << std::endl;
             }
         }
         // All questions have been answered
