@@ -175,34 +175,73 @@ void Game::eventHandler()
 }
 
 void Game::loadQuestions() {
-    // Create temp variables for reading .csv file
-    std::string dataLine, correctTemp, incorrectTemp, temp;
-    bool l = false;
-
     // Read the .csv file
     std::ifstream infile("./csv_files/game1input.csv");
-    if (infile.is_open()) {
+    if (infile.is_open())
+    {
+        // Create temp variables for reading .csv file
+        std::string dataLine, correctTemp, incorrectTemp, temp;
+        bool l = false;
+
         // Throw out the first line with the headers
         getline(infile, dataLine);
 
         // Get question values
-        while (getline(infile, dataLine)) {
+        while (getline(infile, dataLine))
+        {
             std::istringstream stream(dataLine);
 
             // Break up line
             getline(stream, correctTemp, ',');
-            std::cout << correctTemp << std::endl;
             getline(stream, incorrectTemp, ',');
-            std::cout << incorrectTemp << std::endl;
             getline(stream, temp, ',');
-            if (stoi(temp) == 1) {
+            if (stoi(temp) == 1)
+            {
                 l = true;
             }
+
+            // Wrap answer text
+            textWrapper(correctTemp);
+            textWrapper(incorrectTemp);
 
             // Create question
             questions.emplace_back(m_Questions{ correctTemp, incorrectTemp, false, false, l });
         }
     }
+}
+
+void Game::textWrapper(std::string& s){
+    std::string nextWord, currentLine, wrappedString;
+    for (int i = 0; i < s.length(); i++)
+    {
+        nextWord += (s.at(i));
+        // If it is a space (ASCII space = 32)
+        if (s.at(i) == 32)
+        {
+            // If the next word will fit on the current line...
+            if ((currentLine.length() + nextWord.length())<= charsPerLine)
+            {
+                // Add nextWord to currentLine & reset next word
+                currentLine += nextWord;
+                nextWord = "";
+            }
+            // If next word won't fit on the current line...
+            else
+            {
+                // End current line and add to wrappedString
+                currentLine += "\n";
+                wrappedString += currentLine;
+                // reset currentLine to nextWord & reset nextWord
+                currentLine = nextWord;
+                nextWord = "";
+            }
+        }
+    }
+    // Add remaining currentLine to the wrappedString
+    currentLine += nextWord;
+    wrappedString += currentLine;
+    // Update input string reference
+    s = wrappedString;
 }
 
 void Game::updateProgressSprite()
