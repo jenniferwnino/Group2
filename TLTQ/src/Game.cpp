@@ -162,14 +162,14 @@ void Game::eventHandler()
 }
 
 void Game::loadQuestions() {
-    // Create temp variables for reading .csv file
-    std::string dataLine, correctTemp, incorrectTemp, temp;
-    bool l = false;
-
     // Read the .csv file
     std::ifstream infile("./csv_files/game1input.csv");
     if (infile.is_open())
     {
+        // Create temp variables for reading .csv file
+        std::string dataLine, correctTemp, incorrectTemp, temp;
+        bool l = false;
+
         // Throw out the first line with the headers
         getline(infile, dataLine);
 
