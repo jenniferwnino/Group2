@@ -30,12 +30,25 @@ void Game::draw()
         // All questions haven't been answered
         if (questionNum < questions.size())
         {
+            // Load text
             sf::Text correctAnswer(questions[questionNum].correctText, mainFont, defaultFontSize);
             correctAnswer.setPosition(584.0f, 788.0f);
             correctAnswer.setFillColor(sf::Color::White);
             sf::Text incorrectAnswer(questions[questionNum].incorrectText, mainFont, defaultFontSize);
             incorrectAnswer.setPosition(584.0f, 788.0f);
             incorrectAnswer.setFillColor(sf::Color::White);
+
+            // Load images
+            correctImageTexture.loadFromFile(questions[questionNum].correctImage);
+            correctImageSprite.setTexture(correctImageTexture);
+            correctImageSprite.setPosition(576.f, 456.f);
+            correctImageSprite.setScale(4.0f, 4.0f);
+            window.draw(correctImageSprite);
+            incorrectImageTexture.loadFromFile(questions[questionNum].incorrectImage);
+            incorrectImageSprite.setTexture(incorrectImageTexture);
+            incorrectImageSprite.setPosition(1088.f, 456.f);
+            incorrectImageSprite.setScale(4.0f, 4.0f);
+            window.draw(incorrectImageSprite);
 
             if (questionNum == 0 && numCorrect == 0)
             {
@@ -173,7 +186,6 @@ void Game::eventHandler()
 		else if (event.type == sf::Event::MouseButtonPressed)
 		{
 			mousePosition = sf::Mouse::getPosition(window);
-            //std::cout << "Clicked at: " << mousePosition.x << " and " << mousePosition.y << std::endl;
 		}
 	}
 }
@@ -184,7 +196,7 @@ void Game::loadQuestions() {
     if (infile.is_open())
     {
         // Create temp variables for reading .csv file
-        std::string dataLine, correctTemp, incorrectTemp, temp;
+        std::string dataLine, correctTemp, incorrectTemp, temp, correctImage, incorrectImage;
         bool l = false;
 
         // Throw out the first line with the headers
@@ -203,13 +215,15 @@ void Game::loadQuestions() {
             {
                 l = true;
             }
+            getline(stream, correctImage, ',');
+            getline(stream, incorrectImage, '\r');
 
             // Wrap answer text
             textWrapper(correctTemp);
             textWrapper(incorrectTemp);
 
             // Create question
-            questions.emplace_back(m_Questions{ correctTemp, incorrectTemp, false, false, l });
+            questions.emplace_back(m_Questions{ correctTemp, incorrectTemp, correctImage, incorrectImage, false, false, l});
         }
     }
 }
