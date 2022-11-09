@@ -14,6 +14,8 @@ private:
     {
         const std::string correctText{};
         const std::string incorrectText{};
+        std::string correctImage{};
+        std::string incorrectImage{};
         bool answered{ false };
         bool answeredCorrect{ false };
         const bool leftIsCorrect{ false };
@@ -33,6 +35,11 @@ private:
     sf::Sprite winSprite;
     sf::Texture loseTexture;
     sf::Sprite loseSprite;
+    sf::Texture correctImageTexture;
+    sf::Sprite  correctImageSprite;
+    sf::Texture incorrectImageTexture;
+    sf::Sprite  incorrectImageSprite;
+
     sf::Font mainFont;
     sf::Vector2i mousePosition;
     sf::Texture progressTexture;
