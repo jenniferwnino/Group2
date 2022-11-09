@@ -39,6 +39,7 @@ private:
     sf::Sprite  correctImageSprite;
     sf::Texture incorrectImageTexture;
     sf::Sprite  incorrectImageSprite;
+    sf::Event event;
 
     sf::Font mainFont;
     sf::Vector2i mousePosition;

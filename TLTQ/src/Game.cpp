@@ -116,7 +116,8 @@ void Game::update()
        }
        // If they clicked on LOAD GAME
        if (mousePosition.x >= 32 && mousePosition.x <= 426 && mousePosition.y >= 139 && mousePosition.y <= 216) {
-           //TODO: implement functionality for loading a game 
+          // This will simply resume the previous game for now since we do not have multiple games
+           state = m_GameState::MainGame;
        } 
        // If they clicked on OPTIONS
        if (mousePosition.x >= 32 && mousePosition.x <= 426 && mousePosition.y >= 251 && mousePosition.y <= 316) {
@@ -157,6 +158,12 @@ void Game::update()
                      mousePosition.y <= 1052 && questions[questionNum].answered) {
                 ++questionNum;
             }
+            // If menu is selected
+            else if (mousePosition.x >= 20 && mousePosition.x <= 525 && mousePosition.y >= 20 &&
+                mousePosition.y <= 100)
+            {
+                state = m_GameState::Menu;
+            }
         }
         // All questions have been answered
         else
@@ -173,6 +180,10 @@ void Game::update()
 	{
 
 	}
+
+    // Reset mouse position to avoid overlapping elements.
+    mousePosition.x = 0;
+    mousePosition.y = 0;
 }
 
 void Game::eventHandler()
@@ -183,7 +194,7 @@ void Game::eventHandler()
 		// "close requested" event: we close the window
 		if (event.type == sf::Event::Closed)
 			window.close();
-		else if (event.type == sf::Event::MouseButtonPressed)
+		else if (event.type == sf::Event::MouseButtonReleased)
 		{
 			mousePosition = sf::Mouse::getPosition(window);
 		}
