@@ -158,7 +158,7 @@ void Game::update()
             }
             // If next button clicked and question already answered
             else if (mousePosition.x >= 1696 && mousePosition.x <= 1886 && mousePosition.y >= 978 &&
-                     mousePosition.y <= 1052 && questions[questionNum].answered) {
+                     mousePosition.y <= 1052 && questions[questionNum].answered){
                 ++questionNum;
             }
             // If menu is selected
@@ -222,8 +222,13 @@ void Game::eventHandler()
                 }
                 else
                 {
-                    state = m_GameState::MainGame;
+                    state = m_GameState::MainGame;      // Will need to change how this works if more than 1 game
                 }
+            }
+            // Pressing escape key closes window
+            else if (event.key.code == sf::Keyboard::Escape)
+            {
+                window.close();
             }
         }
 	}
