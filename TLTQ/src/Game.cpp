@@ -38,7 +38,7 @@ void Game::draw()
             incorrectAnswer.setPosition(584.0f, 788.0f);
             incorrectAnswer.setFillColor(sf::Color::White);
 
-            // Load images
+            // Load & draw images
             correctImageTexture.loadFromFile(questions[questionNum].correctImage);
             correctImageSprite.setTexture(correctImageTexture);
             correctImageSprite.setPosition(576.f, 456.f);
@@ -165,7 +165,7 @@ void Game::update()
                 state = m_GameState::Menu;
             }
         }
-        // All questions have been answered
+        // All questions have been answered (winScreen or loseScreen is displayed)
         else
         {
             // Home button clicked
@@ -174,6 +174,17 @@ void Game::update()
                 state = m_GameState::Menu;
             }
             // Play again button clicked
+            else if (mousePosition.x >= 762 && mousePosition.x <= 1156 && mousePosition.y >= 586 && mousePosition.y <= 720)
+            {
+                state = m_GameState::MainGame;
+                questionNum = 0;
+                numCorrect = 0;
+                for (int i = 0; i < questions.size(); i++)
+                {
+                    questions[i].answered = false;
+                    questions[i].answeredCorrect = false;
+                }
+            }
         }
 	}
 	else if (state == m_GameState::Paused)
