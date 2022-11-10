@@ -35,16 +35,18 @@ private:
     sf::Sprite winSprite;
     sf::Texture loseTexture;
     sf::Sprite loseSprite;
+    sf::Texture pauseTexture;
+    sf::Sprite pauseSprite;
     sf::Texture correctImageTexture;
     sf::Sprite  correctImageSprite;
     sf::Texture incorrectImageTexture;
     sf::Sprite  incorrectImageSprite;
-    sf::Event event;
-
-    sf::Font mainFont;
-    sf::Vector2i mousePosition;
     sf::Texture progressTexture;
     sf::Sprite progressSprite;
+
+    sf::Event event;
+    sf::Font mainFont;
+    sf::Vector2i mousePosition;
 
 private:
     void eventHandler();

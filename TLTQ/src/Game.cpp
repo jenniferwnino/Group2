@@ -94,7 +94,10 @@ void Game::draw()
 	}
 	else if (state == m_GameState::Paused)
 	{
-
+        pauseTexture.loadFromFile("./graphics/pauseScreen.png");
+        pauseSprite.setTexture(pauseTexture);
+        pauseSprite.setScale(4.0f, 4.0f);
+        window.draw(pauseSprite);
 	}
 	window.display();
 }
@@ -209,6 +212,20 @@ void Game::eventHandler()
 		{
 			mousePosition = sf::Mouse::getPosition(window);
 		}
+        else if (event.type == sf::Event::KeyPressed)
+        {
+            // Pressing space bar controls the pause screen
+            if (event.key.code == sf::Keyboard::Space)
+            {
+                if (state != m_GameState::Paused) {
+                    state = m_GameState::Paused;
+                }
+                else
+                {
+                    state = m_GameState::MainGame;
+                }
+            }
+        }
 	}
 }
 
