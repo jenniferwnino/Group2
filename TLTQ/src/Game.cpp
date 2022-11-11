@@ -38,7 +38,7 @@ void Game::draw()
             incorrectAnswer.setPosition(584.0f, 788.0f);
             incorrectAnswer.setFillColor(sf::Color::White);
 
-            // Load images
+            // Load & draw images
             correctImageTexture.loadFromFile(questions[questionNum].correctImage);
             correctImageSprite.setTexture(correctImageTexture);
             correctImageSprite.setPosition(576.f, 456.f);
@@ -94,7 +94,10 @@ void Game::draw()
 	}
 	else if (state == m_GameState::Paused)
 	{
-
+        pauseTexture.loadFromFile("./graphics/pauseScreen.png");
+        pauseSprite.setTexture(pauseTexture);
+        pauseSprite.setScale(4.0f, 4.0f);
+        window.draw(pauseSprite);
 	}
 	window.display();
 }
@@ -155,7 +158,7 @@ void Game::update()
             }
             // If next button clicked and question already answered
             else if (mousePosition.x >= 1696 && mousePosition.x <= 1886 && mousePosition.y >= 978 &&
-                     mousePosition.y <= 1052 && questions[questionNum].answered) {
+                     mousePosition.y <= 1052 && questions[questionNum].answered){
                 ++questionNum;
             }
             // If menu is selected
@@ -165,7 +168,7 @@ void Game::update()
                 state = m_GameState::Menu;
             }
         }
-        // All questions have been answered
+        // All questions have been answered (winScreen or loseScreen is displayed)
         else
         {
             // Home button clicked
@@ -174,6 +177,17 @@ void Game::update()
                 state = m_GameState::Menu;
             }
             // Play again button clicked
+            else if (mousePosition.x >= 762 && mousePosition.x <= 1156 && mousePosition.y >= 586 && mousePosition.y <= 720)
+            {
+                state = m_GameState::MainGame;
+                questionNum = 0;
+                numCorrect = 0;
+                for (int i = 0; i < questions.size(); i++)
+                {
+                    questions[i].answered = false;
+                    questions[i].answeredCorrect = false;
+                }
+            }
         }
 	}
 	else if (state == m_GameState::Paused)
@@ -198,6 +212,25 @@ void Game::eventHandler()
 		{
 			mousePosition = sf::Mouse::getPosition(window);
 		}
+        else if (event.type == sf::Event::KeyPressed)
+        {
+            // Pressing space bar controls the pause screen
+            if (event.key.code == sf::Keyboard::Space)
+            {
+                if (state != m_GameState::Paused) {
+                    state = m_GameState::Paused;
+                }
+                else
+                {
+                    state = m_GameState::MainGame;      // Will need to change how this works if more than 1 game
+                }
+            }
+            // Pressing escape key closes window
+            else if (event.key.code == sf::Keyboard::Escape)
+            {
+                window.close();
+            }
+        }
 	}
 }
 
