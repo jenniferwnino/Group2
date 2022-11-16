@@ -48,6 +48,9 @@ private:
     sf::Event event;
     sf::Font mainFont;
     sf::Vector2i mousePosition;
+    sf::Vector2f textPos {584.0f, 788.0f};
+    sf::Vector2f leftPos {576.f, 456.f};               // Start position for left sprite
+    sf::Vector2f rightPos {1088.f, 456.f};            // Start position for right sprite
 
 private:
     void eventHandler();

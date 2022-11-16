@@ -30,15 +30,15 @@ void Game::draw()
         // All questions haven't been answered
         if (questionNum < questions.size())
         {
-            // Load text
+            // Load correct & incorrect answer text
             sf::Text correctAnswer(questions[questionNum].correctText, mainFont, defaultFontSize);
-            correctAnswer.setPosition(584.0f, 788.0f);
+            correctAnswer.setPosition(textPos);
             correctAnswer.setFillColor(sf::Color::White);
             sf::Text incorrectAnswer(questions[questionNum].incorrectText, mainFont, defaultFontSize);
-            incorrectAnswer.setPosition(584.0f, 788.0f);
+            incorrectAnswer.setPosition(textPos);
             incorrectAnswer.setFillColor(sf::Color::White);
 
-            // Load images
+            // Load correct & incorrect images
             correctImageTexture.loadFromFile(questions[questionNum].correctImage);
             correctImageSprite.setTexture(correctImageTexture);
             correctImageSprite.setScale(4.0f, 4.0f);
@@ -46,22 +46,21 @@ void Game::draw()
             incorrectImageSprite.setTexture(incorrectImageTexture);
             incorrectImageSprite.setScale(4.0f, 4.0f);
 
-            // Static images for difficultyLevel = 1
-            if (difficultyLevel == 1)
+            // Set answer sprite locations
+            if (questions[questionNum].leftIsCorrect)
             {
-                // Set image location & draw
-                correctImageSprite.setPosition(576.f, 456.f);
-                window.draw(correctImageSprite);
-                incorrectImageSprite.setPosition(1088.f, 456.f);
-                window.draw(incorrectImageSprite);
+                correctImageSprite.setPosition(leftPos);
+                incorrectImageSprite.setPosition(rightPos);
             }
-            else if (difficultyLevel == 2)
+            else
             {
-                correctImageSprite.setPosition(576.f, 0.f);
-                window.draw(correctImageSprite);
-                incorrectImageSprite.setPosition(1088.f, 0.f);
-                window.draw(incorrectImageSprite);
+                correctImageSprite.setPosition(rightPos);
+                incorrectImageSprite.setPosition(leftPos);
             }
+
+            // Draw answer sprites
+            window.draw(correctImageSprite);
+            window.draw(incorrectImageSprite);
 
             if (questionNum == 0 && numCorrect == 0)
             {
@@ -145,14 +144,14 @@ void Game::update()
 	{
         // All questions haven't been answered
         if (questionNum < questions.size()) {
-            // Correct sprite clicked
+            // Correct sprite clicked and question not already answered
             if (correctImageSprite.getGlobalBounds().contains(sf::Vector2f(mousePosition)) && !questions[questionNum].answered)
             {
                 questions[questionNum].answered = true;
                 numCorrect++;
                 questions[questionNum].answeredCorrect = true;
             }
-            // Incorrect sprite clicked
+            // Incorrect sprite clicked and question not already answered
             else if (incorrectImageSprite.getGlobalBounds().contains(sf::Vector2f(mousePosition)) && !questions[questionNum].answered)
             {
                 questions[questionNum].answered = true;
@@ -167,6 +166,32 @@ void Game::update()
             else if (mousePosition.x >= 20 && mousePosition.x <= 525 && mousePosition.y >= 20 && mousePosition.y <= 100)
             {
                 state = m_GameState::Menu;
+            }
+
+            if (difficultyLevel == 2)
+            {
+                // If question not answered, move the sprites
+                if (!questions[questionNum].answered)
+                {
+                    // If sprite is still on the screen
+                    if (leftPos.y < window.getSize().y)
+                    {
+                        leftPos.y += 1;
+                        rightPos.y += 1;
+                    }
+                    // If sprite went off the screen, mark question as incorrect answer
+                    else
+                    {
+                        questions[questionNum].answered = true;
+                        questions[questionNum].answeredCorrect = false;
+                    }
+                }
+                    // Reset positions once question is answered
+                else
+                {
+                    leftPos.y = 0.f;
+                    rightPos.y = 0.f;
+                }
             }
         }
         // All questions have been answered (winScreen or loseScreen is displayed)
@@ -235,10 +260,14 @@ void Game::eventHandler()
             else if (event.key.code == sf::Keyboard::Num1)
             {
                 difficultyLevel = 1;
+                leftPos.y = 456.f;
+                rightPos.y = 456.f;
             }
             else if (event.key.code == sf::Keyboard::Num2)
             {
                 difficultyLevel = 2;
+                leftPos.y = 0.f;
+                rightPos.y = 0.f;
             }
         }
 	}
