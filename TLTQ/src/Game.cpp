@@ -192,7 +192,7 @@ void Game::update()
 	}
 	else if (state == m_GameState::Paused)
 	{
-
+        // To be updated later if necessary
 	}
 
     // Reset mouse position to avoid overlapping elements.
@@ -214,8 +214,8 @@ void Game::eventHandler()
 		}
         else if (event.type == sf::Event::KeyPressed)
         {
-            // Pressing space bar controls the pause screen
-            if (event.key.code == sf::Keyboard::Space)
+            // Pressing space bar controls the pause screen - Doesn't work on main screen
+            if (event.key.code == sf::Keyboard::Space && state != m_GameState::Menu)
             {
                 if (state != m_GameState::Paused) {
                     state = m_GameState::Paused;
