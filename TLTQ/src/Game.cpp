@@ -38,24 +38,29 @@ void Game::draw()
             incorrectAnswer.setPosition(584.0f, 788.0f);
             incorrectAnswer.setFillColor(sf::Color::White);
 
+            // Load images
+            correctImageTexture.loadFromFile(questions[questionNum].correctImage);
+            correctImageSprite.setTexture(correctImageTexture);
+            correctImageSprite.setScale(4.0f, 4.0f);
+            incorrectImageTexture.loadFromFile(questions[questionNum].incorrectImage);
+            incorrectImageSprite.setTexture(incorrectImageTexture);
+            incorrectImageSprite.setScale(4.0f, 4.0f);
+
             // Static images for difficultyLevel = 1
             if (difficultyLevel == 1)
             {
-                // Load & draw images
-                correctImageTexture.loadFromFile(questions[questionNum].correctImage);
-                correctImageSprite.setTexture(correctImageTexture);
+                // Set image location & draw
                 correctImageSprite.setPosition(576.f, 456.f);
-                correctImageSprite.setScale(4.0f, 4.0f);
                 window.draw(correctImageSprite);
-                incorrectImageTexture.loadFromFile(questions[questionNum].incorrectImage);
-                incorrectImageSprite.setTexture(incorrectImageTexture);
                 incorrectImageSprite.setPosition(1088.f, 456.f);
-                incorrectImageSprite.setScale(4.0f, 4.0f);
                 window.draw(incorrectImageSprite);
             }
             else if (difficultyLevel == 2)
             {
-                // TO BE FINISHED
+                correctImageSprite.setPosition(576.f, 0.f);
+                window.draw(correctImageSprite);
+                incorrectImageSprite.setPosition(1088.f, 0.f);
+                window.draw(incorrectImageSprite);
             }
 
             if (questionNum == 0 && numCorrect == 0)
@@ -140,45 +145,26 @@ void Game::update()
 	{
         // All questions haven't been answered
         if (questionNum < questions.size()) {
-            if (difficultyLevel == 1)
+            // Correct sprite clicked
+            if (correctImageSprite.getGlobalBounds().contains(sf::Vector2f(mousePosition)) && !questions[questionNum].answered)
             {
-                // If left answer selected and question not already answered
-                if (mousePosition.x >= 578 && mousePosition.x <= 832 && mousePosition.y >= 460 && mousePosition.y <= 712 &&
-                    !questions[questionNum].answered) {
-                    questions[questionNum].answered = true;
-
-                    if (questions[questionNum].leftIsCorrect) {
-                        questions[questionNum].answeredCorrect = true;
-                        numCorrect++;
-                    } else {
-                        questions[questionNum].answeredCorrect = false;
-                    }
-                }
-                // If right answer selected and question not already answered
-                else if (mousePosition.x >= 1090 && mousePosition.x <= 1344 && mousePosition.y >= 460 &&
-                         mousePosition.y <= 712 && !questions[questionNum].answered) {
-                    questions[questionNum].answered = true;
-
-                    if (!questions[questionNum].leftIsCorrect) {
-                        questions[questionNum].answeredCorrect = true;
-                        numCorrect++;
-                    } else {
-                        questions[questionNum].answeredCorrect = false;
-                    }
-                }
+                questions[questionNum].answered = true;
+                numCorrect++;
+                questions[questionNum].answeredCorrect = true;
             }
-            else if (difficultyLevel == 2)
+            // Incorrect sprite clicked
+            else if (incorrectImageSprite.getGlobalBounds().contains(sf::Vector2f(mousePosition)) && !questions[questionNum].answered)
             {
-                // TO BE FINISHED
+                questions[questionNum].answered = true;
+                questions[questionNum].answeredCorrect = false;
             }
             // If next button clicked and question already answered
-            if (mousePosition.x >= 1696 && mousePosition.x <= 1886 && mousePosition.y >= 978 &&
-                     mousePosition.y <= 1052 && questions[questionNum].answered){
+            else if (mousePosition.x >= 1696 && mousePosition.x <= 1886 && mousePosition.y >= 978 && mousePosition.y <= 1052 && questions[questionNum].answered)
+            {
                 ++questionNum;
             }
             // If menu is selected
-            if (mousePosition.x >= 20 && mousePosition.x <= 525 && mousePosition.y >= 20 &&
-                mousePosition.y <= 100)
+            else if (mousePosition.x >= 20 && mousePosition.x <= 525 && mousePosition.y >= 20 && mousePosition.y <= 100)
             {
                 state = m_GameState::Menu;
             }
