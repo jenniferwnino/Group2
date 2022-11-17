@@ -366,7 +366,6 @@ void Game::update()
 
 void Game::eventHandler()
 {
-	sf::Event event;
 	while (window.pollEvent(event))
 	{
 		// "close requested" event: we close the window
