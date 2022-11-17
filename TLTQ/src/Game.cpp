@@ -13,15 +13,98 @@ void Game::draw()
 		mainSprite.setScale(4.0f, 4.0f);
 		window.draw(mainSprite);
 	}
-	else if (state == m_GameState::MainGame)
+	else if (state == m_GameState::Options)
+    {
+        // TEMP FOR OPTIONS - NEED A NICER SCREEN DESIGN
+        // CODE WILL CHANGE WITH NEW SCREEN DESIGN
+        mainFont.loadFromFile("./fonts/Square.ttf");
+
+        setOptionsMenu_mainMenuButton();
+        window.draw(returnToMain);
+        window.draw(mainReturnText);
+
+        changeLevel.setSize(sf::Vector2f(800.f, 150.f));
+        changeLevel.setFillColor(sf::Color(255, 128, 0, 255));
+        changeLevel.setPosition(550.f, 500.f);
+        sf::Text selectLevelText ("Change difficulty level", mainFont, 48U);
+        selectLevelText.setFillColor(sf::Color::White);
+        selectLevelText.setPosition(680.f, 545.f);
+        window.draw(changeLevel);
+        window.draw(selectLevelText);
+    }
+
+    else if (state == m_GameState::Options_Level)
+    {
+        // TEMP FOR SETTING LEVEL - NEED A NICER SCREEN DESIGN
+        // CODE WILL CHANGE WITH NEW SCREEN DESIGN
+        mainFont.loadFromFile("./fonts/Square.ttf");
+
+        setOptionsMenu_mainMenuButton();
+        window.draw(returnToMain);
+        window.draw(mainReturnText);
+
+        setOptionsMenu_optionsMenuButton();
+        window.draw(returnToOptionsMenu);
+        window.draw(optionsReturnText);
+
+        optionsL1.setSize(sf::Vector2f(256.f, 256.f));
+        optionsL1.setPosition(400, 400);
+        if (difficultyLevel == 1)
+        {
+            optionsL1.setFillColor(sf::Color::Blue);
+        }
+        else
+        {
+            optionsL1.setFillColor(sf::Color(255, 128, 0, 255));
+        }
+        sf::Text level1Text ("Level 1", mainFont, 48U);
+        level1Text.setFillColor(sf::Color::White);
+        level1Text.setPosition(420.f, 420.f);
+        window.draw(optionsL1);
+        window.draw(level1Text);
+
+        optionsL2.setSize(sf::Vector2f(256.f, 256.f));
+        optionsL2.setPosition(800, 400);
+        if (difficultyLevel == 2) {
+            optionsL2.setFillColor(sf::Color::Blue);
+        }
+        else
+        {
+            optionsL2.setFillColor(sf::Color(255, 128, 0, 255));
+        }
+        sf::Text level2Text ("Level 2", mainFont, 48U);
+        level2Text.setFillColor(sf::Color::White);
+        level2Text.setPosition(820.f, 420.f);
+        window.draw(optionsL2);
+        window.draw(level2Text);
+
+        optionsL3.setSize(sf::Vector2f(256.f, 256.f));
+        optionsL3.setPosition(1200, 400);
+        if (difficultyLevel == 3)
+        {
+            optionsL3.setFillColor(sf::Color::Blue);
+        }
+        else
+        {
+            optionsL3.setFillColor(sf::Color(255, 128, 0, 255));
+        }
+        sf::Text level3Text ("Level 3", mainFont, 48U);
+        level3Text.setFillColor(sf::Color::White);
+        level3Text.setPosition(1220.f, 420.f);
+        window.draw(optionsL3);
+        window.draw(level3Text);
+    }
+
+    else if (state == m_GameState::MainGame)
 	{
-		mainTexture.loadFromFile("./graphics/inGame.png");
+		// Load and draw background
+        mainTexture.loadFromFile("./graphics/inGame.png");
 		mainSprite.setTexture(mainTexture);
         mainSprite.setScale(4.0f, 4.0f);
 		window.draw(mainSprite);
 
+        // Load and draw main question text
 		mainFont.loadFromFile("./fonts/Square.ttf");
-
 		sf::Text mainText("Choose the option that is best \nfor the environment!", mainFont, 36U);
 		mainText.setPosition(600.0f, 185.0f);
 		mainText.setFillColor(sf::Color::White);
@@ -119,7 +202,8 @@ void Game::update()
 	if (state == m_GameState::Menu)
 	{
         // If they clicked on NEW GAME
-       if (mousePosition.x >= 32 && mousePosition.x <= 426 && mousePosition.y >= 26 && mousePosition.y <= 104) {
+       if (mousePosition.x >= 32 && mousePosition.x <= 426 && mousePosition.y >= 26 && mousePosition.y <= 104)
+       {
            state = m_GameState::MainGame;
            questionNum = 0;
            numCorrect = 0;
@@ -130,16 +214,61 @@ void Game::update()
            }
        }
        // If they clicked on LOAD GAME
-       if (mousePosition.x >= 32 && mousePosition.x <= 426 && mousePosition.y >= 139 && mousePosition.y <= 216) {
+       if (mousePosition.x >= 32 && mousePosition.x <= 426 && mousePosition.y >= 139 && mousePosition.y <= 216)
+       {
           // This will simply resume the previous game for now since we do not have multiple games
            state = m_GameState::MainGame;
        } 
        // If they clicked on OPTIONS
-       if (mousePosition.x >= 32 && mousePosition.x <= 426 && mousePosition.y >= 251 && mousePosition.y <= 316) {
-           //TODO: implement functionality for set of options available to user (perhaps music mute and difficulty bar?)
+       if (mousePosition.x >= 32 && mousePosition.x <= 426 && mousePosition.y >= 251 && mousePosition.y <= 316)
+       {
+           state = m_GameState::Options;
        }
        //TODO (not neccessary): Perhaps if the sun is clicked on, he twitches or moves suddenly as a small easter egg
 	}
+    else if (state == m_GameState::Options)
+    {
+        if (returnToMain.getGlobalBounds().contains(sf::Vector2f(mousePosition)))
+        {
+            state = m_GameState::Menu;
+        }
+        else if (changeLevel.getGlobalBounds().contains(sf::Vector2f(mousePosition)))
+        {
+            state = m_GameState::Options_Level;
+        }
+    }
+    else if (state == m_GameState::Options_Level)
+    {
+        if (optionsL1.getGlobalBounds().contains(sf::Vector2f(mousePosition)))
+        {
+            difficultyLevel = 1;
+            winCondition = 0.75f;
+            leftPos.y = 456.f;
+            rightPos.y = 456.f;
+        }
+        else if (optionsL2.getGlobalBounds().contains(sf::Vector2f(mousePosition)))
+        {
+            difficultyLevel = 2;
+            winCondition = 0.80f;
+            leftPos.y = 0.f;
+            rightPos.y = 0.f;
+        }
+        else if (optionsL3.getGlobalBounds().contains(sf::Vector2f(mousePosition)))
+        {
+            difficultyLevel = 3;
+            winCondition = 0.85f;
+            leftPos.y = 0.f;
+            rightPos.y = 0.f;
+        }
+        else if (returnToMain.getGlobalBounds().contains(sf::Vector2f(mousePosition)))
+        {
+            state = m_GameState::Menu;
+        }
+        else if (returnToOptionsMenu.getGlobalBounds().contains(sf::Vector2f(mousePosition)))
+        {
+            state = m_GameState::Options;
+        }
+    }
 	else if (state == m_GameState::MainGame)
 	{
         // All questions haven't been answered
@@ -168,7 +297,8 @@ void Game::update()
                 state = m_GameState::Menu;
             }
 
-            if (difficultyLevel == 2)
+            // If difficultyLevel 2 or 3, move the sprites
+            if (difficultyLevel == 2 || difficultyLevel == 3)
             {
                 // If question not answered, move the sprites
                 if (!questions[questionNum].answered)
@@ -176,8 +306,16 @@ void Game::update()
                     // If sprite is still on the screen
                     if (leftPos.y < window.getSize().y)
                     {
-                        leftPos.y += 1;
-                        rightPos.y += 1;
+                        if (difficultyLevel == 2)
+                        {
+                            leftPos.y += 1;
+                            rightPos.y += 1;
+                        }
+                        if (difficultyLevel == 3)
+                        {
+                            leftPos.y += 1.5;
+                            rightPos.y += 1.5;
+                        }
                     }
                     // If sprite went off the screen, mark question as incorrect answer
                     else
@@ -186,7 +324,7 @@ void Game::update()
                         questions[questionNum].answeredCorrect = false;
                     }
                 }
-                    // Reset positions once question is answered
+                // Reset positions once question is answered
                 else
                 {
                     leftPos.y = 0.f;
@@ -240,8 +378,8 @@ void Game::eventHandler()
 		}
         else if (event.type == sf::Event::KeyPressed)
         {
-            // Pressing space bar controls the pause screen - Doesn't work on main screen
-            if (event.key.code == sf::Keyboard::Space && state != m_GameState::Menu)
+            // Pressing space bar controls the pause screen - Only works in game
+            if (event.key.code == sf::Keyboard::Space && state == m_GameState::MainGame)
             {
                 if (state != m_GameState::Paused) {
                     state = m_GameState::Paused;
@@ -255,19 +393,6 @@ void Game::eventHandler()
             else if (event.key.code == sf::Keyboard::Escape)
             {
                 window.close();
-            }
-            // TEMPORARY SOLUTION TO CHANGE DIFFICULTY LEVEL - WILL LATER BE DONE IN OPTIONS MENU
-            else if (event.key.code == sf::Keyboard::Num1)
-            {
-                difficultyLevel = 1;
-                leftPos.y = 456.f;
-                rightPos.y = 456.f;
-            }
-            else if (event.key.code == sf::Keyboard::Num2)
-            {
-                difficultyLevel = 2;
-                leftPos.y = 0.f;
-                rightPos.y = 0.f;
             }
         }
 	}
@@ -384,4 +509,27 @@ void Game::updateProgressSprite()
     progressSprite.setPosition(1512.5f, 15.5f);
     progressSprite.setScale(4.0f, 4.0f);
     window.draw(progressSprite);
+}
+
+void Game::setOptionsMenu_mainMenuButton() {
+    returnToMain.setSize(sf::Vector2f(400.f, 75.f));
+    returnToMain.setFillColor(sf::Color(255, 128, 0, 255));
+    returnToMain.setPosition(25, 30);
+    mainReturnText.setString("Menu");
+    mainReturnText.setFont(mainFont);
+    mainReturnText.setCharacterSize(48U);
+    mainReturnText.setFillColor(sf::Color::White);
+    mainReturnText.setPosition(150.f, 40.f);
+}
+
+void Game::setOptionsMenu_optionsMenuButton()
+{
+    returnToOptionsMenu.setSize(sf::Vector2f(400.f, 75.f));
+    returnToOptionsMenu.setFillColor(sf::Color(255, 128, 0, 255));
+    returnToOptionsMenu.setPosition(25, 130);
+    optionsReturnText.setString("Options");
+    optionsReturnText.setFont(mainFont);
+    optionsReturnText.setCharacterSize(48U);
+    optionsReturnText.setFillColor(sf::Color::White);
+    optionsReturnText.setPosition(150.f, 140.f);
 }

@@ -7,7 +7,7 @@ private:
     sf::RenderWindow window;
     enum class m_GameState
     {
-        Menu = 0, MainGame, Paused
+        Menu = 0, Options, Options_Level, MainGame, Paused
     };
 
     struct m_Questions
@@ -23,11 +23,11 @@ private:
 
     m_GameState state;
     const uint32_t defaultFontSize{ 24 };
-    const uint32_t charsPerLine{ 56 };                  // Set number of characters per line for text wrapping answers
+    const uint32_t charsPerLine{ 56 };                      // Set number of characters per line for text wrapping answers
     uint32_t numCorrect{ 0 };
     uint32_t questionNum{ 0 };
-    uint32_t difficultyLevel{ 1 };                        // Default difficulty is level 1
-    float winCondition{ 0.75f };
+    uint32_t difficultyLevel{ 1 };                          // Default difficulty is level 1
+    float winCondition{ 0.75f };                            // Default win condition for level 1
     std::vector<m_Questions> questions;
 
     sf::Texture mainTexture;
@@ -45,6 +45,11 @@ private:
     sf::Texture progressTexture;
     sf::Sprite progressSprite;
 
+    // For Options Settings
+    sf::RectangleShape optionsL1, optionsL2, optionsL3, returnToMain, returnToOptionsMenu, changeLevel;
+    sf::Text mainReturnText, optionsReturnText;
+
+
     sf::Event event;
     sf::Font mainFont;
     sf::Vector2i mousePosition;
@@ -56,12 +61,11 @@ private:
     void eventHandler();
     void update();
     void draw();
-
-
     void loadQuestions();
     void textWrapper(std::string& s);
     void updateProgressSprite();
-
+    void setOptionsMenu_mainMenuButton();
+    void setOptionsMenu_optionsMenuButton();
 
 public:
     // Constructor
@@ -81,4 +85,3 @@ public:
         }
     }
 };
-
