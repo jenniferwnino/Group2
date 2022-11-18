@@ -1,6 +1,8 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include <vector>
+#include <iostream>
 
 class Game {
 private:
@@ -57,6 +59,20 @@ private:
     sf::Vector2f leftPos {576.f, 456.f};               // Start position for left sprite
     sf::Vector2f rightPos {1088.f, 456.f};            // Start position for right sprite
 
+    sf::SoundBuffer clickSoundBuffer;
+    sf::Sound clickSound;
+    sf::SoundBuffer correctSoundBuffer;
+    sf::Sound correctSound;
+    sf::SoundBuffer wrongSoundBuffer;
+    sf::Sound wrongSound;
+    sf::SoundBuffer winSoundBuffer;
+    sf::Sound winSound;
+    sf::SoundBuffer loseSoundBuffer;
+    sf::Sound loseSound;
+    sf::Music music;
+    bool winLoseSoundHasPlayed = false;
+    bool answerSoundHasPlayed = false;
+
 private:
     void eventHandler();
     void update();
@@ -66,6 +82,7 @@ private:
     void updateProgressSprite();
     void setOptionsMenu_mainMenuButton();
     void setOptionsMenu_optionsMenuButton();
+    void loadSounds();
 
 public:
     // Constructor
@@ -74,6 +91,7 @@ public:
         window.create({ 1920, 1080 }, "Climate Stompers");
         state = m_GameState::Menu;
         loadQuestions();
+        loadSounds();
     }
     void run()
     {
