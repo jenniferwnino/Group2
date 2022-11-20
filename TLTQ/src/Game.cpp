@@ -32,7 +32,6 @@ void Game::draw()
         window.draw(changeLevel);
         window.draw(selectLevelText);
     }
-
     else if (state == m_GameState::Options_Level)
     {
         // TEMP FOR SETTING LEVEL - NEED A NICER SCREEN DESIGN
@@ -94,7 +93,6 @@ void Game::draw()
         window.draw(optionsL3);
         window.draw(level3Text);
     }
-
     else if (state == m_GameState::MainGame)
 	{
 		// Load and draw background
@@ -187,6 +185,18 @@ void Game::draw()
             }
         }
 	}
+    else if (state == m_GameState::Game2)
+    {
+        window.draw(game2BackgroundSprite);
+        window.draw(recycleSprite);
+        window.draw(trashSprite);
+
+        // Draw the temp shapes to sort
+        for (int i = 0; i < 8; i++)
+        {
+            window.draw(toSort[i].tempShape);
+        }
+    }
 	else if (state == m_GameState::Paused)
 	{
         pauseTexture.loadFromFile("./graphics/pauseScreen.png");
@@ -354,14 +364,24 @@ void Game::update()
             }
         }
 	}
+    else if (state == m_GameState::Game2)
+    {
+        if (clickHeld)
+        {
+            toSort[spriteMoving].tempShape.setPosition(mousePosition.x, mousePosition.y);
+        }
+    }
 	else if (state == m_GameState::Paused)
 	{
         // To be updated later if necessary
 	}
 
     // Reset mouse position to avoid overlapping elements.
-    mousePosition.x = 0;
-    mousePosition.y = 0;
+    // Don't do on Game2 as it messes up drag & drop
+    if (state != m_GameState::Game2){
+        mousePosition.x = 0;
+        mousePosition.y = 0;
+    }
 }
 
 void Game::eventHandler()
@@ -371,14 +391,34 @@ void Game::eventHandler()
 		// "close requested" event: we close the window
 		if (event.type == sf::Event::Closed)
 			window.close();
-		else if (event.type == sf::Event::MouseButtonReleased)
+        else if (state == m_GameState::Game2 && !clickHeld && event.type == sf::Event::MouseButtonPressed)
+        {
+            clickHeld = true;
+            clickPos = sf::Mouse::getPosition(window);
+
+            // Mark the correct sprite as moving
+            for (int i = 0; i < toSort.size(); i++)
+            {
+                if (toSort[i].tempShape.getGlobalBounds().contains(sf::Vector2f(clickPos)))
+                {
+                    spriteMoving = i;
+                }
+            }
+        }
+        else if (event.type == sf::Event::MouseButtonReleased)
 		{
 			mousePosition = sf::Mouse::getPosition(window);
+            if (clickHeld) {clickHeld = false;}
+            std::cout << "released" << std::endl;
 		}
+        else if (clickHeld)
+        {
+            mousePosition = sf::Mouse::getPosition(window);
+        }
         else if (event.type == sf::Event::KeyPressed)
         {
             // Pressing space bar controls the pause screen - Only works in game
-            if (event.key.code == sf::Keyboard::Space && state == m_GameState::MainGame)
+            if (event.key.code == sf::Keyboard::Space && (state == m_GameState::MainGame || state == m_GameState::Paused))
             {
                 if (state != m_GameState::Paused) {
                     state = m_GameState::Paused;
@@ -393,11 +433,16 @@ void Game::eventHandler()
             {
                 window.close();
             }
+            // TEMP OPTION TO ENTER GAME 2
+            else if (event.key.code == sf::Keyboard::Num2)
+            {
+                state = m_GameState::Game2;
+            }
         }
 	}
 }
 
-void Game::loadQuestions() {
+void Game::loadGame1Assets() {
     // Read the .csv file
     std::ifstream infile("./csv_files/game1input.csv");
     if (infile.is_open())
@@ -467,6 +512,63 @@ void Game::textWrapper(std::string& s){
     wrappedString += currentLine;
     // Update input string reference
     s = wrappedString;
+}
+
+void Game::loadGame2Assets() {
+    // Background
+    game2BackgroudTexture.loadFromFile("./graphics/game2Screen.png");
+    game2BackgroundSprite.setTexture(game2BackgroudTexture);
+    game2BackgroundSprite.setScale(4.0f, 4.0f);
+
+    // Add sprites
+    recycleTexture.loadFromFile("./graphics/recyclingBin.png");
+    recycleSprite.setTexture(recycleTexture);
+    recycleSprite.setScale(4.0f, 4.0f);
+    recycleSprite.setPosition(175.f, 150.f);
+    trashTexture.loadFromFile("./graphics/trashCan.png");
+    trashSprite.setTexture(trashTexture);
+    trashSprite.setScale(4.0f, 4.0f);
+    trashSprite.setPosition(1475.f, 150.f);
+
+    // This whole section is a bit of a hot mess for the temp setup
+    for (int i = 0; i < 8; i++)
+    {
+        toSort.emplace_back(m_Sortables());
+        toSort[i].tempShape.setSize(sf::Vector2f(128.f, 128.f));
+    }
+    for (int i = 0; i < 4; i++)
+    {
+        toSort[i].tempShape.setFillColor(sf::Color::Red);
+    }
+    for (int i = 4; i < 8; i++)
+    {
+        toSort[i].recyclable = true;
+        toSort[i].tempShape.setFillColor(sf::Color::Green);
+    }
+    float tempX = 700;
+    for (int i = 0; i < 3; i++) {
+        toSort[i].unsortPos.x = tempX;
+        toSort[i].unsortPos.y = 150.f;
+        tempX += 200;
+    }
+    tempX = 700;
+    for (int i = 3; i < 6; i++)
+    {
+        toSort[i].unsortPos.x = tempX;
+        toSort[i].unsortPos.y = 350.f;
+        tempX += 200;
+    }
+    tempX = 700;
+    for (int i = 6; i < 8; i++)
+    {
+        toSort[i].unsortPos.x = tempX;
+        toSort[i].unsortPos.y = 550.f;
+        tempX += 200;
+    }
+    for (int i = 0; i < 8; i++)
+    {
+        toSort[i].tempShape.setPosition(toSort[i].unsortPos);
+    }
 }
 
 void Game::updateProgressSprite()
