@@ -425,7 +425,6 @@ void Game::eventHandler()
         else if (event.type == sf::Event::MouseButtonReleased)
 		{
 			mousePosition = sf::Mouse::getPosition(window);
-UpdatedSoundAdditions
             clickSound.play();
 
             if (clickHeld) {clickHeld = false;}

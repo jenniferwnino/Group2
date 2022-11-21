@@ -106,7 +106,6 @@ public:
     {
         window.create({ 1920, 1080 }, "Climate Stompers");
         state = m_GameState::Menu;
-        loadQuestions();
         loadSounds();
         loadGame1Assets();
         loadGame2Assets();
