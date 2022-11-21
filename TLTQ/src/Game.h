@@ -57,12 +57,14 @@ private:
     uint32_t difficultyLevel{ 1 };                          // Default difficulty is level 1
     float winCondition{ 0.75f };                            // Default win condition for level 1
     std::vector<m_Questions> questions;
-    const uint32_t charsPerLine{ 56 };                      // Set number of characters per line for text wrapping answers
-    sf::Texture winTexture, loseTexture, correctImageTexture, incorrectImageTexture, progressTexture;
-    sf::Sprite winSprite, loseSprite, correctImageSprite, incorrectImageSprite, progressSprite;
-    sf::Vector2f textPos {584.0f, 788.0f};
-    sf::Vector2f leftPos {576.f, 456.f};               // Start position for left sprite
-    sf::Vector2f rightPos {1088.f, 456.f};            // Start position for right sprite
+    uint32_t charsPerLine{ 56 };                            // Default for difficult level 1
+    sf::Texture game1StaticTexture, game1FallingTexture, winTexture, loseTexture, correctImageTexture, incorrectImageTexture, progressTexture, dropBoxTexture;
+    sf::Sprite game1StaticSprite, game1FallingSprite, winSprite, loseSprite, correctImageSprite, incorrectImageSprite, progressSprite, dropBoxSprite;
+    sf::Text game1QuestionText;
+    sf::Vector2f answerPos {584.0f, 788.0f};        // Default for difficult level 1
+    sf::Vector2f leftPos {576.f, 456.f};            // Start position for left sprite
+    sf::Vector2f rightPos {1088.f, 456.f};          // Start position for right sprite
+
 
 
     sf::SoundBuffer clickSoundBuffer;

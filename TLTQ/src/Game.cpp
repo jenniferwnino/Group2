@@ -95,28 +95,25 @@ void Game::draw()
     }
     else if (state == m_GameState::MainGame)
 	{
-		// Load and draw background
-        mainTexture.loadFromFile("./graphics/inGame.png");
-		mainSprite.setTexture(mainTexture);
-        mainSprite.setScale(4.0f, 4.0f);
-		window.draw(mainSprite);
-
-        // Load and draw main question text
-		mainFont.loadFromFile("./fonts/Square.ttf");
-		sf::Text mainText("Choose the option that is best \nfor the environment!", mainFont, 36U);
-		mainText.setPosition(600.0f, 185.0f);
-		mainText.setFillColor(sf::Color::White);
-		window.draw(mainText);
+        if (difficultyLevel == 1)
+        {
+            window.draw(game1StaticSprite);
+        }
+        else
+        {
+            window.draw(game1FallingSprite);
+        }
+		window.draw(game1QuestionText);
 
         // All questions haven't been answered
         if (questionNum < questions.size())
         {
             // Load correct & incorrect answer text
             sf::Text correctAnswer(questions[questionNum].correctText, mainFont, defaultFontSize);
-            correctAnswer.setPosition(textPos);
+            correctAnswer.setPosition(answerPos);
             correctAnswer.setFillColor(sf::Color::White);
             sf::Text incorrectAnswer(questions[questionNum].incorrectText, mainFont, defaultFontSize);
-            incorrectAnswer.setPosition(textPos);
+            incorrectAnswer.setPosition(answerPos);
             incorrectAnswer.setFillColor(sf::Color::White);
 
             // Load correct & incorrect images
@@ -142,6 +139,12 @@ void Game::draw()
             // Draw answer sprites
             window.draw(correctImageSprite);
             window.draw(incorrectImageSprite);
+
+            // Need layer for sprites to drop behind
+            if (difficultyLevel != 1)
+            {
+                window.draw(dropBoxSprite);
+            }
 
             if (questionNum == 0 && numCorrect == 0)
             {
@@ -263,23 +266,52 @@ void Game::update()
         if (optionsL1.getGlobalBounds().contains(sf::Vector2f(mousePosition)))
         {
             difficultyLevel = 1;
+
+            // CHANGES FOR GAME 1 SETTINGS
+            charsPerLine = 56;
             winCondition = 0.75f;
+            answerPos = sf::Vector2f (584.f, 788.f);
             leftPos.y = 456.f;
             rightPos.y = 456.f;
+            // Reload game 1 assets to ensure text wrapping is correct
+            questions.clear();
+            loadGame1Assets();
+
+            // CHANGES FOR GAME 2 SETTINGS
+            // TO BE COMPLETED
         }
         else if (optionsL2.getGlobalBounds().contains(sf::Vector2f(mousePosition)))
         {
             difficultyLevel = 2;
+
+            // CHANGES FOR GAME 1 SETTINGS
+            charsPerLine = 105;
             winCondition = 0.80f;
+            answerPos = sf::Vector2f (307.f, 918.f);
             leftPos.y = 0.f;
             rightPos.y = 0.f;
+            // Reload game 1 assets to ensure text wrapping is correct
+            questions.clear();
+            loadGame1Assets();
+
+            // CHANGES FOR GAME 2 SETTINGS
+            // TO BE COMPLETED
         }
         else if (optionsL3.getGlobalBounds().contains(sf::Vector2f(mousePosition)))
         {
             difficultyLevel = 3;
+
+            // CHANGES FOR GAME 1 SETTINGS
+            charsPerLine = 105;
             winCondition = 0.85f;
             leftPos.y = 0.f;
             rightPos.y = 0.f;
+            // Reload game 1 assets to ensure text wrapping is correct
+            questions.clear();
+            loadGame1Assets();
+
+            // CHANGES FOR GAME 2 SETTINGS
+            // TO BE COMPLETED
         }
         else if (returnToMain.getGlobalBounds().contains(sf::Vector2f(mousePosition)))
         {
@@ -330,17 +362,18 @@ void Game::update()
                 if (!questions[questionNum].answered)
                 {
                     // If sprite is still on the screen
-                    if (leftPos.y < window.getSize().y)
+                    //if (leftPos.y < window.getSize().y)
+                    if (leftPos.y < dropBoxSprite.getPosition().y)
                     {
                         if (difficultyLevel == 2)
                         {
-                            leftPos.y += 1;
-                            rightPos.y += 1;
+                            leftPos.y += 0.25;
+                            rightPos.y += 0.25;
                         }
                         if (difficultyLevel == 3)
                         {
-                            leftPos.y += 1.5;
-                            rightPos.y += 1.5;
+                            leftPos.y += 0.5;
+                            rightPos.y += 0.5;
                         }
                     }
                     // If sprite went off the screen, mark question as incorrect answer
@@ -428,7 +461,7 @@ void Game::eventHandler()
             clickSound.play();
 
             if (clickHeld) {clickHeld = false;}
-            std::cout << "released" << std::endl;
+            std::cout << mousePosition.x << " " << mousePosition.y << std::endl;
 		}
         else if (clickHeld)
         {
@@ -462,6 +495,36 @@ void Game::eventHandler()
 }
 
 void Game::loadGame1Assets() {
+    // Load backgrounds
+    game1StaticTexture.loadFromFile("./graphics/inGame.png");
+    game1StaticSprite.setTexture(game1StaticTexture);
+    game1StaticSprite.setScale(4.0f, 4.0f);
+    game1FallingTexture.loadFromFile("./graphics/inGameFallingSprites.png");
+    game1FallingSprite.setTexture(game1FallingTexture);
+    game1FallingSprite.setScale(4.0f, 4.0f);
+
+    // Load main question text
+    mainFont.loadFromFile("./fonts/Square.ttf");
+    if (difficultyLevel == 1)
+    {
+        game1QuestionText.setString("Choose the option that is best for the \nenvironment!");
+        game1QuestionText.setPosition(600.0f, 185.0f);
+    }
+    else
+    {
+        game1QuestionText.setString("Choose the option that is best for the environment!");
+        game1QuestionText.setPosition(520.0f, 765.0f);
+    }
+    game1QuestionText.setFont(mainFont);
+    game1QuestionText.setCharacterSize(36U);
+    game1QuestionText.setFillColor(sf::Color::White);
+
+    // Make dropBox rectangle for level 2 & 3 difficulty
+    dropBoxTexture.loadFromFile("./graphics/dropBox.png");
+    dropBoxSprite.setTexture(dropBoxTexture);
+    dropBoxSprite.setScale(4.f, 4.f);
+    dropBoxSprite.setPosition(sf::Vector2f(252, 680));
+
     // Read the .csv file
     std::ifstream infile("./csv_files/game1input.csv");
     if (infile.is_open())
