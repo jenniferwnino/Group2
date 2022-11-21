@@ -175,6 +175,11 @@ void Game::draw()
                 winSprite.setTexture(winTexture);
                 winSprite.setScale(4.0f, 4.0f);
                 window.draw(winSprite);
+                if (!winLoseSoundHasPlayed)
+                {
+                    winLoseSoundHasPlayed = true;
+                    winSound.play();
+                }
             }
             else
             {
@@ -182,6 +187,11 @@ void Game::draw()
                 loseSprite.setTexture(loseTexture);
                 loseSprite.setScale(4.0f, 4.0f);
                 window.draw(loseSprite);
+                if (!winLoseSoundHasPlayed)
+                {
+                    winLoseSoundHasPlayed = true;
+                    loseSound.play();
+                }
             }
         }
 	}
@@ -217,6 +227,7 @@ void Game::update()
            state = m_GameState::MainGame;
            questionNum = 0;
            numCorrect = 0;
+           winLoseSoundHasPlayed = false;
            for (int i = 0; i < questions.size(); i++)
            {
                questions[i].answered = false;
@@ -289,17 +300,22 @@ void Game::update()
                 questions[questionNum].answered = true;
                 numCorrect++;
                 questions[questionNum].answeredCorrect = true;
+                if (!answerSoundHasPlayed)            
+                    correctSound.play();          
             }
             // Incorrect sprite clicked and question not already answered
             else if (incorrectImageSprite.getGlobalBounds().contains(sf::Vector2f(mousePosition)) && !questions[questionNum].answered)
             {
                 questions[questionNum].answered = true;
                 questions[questionNum].answeredCorrect = false;
+                if (!answerSoundHasPlayed)
+                    wrongSound.play();
             }
             // If next button clicked and question already answered
             else if (mousePosition.x >= 1696 && mousePosition.x <= 1886 && mousePosition.y >= 978 && mousePosition.y <= 1052 && questions[questionNum].answered)
             {
                 ++questionNum;
+                answerSoundHasPlayed = false;
             }
             // If menu is selected
             else if (mousePosition.x >= 20 && mousePosition.x <= 525 && mousePosition.y >= 20 && mousePosition.y <= 100)
@@ -356,6 +372,7 @@ void Game::update()
                 state = m_GameState::MainGame;
                 questionNum = 0;
                 numCorrect = 0;
+                winLoseSoundHasPlayed = false;
                 for (int i = 0; i < questions.size(); i++)
                 {
                     questions[i].answered = false;
@@ -408,6 +425,8 @@ void Game::eventHandler()
         else if (event.type == sf::Event::MouseButtonReleased)
 		{
 			mousePosition = sf::Mouse::getPosition(window);
+            clickSound.play();
+
             if (clickHeld) {clickHeld = false;}
             std::cout << "released" << std::endl;
 		}
@@ -633,4 +652,23 @@ void Game::setOptionsMenu_optionsMenuButton()
     optionsReturnText.setCharacterSize(48U);
     optionsReturnText.setFillColor(sf::Color::White);
     optionsReturnText.setPosition(150.f, 140.f);
+}
+
+void Game::loadSounds()
+{
+    correctSoundBuffer.loadFromFile("./sounds/correctAnswer.wav");
+    clickSoundBuffer.loadFromFile("./sounds/clicking.wav");
+    wrongSoundBuffer.loadFromFile("./sounds/wrongAnswer.wav");
+    winSoundBuffer.loadFromFile("./sounds/winGame.wav");
+    loseSoundBuffer.loadFromFile("./sounds/loseGame.wav");
+    music.openFromFile("./sounds/backgroundMusic.wav");
+
+    clickSound.setBuffer(clickSoundBuffer);
+    correctSound.setBuffer(correctSoundBuffer);
+    wrongSound.setBuffer(wrongSoundBuffer);
+    winSound.setBuffer(winSoundBuffer);
+    loseSound.setBuffer(loseSoundBuffer);
+
+    music.setVolume(50.0f);
+    music.play();
 }
