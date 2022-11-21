@@ -103,7 +103,6 @@ void Game::draw()
         {
             window.draw(game1FallingSprite);
         }
-		window.draw(game1QuestionText);
 
         // All questions haven't been answered
         if (questionNum < questions.size())
@@ -145,6 +144,8 @@ void Game::draw()
             {
                 window.draw(dropBoxSprite);
             }
+
+            window.draw(game1QuestionText);
 
             if (questionNum == 0 && numCorrect == 0)
             {
@@ -510,7 +511,7 @@ void Game::loadGame1Assets() {
         game1QuestionText.setString("Choose the option that is best for the \nenvironment!");
         game1QuestionText.setPosition(600.0f, 185.0f);
     }
-    else
+    else if (difficultyLevel == 2 || difficultyLevel == 3)
     {
         game1QuestionText.setString("Choose the option that is best for the environment!");
         game1QuestionText.setPosition(520.0f, 765.0f);
