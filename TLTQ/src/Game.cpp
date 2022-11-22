@@ -8,89 +8,73 @@ void Game::draw()
 	window.clear();
 	if (state == m_GameState::Menu)
 	{
-	    mainTexture.loadFromFile("./graphics/mainMenu.png");
-		mainSprite.setTexture(mainTexture);
-		mainSprite.setScale(4.0f, 4.0f);
 		window.draw(mainSprite);
 	}
+    else if (state == m_GameState::GameSelection)
+    {
+        // TEMP VERSION OF GAME SELECTIONS SCREEN - NEED FINAL BACKGROUND
+        window.draw(gameSelectSprite);
+        window.draw(returnToMain);
+        window.draw(mainReturnText);
+    }
 	else if (state == m_GameState::Options)
     {
         // TEMP FOR OPTIONS - NEED A NICER SCREEN DESIGN
         // CODE WILL CHANGE WITH NEW SCREEN DESIGN
-        mainFont.loadFromFile("./fonts/Square.ttf");
-
-        setOptionsMenu_mainMenuButton();
         window.draw(returnToMain);
         window.draw(mainReturnText);
+        window.draw(changeLevel);
 
-        changeLevel.setSize(sf::Vector2f(800.f, 150.f));
-        changeLevel.setFillColor(sf::Color(255, 128, 0, 255));
-        changeLevel.setPosition(550.f, 500.f);
+        // Temp text - will be written in final background (?)
         sf::Text selectLevelText ("Change difficulty level", mainFont, 48U);
         selectLevelText.setFillColor(sf::Color::White);
         selectLevelText.setPosition(680.f, 545.f);
-        window.draw(changeLevel);
         window.draw(selectLevelText);
     }
     else if (state == m_GameState::Options_Level)
     {
         // TEMP FOR SETTING LEVEL - NEED A NICER SCREEN DESIGN
         // CODE WILL CHANGE WITH NEW SCREEN DESIGN
-        mainFont.loadFromFile("./fonts/Square.ttf");
-
-        setOptionsMenu_mainMenuButton();
         window.draw(returnToMain);
         window.draw(mainReturnText);
-
-        setOptionsMenu_optionsMenuButton();
         window.draw(returnToOptionsMenu);
         window.draw(optionsReturnText);
 
-        optionsL1.setSize(sf::Vector2f(256.f, 256.f));
-        optionsL1.setPosition(400, 400);
         if (difficultyLevel == 1)
         {
             optionsL1.setFillColor(sf::Color::Blue);
+            optionsL2.setFillColor(sf::Color(255, 128, 0, 255));
+            optionsL3.setFillColor(sf::Color(255, 128, 0, 255));
         }
-        else
+        else if (difficultyLevel == 2)
         {
             optionsL1.setFillColor(sf::Color(255, 128, 0, 255));
+            optionsL2.setFillColor(sf::Color::Blue);
+            optionsL3.setFillColor(sf::Color(255, 128, 0, 255));
         }
+        else if (difficultyLevel == 3)
+        {
+            optionsL1.setFillColor(sf::Color(255, 128, 0, 255));
+            optionsL2.setFillColor(sf::Color(255, 128, 0, 255));
+            optionsL3.setFillColor(sf::Color::Blue);
+        }
+
+        window.draw(optionsL1);
+        window.draw(optionsL2);
+        window.draw(optionsL3);
+
+        // Temp text - will be written in final background (?)
         sf::Text level1Text ("Level 1", mainFont, 48U);
         level1Text.setFillColor(sf::Color::White);
         level1Text.setPosition(420.f, 420.f);
-        window.draw(optionsL1);
         window.draw(level1Text);
-
-        optionsL2.setSize(sf::Vector2f(256.f, 256.f));
-        optionsL2.setPosition(800, 400);
-        if (difficultyLevel == 2) {
-            optionsL2.setFillColor(sf::Color::Blue);
-        }
-        else
-        {
-            optionsL2.setFillColor(sf::Color(255, 128, 0, 255));
-        }
         sf::Text level2Text ("Level 2", mainFont, 48U);
         level2Text.setFillColor(sf::Color::White);
         level2Text.setPosition(820.f, 420.f);
-        window.draw(optionsL2);
         window.draw(level2Text);
-
-        optionsL3.setSize(sf::Vector2f(256.f, 256.f));
-        optionsL3.setPosition(1200, 400);
-        if (difficultyLevel == 3)
-        {
-            optionsL3.setFillColor(sf::Color::Blue);
-        }
-        else
-        {
-            optionsL3.setFillColor(sf::Color(255, 128, 0, 255));
-        }
         sf::Text level3Text ("Level 3", mainFont, 48U);
         level3Text.setFillColor(sf::Color::White);
         level3Text.setPosition(1220.f, 420.f);
-        window.draw(optionsL3);
         window.draw(level3Text);
     }
     else if (state == m_GameState::MainGame)
@@ -228,15 +212,7 @@ void Game::update()
         // If they clicked on NEW GAME
        if (mousePosition.x >= 32 && mousePosition.x <= 426 && mousePosition.y >= 26 && mousePosition.y <= 104)
        {
-           state = m_GameState::MainGame;
-           questionNum = 0;
-           numCorrect = 0;
-           winLoseSoundHasPlayed = false;
-           for (int i = 0; i < questions.size(); i++)
-           {
-               questions[i].answered = false;
-               questions[i].answeredCorrect = false;
-           }
+           state = m_GameState::GameSelection;
        }
        // If they clicked on LOAD GAME
        if (mousePosition.x >= 32 && mousePosition.x <= 426 && mousePosition.y >= 139 && mousePosition.y <= 216)
@@ -251,6 +227,27 @@ void Game::update()
        }
        //TODO (not neccessary): Perhaps if the sun is clicked on, he twitches or moves suddenly as a small easter egg
 	}
+    else if (state == m_GameState::GameSelection)
+    {
+        // Return to main menu
+
+        // Return to options menu
+
+        // Reset all game 1 settings and launch
+        /*
+        state = m_GameState::MainGame;
+        questionNum = 0;
+        numCorrect = 0;
+        winLoseSoundHasPlayed = false;
+        for (int i = 0; i < questions.size(); i++)
+        {
+            questions[i].answered = false;
+            questions[i].answeredCorrect = false;
+        }
+         */
+
+        // Reset all game 2 settings and launch
+    }
     else if (state == m_GameState::Options)
     {
         if (returnToMain.getGlobalBounds().contains(sf::Vector2f(mousePosition)))
@@ -368,13 +365,13 @@ void Game::update()
                     {
                         if (difficultyLevel == 2)
                         {
-                            leftPos.y += 0.25;
-                            rightPos.y += 0.25;
+                            leftPos.y += 0.75;
+                            rightPos.y += 0.75;
                         }
                         if (difficultyLevel == 3)
                         {
-                            leftPos.y += 0.5;
-                            rightPos.y += 0.5;
+                            leftPos.y += 1.25;
+                            rightPos.y += 1.25;
                         }
                     }
                     // If sprite went off the screen, mark question as incorrect answer
@@ -495,6 +492,30 @@ void Game::eventHandler()
             }
         }
 	}
+}
+
+void Game::loadMenuAndOptionsAssets()
+{
+    mainFont.loadFromFile("./fonts/Square.ttf");
+
+    // Load main menu background
+    mainTexture.loadFromFile("./graphics/mainMenu.png");
+    mainSprite.setTexture(mainTexture);
+    mainSprite.setScale(4.0f, 4.0f);
+
+    // Set game selection screen assets
+    gameSelectTexture.loadFromFile("./graphics/gameSelection.png");
+    gameSelectSprite.setTexture(gameSelectTexture);
+    gameSelectSprite.setScale(4.0f, 4.0f);
+
+    // For options menu - change level button
+    changeLevel.setSize(sf::Vector2f(800.f, 150.f));
+    changeLevel.setFillColor(sf::Color(255, 128, 0, 255));
+    changeLevel.setPosition(550.f, 500.f);
+
+    setOptionsMenu_mainMenuButton();
+    setOptionsMenu_optionsMenuButton();
+    setOptionsMenu_levelButtons();
 }
 
 void Game::loadGame1Assets() {
@@ -718,6 +739,18 @@ void Game::setOptionsMenu_optionsMenuButton()
     optionsReturnText.setCharacterSize(48U);
     optionsReturnText.setFillColor(sf::Color::White);
     optionsReturnText.setPosition(150.f, 140.f);
+}
+
+void Game::setOptionsMenu_levelButtons()
+{
+    optionsL1.setSize(sf::Vector2f(256.f, 256.f));
+    optionsL1.setPosition(400, 400);
+
+    optionsL2.setSize(sf::Vector2f(256.f, 256.f));
+    optionsL2.setPosition(800, 400);
+
+    optionsL3.setSize(sf::Vector2f(256.f, 256.f));
+    optionsL3.setPosition(1200, 400);
 }
 
 void Game::loadSounds()
