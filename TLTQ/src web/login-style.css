@@ -1,0 +1,59 @@
+html
+{
+    height: 100%;
+}
+
+body
+{
+    height: 75%;
+    margin: 0;
+    display: grid;
+    justify-items: center;
+    align-items: center;
+    background-color: #11171d;
+    width: 100%;
+}
+
+h1
+{
+    color: aliceblue;
+    font-size: 2.0em;
+    /*width: 100%;*/
+    align-self: center;
+    margin-top: 50px;
+    margin-bottom: 250px;
+}
+
+#login-form
+{
+    display: flex;
+    flex-direction: column;
+}
+
+#login-form ::placeholder
+{
+    color: #44484d;
+}
+
+.login-form-field
+{
+    width: 300px;
+    border: none;
+    border-bottom: 1px solid #FFFF;
+    color: white;
+    background-color: #11171d;
+    margin-bottom: 10px;
+    border-radius: 3px;
+    outline: none;
+    padding: 0px 0px 5px 5px;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+#login-form-submit
+{
+    border: none;
+    border-right: 10px solid #11171d;
+    border-left: 10px solid #11171d;
+    padding: 1.5px 0 1.5px;
+}

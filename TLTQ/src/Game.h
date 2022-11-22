@@ -9,7 +9,7 @@ private:
     sf::RenderWindow window;
     enum class m_GameState
     {
-        Menu = 0, Options, Options_Level, MainGame, Game2, Paused
+        Menu = 0, GameSelection, Options, Options_Level, MainGame, Game2, Paused
     };
 
     // For Game 1
@@ -47,6 +47,11 @@ private:
     sf::Texture mainTexture;
     sf::Sprite mainSprite;
 
+    // For Level Selection
+    sf::Texture gameSelectTexture;
+    sf::Sprite gameSelectSprite;
+    sf::RectangleShape game1Select, game2Select;
+
     // For Options Settings
     sf::RectangleShape optionsL1, optionsL2, optionsL3, returnToMain, returnToOptionsMenu, changeLevel;
     sf::Text mainReturnText, optionsReturnText;
@@ -62,8 +67,13 @@ private:
     sf::Sprite game1StaticSprite, game1FallingSprite, winSprite, loseSprite, correctImageSprite, incorrectImageSprite, progressSprite, dropBoxSprite;
     sf::Text game1QuestionText;
     sf::Vector2f answerPos {584.0f, 788.0f};        // Default for difficult level 1
+
     sf::Vector2f leftPos {576.f, 456.f};               // Start position for left sprite
     sf::Vector2f rightPos {1088.f, 456.f};            // Start position for right sprite
+
+    sf::Vector2f leftPos {576.f, 456.f};            // Start position for left sprite
+    sf::Vector2f rightPos {1088.f, 456.f};          // Start position for right sprite
+
 
     // Sounds
     sf::SoundBuffer clickSoundBuffer;
@@ -93,12 +103,20 @@ private:
     void eventHandler();
     void update();
     void draw();
+
+    // Game 1 loading and helper functions
     void loadGame1Assets();
-    void textWrapper(std::string& s);                       // Helper function for loadGame1Assets()
+    void textWrapper(std::string& s);
     void updateProgressSprite();
+
+    // Game 2 loading
     void loadGame2Assets();
+
+    // Menus, options, and general settings
+    void loadMenuAndOptionsAssets();
     void setOptionsMenu_mainMenuButton();
     void setOptionsMenu_optionsMenuButton();
+    void setOptionsMenu_levelButtons();
     void loadSounds();
 
 public:
@@ -110,6 +128,7 @@ public:
         loadSounds();
         loadGame1Assets();
         loadGame2Assets();
+        loadMenuAndOptionsAssets();
     }
     void run()
     {

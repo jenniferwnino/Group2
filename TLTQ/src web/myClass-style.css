@@ -1,0 +1,38 @@
+html
+{
+    height: 100%;
+}
+
+body
+{
+    height: 100%;
+    margin: 0;
+    display: grid;
+    justify-items: center;
+    align-items: center;
+    background-color: #11171d;
+    width: 100%;
+}
+
+td
+{
+    width: 33%;
+    border: 1px solid #44484d;
+    text-align: center;
+}
+
+th
+{
+    width: 33%;
+    border: 1px solid #44484d;
+    font-size: 1.2em;
+    color: white;
+}
+
+#myClass-Table
+{
+    border: 1px solid #44484d;
+    width: 50%;
+    border-collapse: collapse;
+    color: white;
+}
