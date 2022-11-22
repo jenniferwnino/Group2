@@ -93,8 +93,8 @@ private:
     sf::Sprite game2BackgroundSprite, recycleSprite, trashSprite;
     sf::RectangleShape trash1, trash2, trash3, trash4, recycle1, recycle2, recycle3, recycle4;      // temp
     sf::Vector2i clickPos;
-    bool clickHeld;
-    int spriteMoving;
+    bool clickHeld{ false };
+    int spriteMoving{ 0 };
 
 private:
     void eventHandler();
