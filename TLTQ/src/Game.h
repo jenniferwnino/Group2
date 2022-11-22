@@ -50,6 +50,7 @@ private:
     // For Level Selection
     sf::Texture gameSelectTexture;
     sf::Sprite gameSelectSprite;
+    sf::RectangleShape game1Select, game2Select;
 
     // For Options Settings
     sf::RectangleShape optionsL1, optionsL2, optionsL3, returnToMain, returnToOptionsMenu, changeLevel;

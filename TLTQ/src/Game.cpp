@@ -16,6 +16,10 @@ void Game::draw()
         window.draw(gameSelectSprite);
         window.draw(returnToMain);
         window.draw(mainReturnText);
+        window.draw(returnToOptionsMenu);
+        window.draw(optionsReturnText);
+        window.draw(game1Select);
+        window.draw(game2Select);
     }
 	else if (state == m_GameState::Options)
     {
@@ -229,24 +233,39 @@ void Game::update()
 	}
     else if (state == m_GameState::GameSelection)
     {
-        // Return to main menu
-
-        // Return to options menu
-
-        // Reset all game 1 settings and launch
-        /*
-        state = m_GameState::MainGame;
-        questionNum = 0;
-        numCorrect = 0;
-        winLoseSoundHasPlayed = false;
-        for (int i = 0; i < questions.size(); i++)
+        // Clicked menu
+        if (returnToMain.getGlobalBounds().contains(sf::Vector2f(mousePosition)))
         {
-            questions[i].answered = false;
-            questions[i].answeredCorrect = false;
+            state = m_GameState::Menu;
         }
-         */
 
-        // Reset all game 2 settings and launch
+        // Clicked options
+        else if (returnToOptionsMenu.getGlobalBounds().contains(sf::Vector2f(mousePosition)))
+        {
+            state = m_GameState::Options;
+        }
+
+        // Clicked game 1
+        else if (game1Select.getGlobalBounds().contains(sf::Vector2f(mousePosition)))
+        {
+            // Reset all game 1 settings and launch
+            state = m_GameState::MainGame;
+            questionNum = 0;
+            numCorrect = 0;
+            winLoseSoundHasPlayed = false;
+            for (int i = 0; i < questions.size(); i++)
+            {
+                questions[i].answered = false;
+                questions[i].answeredCorrect = false;
+            }
+        }
+
+        // Clicked game 2
+        else if (game2Select.getGlobalBounds().contains(sf::Vector2f(mousePosition)))
+        {
+            // Reset all game 2 settings and launch
+            state = m_GameState::Game2;
+        }
     }
     else if (state == m_GameState::Options)
     {
@@ -507,6 +526,12 @@ void Game::loadMenuAndOptionsAssets()
     gameSelectTexture.loadFromFile("./graphics/gameSelection.png");
     gameSelectSprite.setTexture(gameSelectTexture);
     gameSelectSprite.setScale(4.0f, 4.0f);
+    game1Select.setSize(sf::Vector2f(256.f, 256.f));
+    game1Select.setPosition(400, 400);
+    game1Select.setFillColor(sf::Color(255, 128, 0, 255));
+    game2Select.setSize(sf::Vector2f(256.f, 256.f));
+    game2Select.setPosition(1250, 400);
+    game2Select.setFillColor(sf::Color(255, 128, 0, 255));
 
     // For options menu - change level button
     changeLevel.setSize(sf::Vector2f(800.f, 150.f));
