@@ -67,10 +67,9 @@ private:
     sf::Sprite game1StaticSprite, game1FallingSprite, winSprite, loseSprite, correctImageSprite, incorrectImageSprite, progressSprite, dropBoxSprite;
     sf::Text game1QuestionText;
     sf::Vector2f answerPos {584.0f, 788.0f};        // Default for difficult level 1
-    sf::Vector2f leftPos {576.f, 456.f};            // Start position for left sprite
-    sf::Vector2f rightPos {1088.f, 456.f};          // Start position for right sprite
 
-
+    sf::Vector2f leftPos {576.f, 456.f};               // Start position for left sprite
+    sf::Vector2f rightPos {1088.f, 456.f};            // Start position for right sprite
 
     // Sounds
     sf::SoundBuffer clickSoundBuffer;
@@ -93,8 +92,8 @@ private:
     sf::Sprite game2BackgroundSprite, recycleSprite, trashSprite;
     sf::RectangleShape trash1, trash2, trash3, trash4, recycle1, recycle2, recycle3, recycle4;      // temp
     sf::Vector2i clickPos;
-    bool clickHeld;
-    int spriteMoving;
+    bool clickHeld{ false };
+    int spriteMoving{ 0 };
 
 private:
     void eventHandler();
