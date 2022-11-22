@@ -47,13 +47,13 @@ private:
     sf::Texture mainTexture;
     sf::Sprite mainSprite;
 
+    // For Level Selection
+    sf::Texture gameSelectTexture;
+    sf::Sprite gameSelectSprite;
+
     // For Options Settings
     sf::RectangleShape optionsL1, optionsL2, optionsL3, returnToMain, returnToOptionsMenu, changeLevel;
     sf::Text mainReturnText, optionsReturnText;
-
-    // For GameSelection
-    sf::Texture gameSelectTexture;
-    sf::Sprite gameSelectSprite;
 
     // For Game 1
     uint32_t numCorrect{ 0 };
@@ -69,16 +69,8 @@ private:
     sf::Vector2f leftPos {576.f, 456.f};            // Start position for left sprite
     sf::Vector2f rightPos {1088.f, 456.f};          // Start position for right sprite
 
-    // For Game 2
-    std::vector<m_Sortables> toSort;
-    sf::Texture game2BackgroudTexture, recycleTexture, trashTexture;
-    sf::Sprite game2BackgroundSprite, recycleSprite, trashSprite;
-    sf::RectangleShape trash1, trash2, trash3, trash4, recycle1, recycle2, recycle3, recycle4;      // temp
-    sf::Vector2i clickPos;
-    bool clickHeld;
-    int spriteMoving;
 
-   // Sounds
+
     sf::SoundBuffer clickSoundBuffer;
     sf::Sound clickSound;
     sf::SoundBuffer correctSoundBuffer;
@@ -93,15 +85,30 @@ private:
     bool winLoseSoundHasPlayed = false;
     bool answerSoundHasPlayed = false;
 
+    // For Game 2
+    std::vector<m_Sortables> toSort;
+    sf::Texture game2BackgroudTexture, recycleTexture, trashTexture;
+    sf::Sprite game2BackgroundSprite, recycleSprite, trashSprite;
+    sf::RectangleShape trash1, trash2, trash3, trash4, recycle1, recycle2, recycle3, recycle4;      // temp
+    sf::Vector2i clickPos;
+    bool clickHeld;
+    int spriteMoving;
+
 private:
-    void draw();
-    void update();
     void eventHandler();
-    void loadMenuAndOptionsAssets();
+    void update();
+    void draw();
+
+    // Game 1 loading and helper functions
     void loadGame1Assets();
-    void textWrapper(std::string& s);                       // Helper function for loadGame1Assets()
+    void textWrapper(std::string& s);
     void updateProgressSprite();
+
+    // Game 2 loading
     void loadGame2Assets();
+
+    // Menus, options, and general settings
+    void loadMenuAndOptionsAssets();
     void setOptionsMenu_mainMenuButton();
     void setOptionsMenu_optionsMenuButton();
     void setOptionsMenu_levelButtons();
@@ -114,9 +121,9 @@ public:
         window.create({ 1920, 1080 }, "Climate Stompers");
         state = m_GameState::Menu;
         loadSounds();
-        loadMenuAndOptionsAssets();
         loadGame1Assets();
         loadGame2Assets();
+        loadMenuAndOptionsAssets();
     }
     void run()
     {
