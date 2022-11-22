@@ -68,6 +68,7 @@ private:
     sf::Text game1QuestionText;
     sf::Vector2f answerPos {584.0f, 788.0f};        // Default for difficult level 1
 <<<<<<< HEAD
+<<<<<<< HEAD
     sf::Vector2f leftPos {576.f, 456.f};            // Start position for left sprite
     sf::Vector2f rightPos {1088.f, 456.f};          // Start position for right sprite
 
@@ -75,6 +76,15 @@ private:
     sf::Vector2f leftPos {576.f, 456.f};               // Start position for left sprite
     sf::Vector2f rightPos {1088.f, 456.f};            // Start position for right sprite
 >>>>>>> c1a9f976026615c5988fef17c7af593aaf63196b
+=======
+
+    sf::Vector2f leftPos {576.f, 456.f};               // Start position for left sprite
+    sf::Vector2f rightPos {1088.f, 456.f};            // Start position for right sprite
+
+    sf::Vector2f leftPos {576.f, 456.f};            // Start position for left sprite
+    sf::Vector2f rightPos {1088.f, 456.f};          // Start position for right sprite
+
+>>>>>>> 1f4d869799397ea49d7d7ca023d554636d5d2519
 
     // Sounds
     sf::SoundBuffer clickSoundBuffer;
