@@ -133,6 +133,10 @@ void Game::draw()
                 window.draw(dropBoxSprite);
             }
 
+<<<<<<< HEAD
+=======
+            // Text has to be added after dropBox layer
+>>>>>>> c1a9f976026615c5988fef17c7af593aaf63196b
             window.draw(game1QuestionText);
 
             if (questionNum == 0 && numCorrect == 0)
@@ -382,11 +386,15 @@ void Game::update()
                 if (!questions[questionNum].answered)
                 {
                     // If sprite is still on the screen
+<<<<<<< HEAD
                     //if (leftPos.y < window.getSize().y)
+=======
+>>>>>>> c1a9f976026615c5988fef17c7af593aaf63196b
                     if (leftPos.y < dropBoxSprite.getPosition().y)
                     {
                         if (difficultyLevel == 2)
                         {
+<<<<<<< HEAD
                             leftPos.y += 0.75;
                             rightPos.y += 0.75;
                         }
@@ -394,6 +402,15 @@ void Game::update()
                         {
                             leftPos.y += 1.25;
                             rightPos.y += 1.25;
+=======
+                            leftPos.y += 0.25;
+                            rightPos.y += 0.25;
+                        }
+                        if (difficultyLevel == 3)
+                        {
+                            leftPos.y += 0.75;
+                            rightPos.y += 0.75;
+>>>>>>> c1a9f976026615c5988fef17c7af593aaf63196b
                         }
                     }
                     // If sprite went off the screen, mark question as incorrect answer
@@ -485,10 +502,14 @@ void Game::eventHandler()
 			mousePosition = sf::Mouse::getPosition(window);
             clickSound.play();
 
+<<<<<<< HEAD
             if (clickHeld)
             {
                 clickHeld = false;
             }
+=======
+            if (clickHeld) {clickHeld = false;}
+>>>>>>> c1a9f976026615c5988fef17c7af593aaf63196b
 		}
         else if (clickHeld)
         {
