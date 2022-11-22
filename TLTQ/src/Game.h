@@ -71,7 +71,6 @@ private:
     sf::Vector2f leftPos {576.f, 456.f};               // Start position for left sprite
     sf::Vector2f rightPos {1088.f, 456.f};            // Start position for right sprite
 
-
     // Sounds
     sf::SoundBuffer clickSoundBuffer;
     sf::Sound clickSound;

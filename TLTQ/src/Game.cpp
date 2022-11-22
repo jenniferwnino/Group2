@@ -133,10 +133,6 @@ void Game::draw()
                 window.draw(dropBoxSprite);
             }
 
-
-            // Text has to be added after dropBox layer
-            window.draw(game1QuestionText);
-
             if (questionNum == 0 && numCorrect == 0)
             {
                 progressTexture.loadFromFile("./graphics/sunSprite4of7.png");
@@ -384,6 +380,7 @@ void Game::update()
                 if (!questions[questionNum].answered)
                 {
                     // If sprite is still on the screen
+                    //if (leftPos.y < window.getSize().y)
 
                     //if (leftPos.y < window.getSize().y)
                     if (leftPos.y < dropBoxSprite.getPosition().y)
@@ -398,14 +395,16 @@ void Game::update()
                         {
                             leftPos.y += 0.75;
                             rightPos.y += 0.75;
-
-                            leftPos.y += 0.75;
-                            rightPos.y += 0.75;
                         }
                         if (difficultyLevel == 3)
                         {
                             leftPos.y += 1.25;
                             rightPos.y += 1.25;
+                        }
+                        if (difficultyLevel == 3)
+                        {
+                            leftPos.y += 0.75;
+                            rightPos.y += 0.75;
                         }
                     }
                     // If sprite went off the screen, mark question as incorrect answer
