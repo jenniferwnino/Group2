@@ -497,8 +497,6 @@ void Game::eventHandler()
 			mousePosition = sf::Mouse::getPosition(window);
             clickSound.play();
 
-
-            if (clickHeld) {clickHeld = false;}
             if (clickHeld)
             {
                 clickHeld = false;
