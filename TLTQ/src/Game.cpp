@@ -190,6 +190,9 @@ void Game::draw()
     else if (state == m_GameState::Game2)
     {
         window.draw(game2BackgroundSprite);
+        window.draw(returnToMain);
+        window.draw(mainReturnText);
+
         window.draw(recycleSprite);
         window.draw(trashSprite);
 
@@ -436,6 +439,11 @@ void Game::update()
         if (clickHeld)
         {
             toSort[spriteMoving].tempShape.setPosition(mousePosition.x, mousePosition.y);
+        }
+        // Clicked menu
+        else if (returnToMain.getGlobalBounds().contains(sf::Vector2f(mousePosition)))
+        {
+            state = m_GameState::Menu;
         }
     }
 	else if (state == m_GameState::Paused)
