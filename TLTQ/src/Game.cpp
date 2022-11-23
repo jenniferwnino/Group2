@@ -210,6 +210,35 @@ void Game::draw()
 	window.display();
 }
 
+void Game::loadSave()
+{
+    std::ifstream file;
+    file.open("save.dat", std::ios_base::in);
+
+    std::string temp;
+    if (file.is_open())
+    {
+        std::getline(file, temp);
+        UID = std::stoi(temp);
+        std::getline(file, temp);
+        game1Score = std::stoi(temp);
+        std::getline(file, temp);
+        game2Score = std::stoi(temp);
+    }
+
+    file.close();
+}
+
+void Game::updateSave()
+{
+    std::ofstream oStream;
+    oStream.open("save.dat", std::ios_base::out | std::ios_base::trunc);
+    oStream << UID << "\n"
+            << game1Score << "\n"
+            << game2Score;
+    oStream.close();
+}
+
 void Game::update()
 {
 	if (state == m_GameState::Menu)

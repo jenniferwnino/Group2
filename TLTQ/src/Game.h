@@ -37,6 +37,9 @@ private:
     // General Game Variables
     m_GameState state;
     const uint32_t defaultFontSize{ 24 };
+    uint32_t UID{ 0 };
+    uint32_t game1Score{ 0 };
+    uint32_t game2Score{ 0 };
     sf::Vector2i mousePosition;
     sf::Event event;
     sf::Font mainFont;
@@ -99,6 +102,8 @@ private:
     void eventHandler();
     void update();
     void draw();
+    void loadSave();
+    void updateSave();
 
     // Game 1 loading and helper functions
     void loadGame1Assets();
@@ -119,6 +124,7 @@ public:
     // Constructor
     Game()
     {
+        loadSave();
         window.create({ 1920, 1080 }, "Climate Stompers");
         state = m_GameState::Menu;
         loadSounds();
@@ -134,5 +140,9 @@ public:
             update();
             draw();
         }
+    }
+    ~Game()
+    {
+        updateSave();
     }
 };
