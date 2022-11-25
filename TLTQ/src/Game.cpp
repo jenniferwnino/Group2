@@ -403,6 +403,7 @@ void Game::update()
             if (nextButton.getGlobalBounds().contains(sf::Vector2f(mousePosition)))
             {
                 tutorial1aWatched = true;
+                mousePosition = sf::Vector2i (0, 0);
             }
         }
         else if (!tutorial1bWatched)
@@ -410,6 +411,7 @@ void Game::update()
             if (nextButton.getGlobalBounds().contains(sf::Vector2f(mousePosition)))
             {
                 tutorial1bWatched = true;
+                mousePosition = sf::Vector2i (0, 0);
             }
         }
 
@@ -527,6 +529,7 @@ void Game::update()
             if (nextButton.getGlobalBounds().contains(sf::Vector2f(mousePosition)))
             {
                 tutorial2aWatched = true;
+                mousePosition = sf::Vector2i (0, 0);
             }
         }
         else if (!tutorial2bWatched)
@@ -534,6 +537,7 @@ void Game::update()
             if (nextButton.getGlobalBounds().contains(sf::Vector2f(mousePosition)))
             {
                 tutorial2bWatched = true;
+                mousePosition = sf::Vector2i (0, 0);
             }
         }
 
