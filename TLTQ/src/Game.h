@@ -47,6 +47,8 @@ private:
     sf::Sprite pauseSprite, tutorial1Sprite, tutorial2Sprite, tutorial3Sprite;
     sf::RectangleShape nextButton;
 
+    m_GameState returnTo;
+
     // For Main Menu
     sf::Texture mainTexture;
     sf::Sprite mainSprite;
@@ -93,9 +95,10 @@ private:
     bool answerSoundHasPlayed = false;
 
     // For Game 2
-    bool game2TutorialWatched { false };
+    bool tutorial2aWatched { false };
+    bool tutorial2bWatched { false };
     std::vector<m_Sortables> toSort;
-    sf::Texture game2BackgroudTexture, recycleTexture, trashTexture;
+    sf::Texture game2BackgroundTexture, recycleTexture, trashTexture;
     sf::Sprite game2BackgroundSprite, recycleSprite, trashSprite;
     sf::RectangleShape trash1, trash2, trash3, trash4, recycle1, recycle2, recycle3, recycle4;      // temp
     sf::Vector2i clickPos;

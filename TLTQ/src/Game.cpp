@@ -89,7 +89,7 @@ void Game::draw()
             window.draw(nextButton);                            // Draw first so hidden
             window.draw(tutorial1Sprite);
         }
-        else if (tutorial1aWatched && !tutorial1bWatched)
+        else if (!tutorial1bWatched)
         {
             window.draw(nextButton);                            // Draw first so hidden
             window.draw(tutorial2Sprite);
@@ -201,17 +201,29 @@ void Game::draw()
 	}
     else if (state == m_GameState::Game2)
     {
-        window.draw(game2BackgroundSprite);
-        window.draw(returnToMain);
-        window.draw(mainReturnText);
-
-        window.draw(recycleSprite);
-        window.draw(trashSprite);
-
-        // Draw the temp shapes to sort
-        for (int i = 0; i < 8; i++)
+        // Show the tutorials if it has not been viewed yet
+        if (!tutorial2aWatched)
         {
-            window.draw(toSort[i].tempShape);
+            window.draw(nextButton);                            // Draw first so hidden
+            window.draw(tutorial3Sprite);
+        }
+        else if (!tutorial2bWatched)
+        {
+            window.draw(nextButton);                            // Draw first so hidden
+            window.draw(tutorial2Sprite);
+        }
+        else {
+            window.draw(game2BackgroundSprite);
+            window.draw(returnToMain);
+            window.draw(mainReturnText);
+
+            window.draw(recycleSprite);
+            window.draw(trashSprite);
+
+            // Draw the temp shapes to sort
+            for (int i = 0; i < 8; i++) {
+                window.draw(toSort[i].tempShape);
+            }
         }
     }
 	else if (state == m_GameState::Paused)
@@ -509,14 +521,31 @@ void Game::update()
 	}
     else if (state == m_GameState::Game2)
     {
-        if (clickHeld)
+        // On tutorial screens
+        if (!tutorial2aWatched)
         {
-            toSort[spriteMoving].tempShape.setPosition(mousePosition.x, mousePosition.y);
+            if (nextButton.getGlobalBounds().contains(sf::Vector2f(mousePosition)))
+            {
+                tutorial2aWatched = true;
+            }
         }
-        // Clicked menu
-        else if (returnToMain.getGlobalBounds().contains(sf::Vector2f(mousePosition)))
+        else if (!tutorial2bWatched)
         {
-            state = m_GameState::Menu;
+            if (nextButton.getGlobalBounds().contains(sf::Vector2f(mousePosition)))
+            {
+                tutorial2bWatched = true;
+            }
+        }
+
+        // In Game
+        else {
+            if (clickHeld) {
+                toSort[spriteMoving].tempShape.setPosition(mousePosition.x, mousePosition.y);
+            }
+                // Clicked menu
+            else if (returnToMain.getGlobalBounds().contains(sf::Vector2f(mousePosition))) {
+                state = m_GameState::Menu;
+            }
         }
     }
 	else if (state == m_GameState::Paused)
@@ -573,11 +602,13 @@ void Game::eventHandler()
             if (event.key.code == sf::Keyboard::Space && (state == m_GameState::MainGame || state == m_GameState::Paused || state == m_GameState::Game2))
             {
                 if (state != m_GameState::Paused) {
+                    returnTo = state;
                     state = m_GameState::Paused;
                 }
                 else
                 {
-                    state = m_GameState::MainGame;      // Will need to change how this works if more than 1 game
+                    state = returnTo;
+                    //state = m_GameState::MainGame;      // Will need to change how this works if more than 1 game
                 }
             }
             // Pressing escape key closes window
@@ -744,8 +775,8 @@ void Game::textWrapper(std::string& s){
 
 void Game::loadGame2Assets() {
     // Background
-    game2BackgroudTexture.loadFromFile("./graphics/game2Screen.png");
-    game2BackgroundSprite.setTexture(game2BackgroudTexture);
+    game2BackgroundTexture.loadFromFile("./graphics/game2Screen.png");
+    game2BackgroundSprite.setTexture(game2BackgroundTexture);
     game2BackgroundSprite.setScale(4.0f, 4.0f);
 
     // Add sprites
