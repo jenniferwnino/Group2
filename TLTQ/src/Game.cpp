@@ -83,104 +83,118 @@ void Game::draw()
     }
     else if (state == m_GameState::MainGame)
 	{
-        if (difficultyLevel == 1)
+        // Show the tutorials if it has not been viewed yet
+        if (!tutorial1aWatched)
         {
-            window.draw(game1StaticSprite);
+            window.draw(nextButton);                            // Draw first so hidden
+            window.draw(tutorial1Sprite);
+        }
+        else if (tutorial1aWatched && !tutorial1bWatched)
+        {
+            window.draw(nextButton);                            // Draw first so hidden
+            window.draw(tutorial2Sprite);
         }
         else
         {
-            window.draw(game1FallingSprite);
-        }
-
-        // All questions haven't been answered
-        if (questionNum < questions.size())
-        {
-            // Load correct & incorrect answer text
-            sf::Text correctAnswer(questions[questionNum].correctText, mainFont, defaultFontSize);
-            correctAnswer.setPosition(answerPos);
-            correctAnswer.setFillColor(sf::Color::White);
-            sf::Text incorrectAnswer(questions[questionNum].incorrectText, mainFont, defaultFontSize);
-            incorrectAnswer.setPosition(answerPos);
-            incorrectAnswer.setFillColor(sf::Color::White);
-
-            // Load correct & incorrect images
-            correctImageTexture.loadFromFile(questions[questionNum].correctImage);
-            correctImageSprite.setTexture(correctImageTexture);
-            correctImageSprite.setScale(4.0f, 4.0f);
-            incorrectImageTexture.loadFromFile(questions[questionNum].incorrectImage);
-            incorrectImageSprite.setTexture(incorrectImageTexture);
-            incorrectImageSprite.setScale(4.0f, 4.0f);
-
-            // Set answer sprite locations
-            if (questions[questionNum].leftIsCorrect)
+            if (difficultyLevel == 1)
             {
-                correctImageSprite.setPosition(leftPos);
-                incorrectImageSprite.setPosition(rightPos);
+                window.draw(game1StaticSprite);
             }
             else
             {
-                correctImageSprite.setPosition(rightPos);
-                incorrectImageSprite.setPosition(leftPos);
+                window.draw(game1FallingSprite);
             }
 
-            // Draw answer sprites
-            window.draw(correctImageSprite);
-            window.draw(incorrectImageSprite);
-
-            // Need layer for sprites to drop behind
-            if (difficultyLevel != 1)
+            // All questions haven't been answered
+            if (questionNum < questions.size())
             {
-                window.draw(dropBoxSprite);
-            }
+                // Load correct & incorrect answer text
+                sf::Text correctAnswer(questions[questionNum].correctText, mainFont, defaultFontSize);
+                correctAnswer.setPosition(answerPos);
+                correctAnswer.setFillColor(sf::Color::White);
+                sf::Text incorrectAnswer(questions[questionNum].incorrectText, mainFont, defaultFontSize);
+                incorrectAnswer.setPosition(answerPos);
+                incorrectAnswer.setFillColor(sf::Color::White);
 
-            if (questionNum == 0 && numCorrect == 0)
-            {
-                progressTexture.loadFromFile("./graphics/sunSprite4of7.png");
-                progressSprite.setTexture(progressTexture);
-                progressSprite.setPosition(1512.5f, 15.5f);
-                progressSprite.setScale(4.0f, 4.0f);
+                // Load correct & incorrect images
+                correctImageTexture.loadFromFile(questions[questionNum].correctImage);
+                correctImageSprite.setTexture(correctImageTexture);
+                correctImageSprite.setScale(4.0f, 4.0f);
+                incorrectImageTexture.loadFromFile(questions[questionNum].incorrectImage);
+                incorrectImageSprite.setTexture(incorrectImageTexture);
+                incorrectImageSprite.setScale(4.0f, 4.0f);
+
+                // Set answer sprite locations
+                if (questions[questionNum].leftIsCorrect)
+                {
+                    correctImageSprite.setPosition(leftPos);
+                    incorrectImageSprite.setPosition(rightPos);
+                }
+                else
+                {
+                    correctImageSprite.setPosition(rightPos);
+                    incorrectImageSprite.setPosition(leftPos);
+                }
+
+                // Draw answer sprites
+                window.draw(correctImageSprite);
+                window.draw(incorrectImageSprite);
+
+                // Need layer for sprites to drop behind
+                if (difficultyLevel != 1)
+                {
+                    window.draw(dropBoxSprite);
+                }
+
+                if (questionNum == 0 && numCorrect == 0)
+                {
+                    progressTexture.loadFromFile("./graphics/sunSprite4of7.png");
+                    progressSprite.setTexture(progressTexture);
+                    progressSprite.setPosition(1512.5f, 15.5f);
+                    progressSprite.setScale(4.0f, 4.0f);
+                    window.draw(progressSprite);
+                }
+
+                if (questions[questionNum].answered && questions[questionNum].answeredCorrect)
+                {
+                    window.draw(correctAnswer);
+                    updateProgressSprite();
+                }
+
+                else if (questions[questionNum].answered && !questions[questionNum].answeredCorrect)
+                {
+                    window.draw(incorrectAnswer);
+                    updateProgressSprite();
+                }
+
                 window.draw(progressSprite);
             }
-
-            if (questions[questionNum].answered && questions[questionNum].answeredCorrect)
-            {
-                window.draw(correctAnswer);
-                updateProgressSprite();
-            }
-
-            else if (questions[questionNum].answered && !questions[questionNum].answeredCorrect)
-            {
-                window.draw(incorrectAnswer);
-                updateProgressSprite();
-            }
-
-            window.draw(progressSprite);
-        }
-        // All questions answered - display win or lose
-        else
-        {
-            if (numCorrect >= (questions.size()  * winCondition))
-            {
-                winTexture.loadFromFile("./graphics/winScreen.png");
-                winSprite.setTexture(winTexture);
-                winSprite.setScale(4.0f, 4.0f);
-                window.draw(winSprite);
-                if (!winLoseSoundHasPlayed)
-                {
-                    winLoseSoundHasPlayed = true;
-                    winSound.play();
-                }
-            }
+                // All questions answered - display win or lose
             else
             {
-                loseTexture.loadFromFile("./graphics/loseScreen.png");
-                loseSprite.setTexture(loseTexture);
-                loseSprite.setScale(4.0f, 4.0f);
-                window.draw(loseSprite);
-                if (!winLoseSoundHasPlayed)
+                if (numCorrect >= (questions.size()  * winCondition))
                 {
-                    winLoseSoundHasPlayed = true;
-                    loseSound.play();
+                    winTexture.loadFromFile("./graphics/winScreen.png");
+                    winSprite.setTexture(winTexture);
+                    winSprite.setScale(4.0f, 4.0f);
+                    window.draw(winSprite);
+                    if (!winLoseSoundHasPlayed)
+                    {
+                        winLoseSoundHasPlayed = true;
+                        winSound.play();
+                    }
+                }
+                else
+                {
+                    loseTexture.loadFromFile("./graphics/loseScreen.png");
+                    loseSprite.setTexture(loseTexture);
+                    loseSprite.setScale(4.0f, 4.0f);
+                    window.draw(loseSprite);
+                    if (!winLoseSoundHasPlayed)
+                    {
+                        winLoseSoundHasPlayed = true;
+                        loseSound.play();
+                    }
                 }
             }
         }
@@ -371,105 +385,124 @@ void Game::update()
     }
 	else if (state == m_GameState::MainGame)
 	{
-        // All questions haven't been answered
-        if (questionNum < questions.size()) {
-            // Correct sprite clicked and question not already answered
-            if (correctImageSprite.getGlobalBounds().contains(sf::Vector2f(mousePosition)) && !questions[questionNum].answered)
+        // On tutorial screens
+        if (!tutorial1aWatched)
+        {
+            if (nextButton.getGlobalBounds().contains(sf::Vector2f(mousePosition)))
             {
-                questions[questionNum].answered = true;
-                numCorrect++;
-                questions[questionNum].answeredCorrect = true;
-                if (!answerSoundHasPlayed)            
-                    correctSound.play();          
-            }
-            // Incorrect sprite clicked and question not already answered
-            else if (incorrectImageSprite.getGlobalBounds().contains(sf::Vector2f(mousePosition)) && !questions[questionNum].answered)
-            {
-                questions[questionNum].answered = true;
-                questions[questionNum].answeredCorrect = false;
-                if (!answerSoundHasPlayed)
-                    wrongSound.play();
-            }
-            // If next button clicked and question already answered
-            else if (mousePosition.x >= 1696 && mousePosition.x <= 1886 && mousePosition.y >= 978 && mousePosition.y <= 1052 && questions[questionNum].answered)
-            {
-                ++questionNum;
-                answerSoundHasPlayed = false;
-            }
-            // If menu is selected
-            else if (mousePosition.x >= 20 && mousePosition.x <= 525 && mousePosition.y >= 20 && mousePosition.y <= 100)
-            {
-                state = m_GameState::Menu;
-            }
-
-            // If difficultyLevel 2 or 3, move the sprites
-            if (difficultyLevel == 2 || difficultyLevel == 3)
-            {
-                // If question not answered, move the sprites
-                if (!questions[questionNum].answered)
-                {
-                    // If sprite is still on the screen
-                    //if (leftPos.y < window.getSize().y)
-
-                    //if (leftPos.y < window.getSize().y)
-                    if (leftPos.y < dropBoxSprite.getPosition().y)
-                    {
-                        if (difficultyLevel == 2)
-                        {
-
-                            leftPos.y += 0.25;
-                            rightPos.y += 0.25;
-                        }
-                        if (difficultyLevel == 3)
-                        {
-                            leftPos.y += 0.75;
-                            rightPos.y += 0.75;
-                        }
-                        if (difficultyLevel == 3)
-                        {
-                            leftPos.y += 1.25;
-                            rightPos.y += 1.25;
-                        }
-                        if (difficultyLevel == 3)
-                        {
-                            leftPos.y += 0.75;
-                            rightPos.y += 0.75;
-                        }
-                    }
-                    // If sprite went off the screen, mark question as incorrect answer
-                    else
-                    {
-                        questions[questionNum].answered = true;
-                        questions[questionNum].answeredCorrect = false;
-                    }
-                }
-                // Reset positions once question is answered
-                else
-                {
-                    leftPos.y = 0.f;
-                    rightPos.y = 0.f;
-                }
+                tutorial1aWatched = true;
             }
         }
-        // All questions have been answered (winScreen or loseScreen is displayed)
-        else
+        else if (!tutorial1bWatched)
         {
-            // Home button clicked
-            if (mousePosition.x >= 762 && mousePosition.x <= 1156 && mousePosition.y >= 756 && mousePosition.y <= 834)
+            if (nextButton.getGlobalBounds().contains(sf::Vector2f(mousePosition)))
             {
-                state = m_GameState::Menu;
+                tutorial1bWatched = true;
             }
-            // Play again button clicked
-            else if (mousePosition.x >= 762 && mousePosition.x <= 1156 && mousePosition.y >= 586 && mousePosition.y <= 720)
-            {
-                state = m_GameState::MainGame;
-                questionNum = 0;
-                numCorrect = 0;
-                winLoseSoundHasPlayed = false;
-                for (int i = 0; i < questions.size(); i++)
+        }
+
+        // On Game screen
+        else {
+            // All questions haven't been answered
+            if (questionNum < questions.size()) {
+                // Correct sprite clicked and question not already answered
+                if (correctImageSprite.getGlobalBounds().contains(sf::Vector2f(mousePosition)) && !questions[questionNum].answered)
                 {
-                    questions[i].answered = false;
-                    questions[i].answeredCorrect = false;
+                    questions[questionNum].answered = true;
+                    numCorrect++;
+                    questions[questionNum].answeredCorrect = true;
+                    if (!answerSoundHasPlayed)
+                        correctSound.play();
+                }
+                    // Incorrect sprite clicked and question not already answered
+                else if (incorrectImageSprite.getGlobalBounds().contains(sf::Vector2f(mousePosition)) && !questions[questionNum].answered)
+                {
+                    questions[questionNum].answered = true;
+                    questions[questionNum].answeredCorrect = false;
+                    if (!answerSoundHasPlayed)
+                        wrongSound.play();
+                }
+                    // If next button clicked and question already answered
+                else if (mousePosition.x >= 1696 && mousePosition.x <= 1886 && mousePosition.y >= 978 && mousePosition.y <= 1052 && questions[questionNum].answered)
+                {
+                    ++questionNum;
+                    answerSoundHasPlayed = false;
+                }
+                    // If menu is selected
+                else if (mousePosition.x >= 20 && mousePosition.x <= 525 && mousePosition.y >= 20 && mousePosition.y <= 100)
+                {
+                    state = m_GameState::Menu;
+                }
+
+                // If difficultyLevel 2 or 3, move the sprites
+                if (difficultyLevel == 2 || difficultyLevel == 3)
+                {
+                    // If question not answered, move the sprites
+                    if (!questions[questionNum].answered)
+                    {
+                        // If sprite is still on the screen
+                        //if (leftPos.y < window.getSize().y)
+
+                        //if (leftPos.y < window.getSize().y)
+                        if (leftPos.y < dropBoxSprite.getPosition().y)
+                        {
+                            if (difficultyLevel == 2)
+                            {
+
+                                leftPos.y += 0.25;
+                                rightPos.y += 0.25;
+                            }
+                            if (difficultyLevel == 3)
+                            {
+                                leftPos.y += 0.75;
+                                rightPos.y += 0.75;
+                            }
+                            if (difficultyLevel == 3)
+                            {
+                                leftPos.y += 1.25;
+                                rightPos.y += 1.25;
+                            }
+                            if (difficultyLevel == 3)
+                            {
+                                leftPos.y += 0.75;
+                                rightPos.y += 0.75;
+                            }
+                        }
+                            // If sprite went off the screen, mark question as incorrect answer
+                        else
+                        {
+                            questions[questionNum].answered = true;
+                            questions[questionNum].answeredCorrect = false;
+                        }
+                    }
+                        // Reset positions once question is answered
+                    else
+                    {
+                        leftPos.y = 0.f;
+                        rightPos.y = 0.f;
+                    }
+                }
+            }
+                // All questions have been answered (winScreen or loseScreen is displayed)
+            else
+            {
+                // Home button clicked
+                if (mousePosition.x >= 762 && mousePosition.x <= 1156 && mousePosition.y >= 756 && mousePosition.y <= 834)
+                {
+                    state = m_GameState::Menu;
+                }
+                    // Play again button clicked
+                else if (mousePosition.x >= 762 && mousePosition.x <= 1156 && mousePosition.y >= 586 && mousePosition.y <= 720)
+                {
+                    state = m_GameState::MainGame;
+                    questionNum = 0;
+                    numCorrect = 0;
+                    winLoseSoundHasPlayed = false;
+                    for (int i = 0; i < questions.size(); i++)
+                    {
+                        questions[i].answered = false;
+                        questions[i].answeredCorrect = false;
+                    }
                 }
             }
         }
@@ -536,8 +569,8 @@ void Game::eventHandler()
         }
         else if (event.type == sf::Event::KeyPressed)
         {
-            // Pressing space bar controls the pause screen - Only works in game
-            if (event.key.code == sf::Keyboard::Space && (state == m_GameState::MainGame || state == m_GameState::Paused))
+            // Pressing space bar controls the pause screen - Only works in games
+            if (event.key.code == sf::Keyboard::Space && (state == m_GameState::MainGame || state == m_GameState::Paused || state == m_GameState::Game2))
             {
                 if (state != m_GameState::Paused) {
                     state = m_GameState::Paused;
@@ -589,6 +622,22 @@ void Game::loadMenuAndOptionsAssets()
     setOptionsMenu_mainMenuButton();
     setOptionsMenu_optionsMenuButton();
     setOptionsMenu_levelButtons();
+
+    // Load tutorial sprites
+    tutorial1Texture.loadFromFile("./graphics/tutorial1.png");
+    tutorial1Sprite.setTexture(tutorial1Texture);
+    tutorial1Sprite.setScale(4.f, 4.f);
+    tutorial2Texture.loadFromFile("./graphics/tutorial2.png");
+    tutorial2Sprite.setTexture(tutorial2Texture);
+    tutorial2Sprite.setScale(4.f, 4.f);
+    tutorial3Texture.loadFromFile("./graphics/tutorial3.png");
+    tutorial3Sprite.setTexture(tutorial3Texture);
+    tutorial3Sprite.setScale(4.f, 4.f);
+
+    // Set nextButton rectangle
+    nextButton.setSize(sf::Vector2f (190.f, 75.f));
+    nextButton.setPosition(1696.f, 978.f);
+    nextButton.setFillColor(sf::Color::Green);
 }
 
 void Game::loadGame1Assets() {

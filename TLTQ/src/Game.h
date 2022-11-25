@@ -43,8 +43,9 @@ private:
     sf::Vector2i mousePosition;
     sf::Event event;
     sf::Font mainFont;
-    sf::Texture pauseTexture;
-    sf::Sprite pauseSprite;
+    sf::Texture pauseTexture, tutorial1Texture, tutorial2Texture, tutorial3Texture;
+    sf::Sprite pauseSprite, tutorial1Sprite, tutorial2Sprite, tutorial3Sprite;
+    sf::RectangleShape nextButton;
 
     // For Main Menu
     sf::Texture mainTexture;
@@ -60,6 +61,8 @@ private:
     sf::Text mainReturnText, optionsReturnText;
 
     // For Game 1
+    bool tutorial1aWatched { false };
+    bool tutorial1bWatched { false };
     uint32_t numCorrect{ 0 };
     uint32_t questionNum{ 0 };
     uint32_t difficultyLevel{ 1 };                          // Default difficulty is level 1
@@ -90,6 +93,7 @@ private:
     bool answerSoundHasPlayed = false;
 
     // For Game 2
+    bool game2TutorialWatched { false };
     std::vector<m_Sortables> toSort;
     sf::Texture game2BackgroudTexture, recycleTexture, trashTexture;
     sf::Sprite game2BackgroundSprite, recycleSprite, trashSprite;
