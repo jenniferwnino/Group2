@@ -47,7 +47,7 @@ private:
     sf::Sprite pauseSprite, tutorial1Sprite, tutorial2Sprite, tutorial3Sprite;
     sf::RectangleShape nextButton;
 
-    m_GameState returnTo;
+    m_GameState returnTo{ m_GameState::Menu };
 
     // For Main Menu
     sf::Texture mainTexture;
