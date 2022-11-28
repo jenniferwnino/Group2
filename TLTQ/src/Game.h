@@ -23,11 +23,12 @@ private:
     sf::Font mainFont;
     sf::Texture pauseTexture, tutorial1Texture, tutorial2Texture, tutorial3Texture;
     sf::Sprite pauseSprite, tutorial1Sprite, tutorial2Sprite, tutorial3Sprite;
-    sf::RectangleShape returnToMain, nextButton;
+    sf::RectangleShape returnToMainButton, returnToOptionsButton, nextButton;
 
     // For Main Menu
     sf::Texture mainTexture;
     sf::Sprite mainSprite;
+    sf::RectangleShape mainNewGameButton, mainLoadGameButton, mainOptionsButton;
 
     // For Level Selection
     sf::Texture gameSelectTexture;
@@ -35,8 +36,8 @@ private:
     sf::RectangleShape game1Select, game2Select;
 
     // For Options Settings
-    sf::RectangleShape optionsL1, optionsL2, optionsL3, returnToOptionsMenu, changeLevel;
-    sf::Text mainReturnText, optionsReturnText;
+    sf::RectangleShape optionsL1, optionsL2, optionsL3, changeLevel;
+    sf::Text mainReturnText, optionsReturnText;                     // TEMP - REMOVE ONCE FINAL BACKGROUND ADDED
 
     // For Game 1
     struct m_Questions
@@ -100,10 +101,8 @@ private:
     void updateSave();
 
     // Menus, options, and general settings functions
-    void setMenuAndNextButtons();
+    void setGlobalButtons();
     void loadMenuAndOptionsAssets();
-    void setOptionsMenu_optionsMenuButton();
-    void setOptionsMenu_levelButtons();
     void loadSounds();
 
     // Game 1 loading and helper functions
@@ -122,7 +121,7 @@ public:
         window.create({ 1920, 1080 }, "Climate Stompers");
         state = m_GameState::Menu;
         loadSounds();
-        setMenuAndNextButtons();
+        setGlobalButtons();
         loadMenuAndOptionsAssets();
         loadGame1Assets();
         loadGame2Assets();

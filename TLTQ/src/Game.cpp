@@ -14,9 +14,9 @@ void Game::draw()
     {
         // TEMP VERSION OF GAME SELECTIONS SCREEN - NEED FINAL BACKGROUND
         window.draw(gameSelectSprite);
-        window.draw(returnToMain);
+        window.draw(returnToMainButton);
         window.draw(mainReturnText);
-        window.draw(returnToOptionsMenu);
+        window.draw(returnToOptionsButton);
         window.draw(optionsReturnText);
         window.draw(game1Select);
         window.draw(game2Select);
@@ -25,7 +25,7 @@ void Game::draw()
     {
         // TEMP FOR OPTIONS - NEED A NICER SCREEN DESIGN
         // CODE WILL CHANGE WITH NEW SCREEN DESIGN
-        window.draw(returnToMain);
+        window.draw(returnToMainButton);
         window.draw(mainReturnText);
         window.draw(changeLevel);
 
@@ -39,11 +39,12 @@ void Game::draw()
     {
         // TEMP FOR SETTING LEVEL - NEED A NICER SCREEN DESIGN
         // CODE WILL CHANGE WITH NEW SCREEN DESIGN
-        window.draw(returnToMain);
+        window.draw(returnToMainButton);
         window.draw(mainReturnText);
-        window.draw(returnToOptionsMenu);
+        window.draw(returnToOptionsButton);
         window.draw(optionsReturnText);
 
+        // Selected difficulty level shows blue, other levels show orange
         if (difficultyLevel == 1)
         {
             optionsL1.setFillColor(sf::Color::Blue);
@@ -63,6 +64,7 @@ void Game::draw()
             optionsL3.setFillColor(sf::Color::Blue);
         }
 
+        // Draw the three level rectangles
         window.draw(optionsL1);
         window.draw(optionsL2);
         window.draw(optionsL3);
@@ -215,17 +217,16 @@ void Game::draw()
         // Show the tutorials if it has not been viewed yet
         if (!tutorial2aWatched)
         {
-            window.draw(nextButton);                            // Draw first so hidden
             window.draw(tutorial3Sprite);
         }
         else if (!tutorial2bWatched)
         {
-            window.draw(nextButton);                            // Draw first so hidden
             window.draw(tutorial2Sprite);
         }
+        // Show the game if tutorials have been watched
         else {
             window.draw(game2BackgroundSprite);
-            window.draw(returnToMain);
+            window.draw(returnToMainButton);
             window.draw(mainReturnText);
 
             window.draw(recycleSprite);
@@ -280,34 +281,33 @@ void Game::update()
 {
 	if (state == m_GameState::Menu)
 	{
-        // If they clicked on NEW GAME
-       if (mousePosition.x >= 32 && mousePosition.x <= 426 && mousePosition.y >= 26 && mousePosition.y <= 104)
+        // New Game button is clicked
+       if (mainNewGameButton.getGlobalBounds().contains(sf::Vector2f(mousePosition)))
        {
            state = m_GameState::GameSelection;
        }
-       // If they clicked on LOAD GAME
-       if (mousePosition.x >= 32 && mousePosition.x <= 426 && mousePosition.y >= 139 && mousePosition.y <= 216)
+       // Load Game button is clicked
+       if (mainLoadGameButton.getGlobalBounds().contains(sf::Vector2f(mousePosition)))
        {
           // This will simply resume the previous game for now since we do not have multiple games
            state = m_GameState::MainGame;
        } 
-       // If they clicked on OPTIONS
-       if (mousePosition.x >= 32 && mousePosition.x <= 426 && mousePosition.y >= 251 && mousePosition.y <= 316)
+       // Options button is clicked
+       if (mainOptionsButton.getGlobalBounds().contains(sf::Vector2f(mousePosition)))
        {
            state = m_GameState::Options;
        }
-       //TODO (not neccessary): Perhaps if the sun is clicked on, he twitches or moves suddenly as a small easter egg
 	}
     else if (state == m_GameState::GameSelection)
     {
         // Clicked menu
-        if (returnToMain.getGlobalBounds().contains(sf::Vector2f(mousePosition)))
+        if (returnToMainButton.getGlobalBounds().contains(sf::Vector2f(mousePosition)))
         {
             state = m_GameState::Menu;
         }
 
         // Clicked options
-        else if (returnToOptionsMenu.getGlobalBounds().contains(sf::Vector2f(mousePosition)))
+        else if (returnToOptionsButton.getGlobalBounds().contains(sf::Vector2f(mousePosition)))
         {
             state = m_GameState::Options;
         }
@@ -336,7 +336,7 @@ void Game::update()
     }
     else if (state == m_GameState::Options)
     {
-        if (returnToMain.getGlobalBounds().contains(sf::Vector2f(mousePosition)))
+        if (returnToMainButton.getGlobalBounds().contains(sf::Vector2f(mousePosition)))
         {
             state = m_GameState::Menu;
         }
@@ -397,11 +397,11 @@ void Game::update()
             // CHANGES FOR GAME 2 SETTINGS
             // TO BE COMPLETED
         }
-        else if (returnToMain.getGlobalBounds().contains(sf::Vector2f(mousePosition)))
+        else if (returnToMainButton.getGlobalBounds().contains(sf::Vector2f(mousePosition)))
         {
             state = m_GameState::Menu;
         }
-        else if (returnToOptionsMenu.getGlobalBounds().contains(sf::Vector2f(mousePosition)))
+        else if (returnToOptionsButton.getGlobalBounds().contains(sf::Vector2f(mousePosition)))
         {
             state = m_GameState::Options;
         }
@@ -412,7 +412,7 @@ void Game::update()
         if (!tutorial1aWatched)
         {
             // Menu button is clicked
-            if (returnToMain.getGlobalBounds().contains(sf::Vector2f(mousePosition)))
+            if (returnToMainButton.getGlobalBounds().contains(sf::Vector2f(mousePosition)))
             {
                 state = m_GameState::Menu;
             }
@@ -428,7 +428,7 @@ void Game::update()
         else if (!tutorial1bWatched)
         {
             // Menu button is clicked
-            if (returnToMain.getGlobalBounds().contains(sf::Vector2f(mousePosition)))
+            if (returnToMainButton.getGlobalBounds().contains(sf::Vector2f(mousePosition)))
             {
                 state = m_GameState::Menu;
             }
@@ -462,7 +462,7 @@ void Game::update()
                         wrongSound.play();
                 }
                 // Menu button is clicked
-                else if (returnToMain.getGlobalBounds().contains(sf::Vector2f(mousePosition)))
+                else if (returnToMainButton.getGlobalBounds().contains(sf::Vector2f(mousePosition)))
                 {
                     state = m_GameState::Menu;
                 }
@@ -536,7 +536,7 @@ void Game::update()
 	}
     else if (state == m_GameState::Game2)
     {
-        // On tutorial screens
+        // On tutorial 2a screen
         if (!tutorial2aWatched)
         {
             if (nextButton.getGlobalBounds().contains(sf::Vector2f(mousePosition)))
@@ -545,6 +545,7 @@ void Game::update()
                 mousePosition = sf::Vector2i (0, 0);
             }
         }
+        // On tutorial 2b screen
         else if (!tutorial2bWatched)
         {
             if (nextButton.getGlobalBounds().contains(sf::Vector2f(mousePosition)))
@@ -560,7 +561,7 @@ void Game::update()
                 toSort[spriteMoving].tempShape.setPosition(mousePosition.x, mousePosition.y);
             }
                 // Clicked menu
-            else if (returnToMain.getGlobalBounds().contains(sf::Vector2f(mousePosition))) {
+            else if (returnToMainButton.getGlobalBounds().contains(sf::Vector2f(mousePosition))) {
                 state = m_GameState::Menu;
             }
         }
@@ -585,6 +586,7 @@ void Game::eventHandler()
 		// "close requested" event: we close the window
 		if (event.type == sf::Event::Closed)
 			window.close();
+        // Game 2 specific for drag & drop selection
         else if (state == m_GameState::Game2 && !clickHeld && event.type == sf::Event::MouseButtonPressed)
         {
             clickHeld = true;
@@ -599,6 +601,7 @@ void Game::eventHandler()
                 }
             }
         }
+        // Record mouse position when click is released
         else if (event.type == sf::Event::MouseButtonReleased)
 		{
 			mousePosition = sf::Mouse::getPosition(window);
@@ -609,10 +612,12 @@ void Game::eventHandler()
                 clickHeld = false;
             }
 		}
+        // Game 2 specific for drag & drop selection
         else if (clickHeld)
         {
             mousePosition = sf::Mouse::getPosition(window);
         }
+        // Keyboard commands
         else if (event.type == sf::Event::KeyPressed)
         {
             // Pressing space bar controls the pause screen - Only works in games
@@ -633,23 +638,27 @@ void Game::eventHandler()
             {
                 window.close();
             }
-            // TEMP OPTION TO ENTER GAME 2
-            else if (event.key.code == sf::Keyboard::Num2)
-            {
-                state = m_GameState::Game2;
-            }
         }
 	}
 }
 
 void Game::loadMenuAndOptionsAssets()
 {
+    // Set mainFont
     mainFont.loadFromFile("./fonts/Square.ttf");
 
     // Load main menu background
     mainTexture.loadFromFile("./graphics/mainMenu.png");
     mainSprite.setTexture(mainTexture);
     mainSprite.setScale(4.0f, 4.0f);
+
+    // Set main menu buttons
+    mainNewGameButton.setPosition(30, 25);
+    mainNewGameButton.setSize(sf::Vector2f(395.f, 85.f));
+    mainLoadGameButton.setPosition(30.f, 130.f);
+    mainLoadGameButton.setSize(sf::Vector2f (395.f, 85.f));
+    mainOptionsButton.setPosition(30.f, 250.f);
+    mainOptionsButton.setSize(sf::Vector2f (395.f, 85.f));
 
     // Set game selection screen assets
     gameSelectTexture.loadFromFile("./graphics/gameSelection.png");
@@ -667,8 +676,13 @@ void Game::loadMenuAndOptionsAssets()
     changeLevel.setFillColor(sf::Color(255, 128, 0, 255));
     changeLevel.setPosition(550.f, 500.f);
 
-    setOptionsMenu_optionsMenuButton();
-    setOptionsMenu_levelButtons();
+    // Create options menu level buttons
+    optionsL1.setSize(sf::Vector2f(256.f, 256.f));
+    optionsL1.setPosition(400, 400);
+    optionsL2.setSize(sf::Vector2f(256.f, 256.f));
+    optionsL2.setPosition(800, 400);
+    optionsL3.setSize(sf::Vector2f(256.f, 256.f));
+    optionsL3.setPosition(1200, 400);
 
     // Load tutorial sprites
     tutorial1Texture.loadFromFile("./graphics/tutorial1.png");
@@ -890,11 +904,11 @@ void Game::updateProgressSprite()
     window.draw(progressSprite);
 }
 
-void Game::setMenuAndNextButtons() {
+void Game::setGlobalButtons() {
     // Set up "Main" button rectangle
-    returnToMain.setSize(sf::Vector2f(395.f, 85.f));
-    returnToMain.setFillColor(sf::Color(255, 128, 0, 255));
-    returnToMain.setPosition(30, 25);
+    returnToMainButton.setPosition(30, 25);
+    returnToMainButton.setSize(sf::Vector2f(395.f, 85.f));
+    returnToMainButton.setFillColor(sf::Color(255, 128, 0, 255));
 
     // TEMPORARY TEXT - REMOVE ONCE OPTIONS MENU BACKGROUND CREATED
     mainReturnText.setString("Menu");
@@ -906,32 +920,19 @@ void Game::setMenuAndNextButtons() {
     // Set up "Next" button
     nextButton.setSize(sf::Vector2f (190.f, 75.f));
     nextButton.setPosition(1696.f, 978.f);
-    nextButton.setFillColor(sf::Color::Green);
-}
+    nextButton.setFillColor(sf::Color(255, 128, 0, 255));
 
+    // Set up "Options" button
+    returnToOptionsButton.setPosition(30.f, 130.f);
+    returnToOptionsButton.setSize(sf::Vector2f(395.f, 85.f));
+    returnToOptionsButton.setFillColor(sf::Color(255, 128, 0, 255));
 
-void Game::setOptionsMenu_optionsMenuButton()
-{
-    returnToOptionsMenu.setSize(sf::Vector2f(400.f, 75.f));
-    returnToOptionsMenu.setFillColor(sf::Color(255, 128, 0, 255));
-    returnToOptionsMenu.setPosition(25, 130);
+    // TEMPORARY TEXT - REMOVE ONCE OPTIONS MENU BACKGROUND CREATED
     optionsReturnText.setString("Options");
     optionsReturnText.setFont(mainFont);
     optionsReturnText.setCharacterSize(48U);
     optionsReturnText.setFillColor(sf::Color::White);
     optionsReturnText.setPosition(150.f, 140.f);
-}
-
-void Game::setOptionsMenu_levelButtons()
-{
-    optionsL1.setSize(sf::Vector2f(256.f, 256.f));
-    optionsL1.setPosition(400, 400);
-
-    optionsL2.setSize(sf::Vector2f(256.f, 256.f));
-    optionsL2.setPosition(800, 400);
-
-    optionsL3.setSize(sf::Vector2f(256.f, 256.f));
-    optionsL3.setPosition(1200, 400);
 }
 
 void Game::loadSounds()
