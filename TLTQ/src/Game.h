@@ -74,7 +74,8 @@ private:
         bool recyclable { false };
         bool sorted { false };
         bool sortedCorrectly { false };
-        sf::RectangleShape tempShape;
+        sf::Texture sortableTexture;
+        sf::Sprite sortableSprite;
     };
     std::vector<m_Sortables> toSort;
     bool tutorial2aWatched { false };
@@ -89,7 +90,6 @@ private:
     sf::Sprite game2BackgroundSprite;
     sf::Text game2Prompt;
     sf::Vector2i clickPos;
-    sf::RectangleShape trash1, trash2, trash3, trash4, recycle1, recycle2, recycle3, recycle4;      // temp
     // For setting locations for item boxes
     sf::RectangleShape game2StartSq1, game2StartSq2, game2StartSq3, game2StartSq4, game2StartSq5, game2StartSq6, game2StartSq7, game2StartSq8;
     sf::RectangleShape game2RecycleSq1, game2RecycleSq2, game2RecycleSq3, game2RecycleSq4;
