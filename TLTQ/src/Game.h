@@ -105,6 +105,12 @@ private:
     bool clickHeld{ false };
     int spriteMoving{ 0 };
 
+    // Hints
+    uint32_t numWrong{ 0 }; // number of questions wrong (in a row)
+    sf::CircleShape bubble;
+    sf::CircleShape triangle;
+    sf::Text hint;
+
 private:
     void eventHandler();
     void update();
@@ -126,6 +132,7 @@ private:
     void setOptionsMenu_optionsMenuButton();
     void setOptionsMenu_levelButtons();
     void loadSounds();
+    void displayHint();
 
 public:
     // Constructor
