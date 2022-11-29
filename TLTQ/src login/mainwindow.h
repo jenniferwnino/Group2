@@ -31,5 +31,6 @@ private:
     void createSave(const qint32 school_id, const qint32 lvl1, const qint32 lvl2);
     QString savePath{"./game/"};
     void uploadSave();
+    qint32 schoolID{ 0 }, lvl1{ 0 }, lvl2{ 0 };
 };
 #endif // MAINWINDOW_H
