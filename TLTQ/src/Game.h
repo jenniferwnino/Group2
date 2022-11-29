@@ -18,6 +18,7 @@ private:
     uint32_t UID{ 0 };
     uint32_t game1Score{ 0 };
     uint32_t game2Score{ 0 };
+    uint32_t game2HighScore{ 0 };
     sf::Vector2i mousePosition;
     sf::Event event;
     sf::Font mainFont;
@@ -70,20 +71,44 @@ private:
     struct m_Sortables
     {
         sf::Vector2f unsortPos {};
-        sf::Vector2f sortPos {};
         bool recyclable { false };
         bool sorted { false };
-        sf::RectangleShape tempShape;
+        bool sortedCorrectly { false };
+        sf::Texture sortableTexture;
+        sf::Sprite sortableSprite;
     };
     std::vector<m_Sortables> toSort;
     bool tutorial2aWatched { false };
     bool tutorial2bWatched { false };
     bool clickHeld{ false };
-    int spriteMoving{ 0 };
-    sf::Texture game2BackgroundTexture, recycleTexture, trashTexture;
-    sf::Sprite game2BackgroundSprite, recycleSprite, trashSprite;
-    sf::RectangleShape trash1, trash2, trash3, trash4, recycle1, recycle2, recycle3, recycle4;      // temp
+    bool game2Finished { false };
+    uint32_t game2AttemptNum { 1 };
+    uint32_t game2MaxAttempts { 3 };
+    uint32_t numSorted { 0 };
+    uint32_t spriteMoving{ 0 };
+    sf::Texture game2BackgroundTexture;
+    sf::Sprite game2BackgroundSprite;
+    sf::Text game2Prompt;
     sf::Vector2i clickPos;
+    // Sun sprites
+    sf::Texture game2Sun1Texture, game2Sun2Texture, game2Sun3Texture;
+    sf::Sprite game2Sun1Sprite, game2Sun2Sprite, game2Sun3Sprite;
+    // For setting locations for item boxes
+    sf::RectangleShape game2StartSq1, game2StartSq2, game2StartSq3, game2StartSq4, game2StartSq5, game2StartSq6, game2StartSq7, game2StartSq8;
+    sf::RectangleShape game2RecycleSq1, game2RecycleSq2, game2RecycleSq3, game2RecycleSq4;
+    sf::RectangleShape game2TrashSq1, game2TrashSq2, game2TrashSq3, game2TrashSq4;
+    // For setting locations of drag-and-drop areas to snap ino place
+    sf::RectangleShape game2RecycleDragArea1, game2RecycleDragArea2, game2RecycleDragArea3, game2RecycleDragArea4;
+    sf::RectangleShape game2TrashDragArea1, game2TrashDragArea2, game2TrashDragArea3, game2TrashDragArea4;
+    // For marking which squares already have an object
+    bool game2RecycleSq1Occupied { false };
+    bool game2RecycleSq2Occupied { false };
+    bool game2RecycleSq3Occupied { false };
+    bool game2RecycleSq4Occupied { false };
+    bool game2TrashSq1Occupied { false };
+    bool game2TrashSq2Occupied { false };
+    bool game2TrashSq3Occupied { false };
+    bool game2TrashSq4Occupied { false };
 
     // Sounds
     bool winLoseSoundHasPlayed = false;
@@ -113,6 +138,7 @@ private:
     void setOptionsMenu_mainMenuButton();
     void setOptionsMenu_optionsMenuButton();
     void setOptionsMenu_levelButtons();
+    void setWinLoseScreens();
     void displayHint();
 
     // Game 1 loading and helper functions
@@ -120,8 +146,10 @@ private:
     void textWrapper(std::string& s);
     void updateProgressSprite();
 
-    // Game 2 loading functions
+    // Game 2 loading and helper functions
     void loadGame2Assets();
+    void resetGame2Soft();
+    void resetGame2Hard();
 
 public:
     // Constructor
@@ -133,6 +161,7 @@ public:
         loadSounds();
         setGlobalButtons();
         loadMenuAndOptionsAssets();
+        setWinLoseScreens();
         loadGame1Assets();
         loadGame2Assets();
     }
