@@ -358,6 +358,7 @@ void Game::update()
         else if (game2Select.getGlobalBounds().contains(sf::Vector2f(mousePosition)))
         {
             // Reset all game 2 settings and launch
+            resetGame2Hard();
             state = m_GameState::Game2;
         }
     }
@@ -493,6 +494,7 @@ void Game::update()
                 // Menu button is clicked
                 else if (returnToMainButton.getGlobalBounds().contains(sf::Vector2f(mousePosition)))
                 {
+                    returnTo = m_GameState::MainGame;
                     state = m_GameState::Menu;
                 }
                 // Next button clicked and question already answered
