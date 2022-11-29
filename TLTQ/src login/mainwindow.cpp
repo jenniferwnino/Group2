@@ -27,11 +27,13 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-
+/**
+ * @brief MainWindow::connect : Open a connection to database.
+*/
 void MainWindow::connect()
 {
     QSqlDatabase db = QSqlDatabase::addDatabase("QMYSQL");
-        db.setHostName("");
+        db.setHostName("161.35.189.167");
         db.setConnectOptions("");
         db.setPort(3306);
         db.setDatabaseName("");
@@ -45,6 +47,9 @@ void MainWindow::connect()
         }
 }
 
+/**
+ * @brief MainWindow::retryConnection : Display a textbox if the connection to the database fails and ask the user if they want to retry.
+ */
 void MainWindow::retryConnection()
 {
     QMessageBox ErrorBox;
@@ -60,6 +65,10 @@ void MainWindow::retryConnection()
     }
 }
 
+/**
+ * @brief MainWindow::loginError : Display an error when login failed.
+ * @param errString
+ */
 void MainWindow::loginError(QString errString)
 {
     QMessageBox ErrorBox;
@@ -88,7 +97,6 @@ void MainWindow::createSave(const qint32 school_id, const qint32 lvl1, const qin
 
 void MainWindow::uploadSave()
 {
-    qint32 schoolID{ 0 }, lvl1{ 0 }, lvl2{ 0 };
     QFile saveData(savePath + "save.dat");
     if(saveData.open(QIODevice::ReadOnly | QIODevice::Text))
     {
@@ -116,7 +124,9 @@ void MainWindow::uploadSave()
         qDebug() << q.size();
     }
 }
-
+/**
+ * @brief MainWindow::on_button_login_clicked : Main function used when a user attempts to login.
+ */
 void MainWindow::on_button_login_clicked()
 {
     if(!ConnectionIsOk)
@@ -126,11 +136,18 @@ void MainWindow::on_button_login_clicked()
     qint32 username = ui->UI_Username->text().toInt();
     QString password = ui->UI_Password->text();
 
+    // Upload the current save to prevent save data from being lost from the previous user.
+    uploadSave();
+
+    // Prepare a sanitized statement to prevent SQL Injection
     QSqlQuery q;
     q.prepare("SELECT FirstName, PermissionLevel, Level_1, Level_2 FROM users WHERE school_id = :username AND password = :password");
     q.bindValue(":username", username);
     q.bindValue(":password", password);
 
+    // Execute the statement and check if the username and password is valid.
+    // If the credentials are not valid throw an error.
+    // If the user is a student start the game, if they are a teacher open the admin screen.
     if(q.exec())
     {
         q.first();
@@ -142,7 +159,7 @@ void MainWindow::on_button_login_clicked()
 
              createSave(username, q.value(2).toInt(), q.value(3).toInt());
 
-             QProcess::startDetached("cmd.exe", QStringList("/c cd /d D:/Dev/build-ClimateStompers-Desktop_Qt_6_4_0_MSVC2019_64bit-MinSizeRel/game && app.exe"));
+             QProcess::startDetached("cmd.exe", QStringList("/c cd ./game && app.exe"));
 
              ui->UI_Password->clear();
         }
@@ -179,21 +196,27 @@ void MainWindow::on_button_login_clicked()
     }
 }
 
-
+/**
+ * @brief MainWindow::on_button_register_clicked : Main function used for registering
+ */
 void MainWindow::on_button_register_clicked()
 {
     if(!ConnectionIsOk)
     {
         retryConnection();
     }
-
+	
+	uploadSave();
+	
     qint32 username = ui->UI_Username->text().toInt();
     QString password = ui->UI_Password->text();
 
+    // Prepare sanitized statement
     QSqlQuery q;
     q.prepare("SELECT school_id FROM users where school_id = :username");
     q.bindValue(":username", username);
 
+    // Execute statement and return an error if the username(school id) already exists.
     if(q.exec())
     {
         if(q.size() > 0)
@@ -207,16 +230,20 @@ void MainWindow::on_button_register_clicked()
             q.bindValue(":password", password);
             q.exec();
             ui->UI_Password->clear();
-            qDebug() << q.lastError().databaseText();
+            //qDebug() << q.lastError().databaseText();
 
-            QProcess::startDetached("cmd.exe", QStringList("/c cd /d D:/Dev/build-ClimateStompers-Desktop_Qt_6_4_0_MSVC2019_64bit-MinSizeRel/game && app.exe"));
+            createSave(username, 0, 0);
+            QProcess::startDetached("cmd.exe", QStringList("/c cd ./game && app.exe"));
         }
     }
 
 }
 
 
-
+/**
+ * @brief MainWindow::on_UI_Password_textChanged : Disable login and register buttons if the username OR password field is blank.
+ * @param arg1
+ */
 void MainWindow::on_UI_Password_textChanged(const QString &arg1)
 {
    if(ui->UI_Password->text().isEmpty() || ui->UI_Username->text().isEmpty())
