@@ -590,6 +590,7 @@ void Game::update()
             {
                 returnTo = m_GameState::Game2;
                 state = m_GameState::Menu;
+                mousePosition = sf::Vector2i(0, 0);
             }
             // Next button is clicked
             if (nextButton.getGlobalBounds().contains(sf::Vector2f(mousePosition)) && !clickHeld)
@@ -605,6 +606,7 @@ void Game::update()
             {
                 returnTo = m_GameState::Game2;
                 state = m_GameState::Menu;
+                mousePosition = sf::Vector2i(0, 0);
             }
             // Next button is clicked
             if (nextButton.getGlobalBounds().contains(sf::Vector2f(mousePosition)) && !clickHeld)
@@ -796,6 +798,7 @@ void Game::update()
             // Clicked menu button
             if (returnToMainButton.getGlobalBounds().contains(sf::Vector2f(mousePosition)) && !clickHeld)
             {
+                mousePosition = sf::Vector2i(0, 0);
                 returnTo = m_GameState::Game2;
                 state = m_GameState::Menu;
             }
@@ -807,6 +810,7 @@ void Game::update()
             // Home button clicked
             if (winLoseMenuButton.getGlobalBounds().contains(sf::Vector2f(mousePosition)))
             {
+                mousePosition = sf::Vector2i(0, 0);
                 returnTo = m_GameState::Game2;
                 state = m_GameState::Menu;
             }
@@ -814,11 +818,11 @@ void Game::update()
             // Play again button clicked
             else if (winLosePlayAgainButton.getGlobalBounds().contains(sf::Vector2f(mousePosition)))
             {
+                mousePosition = sf::Vector2i(0, 0);
                 state = m_GameState::Game2;
                 winLoseSoundHasPlayed = false;
                 game2Finished = false;
                 resetGame2Hard();
-                mousePosition = sf::Vector2i(0,0);
             }
         }
     }
