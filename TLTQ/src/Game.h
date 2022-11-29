@@ -138,6 +138,7 @@ private:
     void setOptionsMenu_mainMenuButton();
     void setOptionsMenu_optionsMenuButton();
     void setOptionsMenu_levelButtons();
+    void setWinLoseScreens();
     void displayHint();
 
     // Game 1 loading and helper functions
