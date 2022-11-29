@@ -186,9 +186,6 @@ void Game::draw()
                 // Game won
                 if (numCorrect >= (questions.size()  * winCondition))
                 {
-                    winTexture.loadFromFile("./graphics/winScreen.png");
-                    winSprite.setTexture(winTexture);
-                    winSprite.setScale(4.0f, 4.0f);
                     window.draw(winSprite);
                     if (!winLoseSoundHasPlayed)
                     {
@@ -199,9 +196,6 @@ void Game::draw()
                 // Game lost
                 else
                 {
-                    loseTexture.loadFromFile("./graphics/loseScreen.png");
-                    loseSprite.setTexture(loseTexture);
-                    loseSprite.setScale(4.0f, 4.0f);
                     window.draw(loseSprite);
                     if (!winLoseSoundHasPlayed)
                     {
@@ -323,8 +317,7 @@ void Game::update()
        // Load Game button is clicked
        if (mainLoadGameButton.getGlobalBounds().contains(sf::Vector2f(mousePosition)))
        {
-          // This will simply resume the previous game for now since we do not have multiple games
-           state = m_GameState::MainGame;
+           state = returnTo;
        } 
        // Options button is clicked
        if (mainOptionsButton.getGlobalBounds().contains(sf::Vector2f(mousePosition)))
@@ -448,6 +441,7 @@ void Game::update()
             // Menu button is clicked
             if (returnToMainButton.getGlobalBounds().contains(sf::Vector2f(mousePosition)))
             {
+                returnTo = m_GameState::MainGame;
                 state = m_GameState::Menu;
             }
             // Next button is clicked
@@ -464,6 +458,7 @@ void Game::update()
             // Menu button is clicked
             if (returnToMainButton.getGlobalBounds().contains(sf::Vector2f(mousePosition)))
             {
+                returnTo = m_GameState::MainGame;
                 state = m_GameState::Menu;
             }
             // Next button is clicked
@@ -550,6 +545,7 @@ void Game::update()
                 // Home button clicked
                 if (winLoseMenuButton.getGlobalBounds().contains(sf::Vector2f(mousePosition)))
                 {
+                    returnTo = m_GameState::MainGame;
                     state = m_GameState::Menu;
                 }
                 // Play again button clicked
@@ -573,7 +569,14 @@ void Game::update()
         // On tutorial screens
         if (!tutorial2aWatched)
         {
-            if (nextButton.getGlobalBounds().contains(sf::Vector2f(mousePosition)))
+            // Menu button is clicked
+            if (returnToMainButton.getGlobalBounds().contains(sf::Vector2f(mousePosition)))
+            {
+                returnTo = m_GameState::Game2;
+                state = m_GameState::Menu;
+            }
+            // Next button is clicked
+            if (nextButton.getGlobalBounds().contains(sf::Vector2f(mousePosition)) && !clickHeld)
             {
                 tutorial2aWatched = true;
                 mousePosition = sf::Vector2i(0, 0);
@@ -581,7 +584,14 @@ void Game::update()
         }
         else if (!tutorial2bWatched)
         {
-            if (nextButton.getGlobalBounds().contains(sf::Vector2f(mousePosition)))
+            // Menu button is clicked
+            if (returnToMainButton.getGlobalBounds().contains(sf::Vector2f(mousePosition)))
+            {
+                returnTo = m_GameState::Game2;
+                state = m_GameState::Menu;
+            }
+            // Next button is clicked
+            if (nextButton.getGlobalBounds().contains(sf::Vector2f(mousePosition)) && !clickHeld)
             {
                 tutorial2bWatched = true;
                 mousePosition = sf::Vector2i(0, 0);
@@ -589,9 +599,10 @@ void Game::update()
         }
 
         // On Game screen
-        else {
+        else if (!game2Finished) {
             // Update position if object is being dragged & not already marked as sorted
-            if (clickHeld && !toSort[spriteMoving].sorted) {
+            if (clickHeld && !toSort[spriteMoving].sorted)
+            {
                 toSort[spriteMoving].sortableSprite.setPosition(mousePosition.x, mousePosition.y);
             }
 
@@ -762,14 +773,36 @@ void Game::update()
                 // If not all sorted correctly and maxAttemps not reached
                 else
                 {
-                    resetGame2();
+                    resetGame2Soft();
                 }
             }
 
             // Clicked menu button
             if (returnToMainButton.getGlobalBounds().contains(sf::Vector2f(mousePosition)) && !clickHeld)
             {
+                returnTo = m_GameState::Game2;
                 state = m_GameState::Menu;
+            }
+        }
+
+        // Game finished - Displaying win/lose screen
+        else
+        {
+            // Home button clicked
+            if (winLoseMenuButton.getGlobalBounds().contains(sf::Vector2f(mousePosition)))
+            {
+                returnTo = m_GameState::Game2;
+                state = m_GameState::Menu;
+            }
+
+            // Play again button clicked
+            else if (winLosePlayAgainButton.getGlobalBounds().contains(sf::Vector2f(mousePosition)))
+            {
+                state = m_GameState::Game2;
+                winLoseSoundHasPlayed = false;
+                game2Finished = false;
+                resetGame2Hard();
+                mousePosition = sf::Vector2i(0,0);
             }
         }
     }
@@ -903,6 +936,27 @@ void Game::loadMenuAndOptionsAssets()
     tutorial3Sprite.setScale(4.f, 4.f);
 }
 
+void Game::setWinLoseScreens()
+{
+    // Load win screen
+    winTexture.loadFromFile("./graphics/winScreen.png");
+    winSprite.setTexture(winTexture);
+    winSprite.setScale(4.0f, 4.0f);
+
+    // Load lose screen
+    loseTexture.loadFromFile("./graphics/loseScreen.png");
+    loseSprite.setTexture(loseTexture);
+    loseSprite.setScale(4.0f, 4.0f);
+
+    // Create menu button seen on win/lose screen
+    winLoseMenuButton.setPosition(757, 749);
+    winLoseMenuButton.setSize(sf::Vector2f(405, 90));
+
+    // Create play again button seen on win/lose screen
+    winLosePlayAgainButton.setPosition(755, 580);
+    winLosePlayAgainButton.setSize(sf::Vector2f(405, 145));
+}
+
 void Game::loadGame1Assets() {
     // Load backgrounds
     game1StaticTexture.loadFromFile("./graphics/inGame.png");
@@ -933,14 +987,6 @@ void Game::loadGame1Assets() {
     dropBoxSprite.setTexture(dropBoxTexture);
     dropBoxSprite.setScale(4.f, 4.f);
     dropBoxSprite.setPosition(sf::Vector2f(252, 680));
-
-    // Create menu button seen on win/lose screen
-    winLoseMenuButton.setPosition(757, 749);
-    winLoseMenuButton.setSize(sf::Vector2f(405, 90));
-
-    // Create play again button seen on win/lose screen
-    winLosePlayAgainButton.setPosition(755, 580);
-    winLosePlayAgainButton.setSize(sf::Vector2f(405, 145));
 
     // Read the .csv file
     std::ifstream infile("./csv_files/game1input.csv");
@@ -1151,7 +1197,7 @@ void Game::loadGame2Assets() {
 
 }
 
-void Game::resetGame2()
+void Game::resetGame2Soft()
 {
     // Reset according to difficulty level
     if (difficultyLevel == 1)
@@ -1219,6 +1265,28 @@ void Game::resetGame2()
         game2TrashSq3Occupied = false;
         game2TrashSq4Occupied = false;
     }
+}
+
+void Game::resetGame2Hard() {
+    // Move all items back to their original position
+    for (int i = 0; i < 8; i++)
+    {
+        toSort[i].sortableSprite.setPosition(toSort[i].unsortPos);
+        toSort[i].sorted = false;
+    }
+
+    // Mark all positions as unoccupied
+    game2RecycleSq1Occupied = false;
+    game2RecycleSq2Occupied = false;
+    game2RecycleSq3Occupied = false;
+    game2RecycleSq4Occupied = false;
+    game2TrashSq1Occupied = false;
+    game2TrashSq2Occupied = false;
+    game2TrashSq3Occupied = false;
+    game2TrashSq4Occupied = false;
+
+    // Reset attempt number
+    game2AttemptNum = 1;
 }
 
 void Game::updateProgressSprite()

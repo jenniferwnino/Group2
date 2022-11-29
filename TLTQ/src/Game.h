@@ -125,6 +125,7 @@ private:
     // Menus, options, and general settings functions
     void setGlobalButtons();
     void loadMenuAndOptionsAssets();
+    void setWinLoseScreens();
     void loadSounds();
 
     // Game 1 loading and helper functions
@@ -134,7 +135,8 @@ private:
 
     // Game 2 loading and helper functions
     void loadGame2Assets();
-    void resetGame2();
+    void resetGame2Soft();
+    void resetGame2Hard();
 
 public:
     // Constructor
@@ -146,6 +148,7 @@ public:
         loadSounds();
         setGlobalButtons();
         loadMenuAndOptionsAssets();
+        setWinLoseScreens();
         loadGame1Assets();
         loadGame2Assets();
     }
