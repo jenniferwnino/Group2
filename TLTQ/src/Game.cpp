@@ -12,14 +12,7 @@ void Game::draw()
 	}
     else if (state == m_GameState::GameSelection)
     {
-        // TEMP VERSION OF GAME SELECTIONS SCREEN - NEED FINAL BACKGROUND
         window.draw(gameSelectSprite);
-        window.draw(returnToMainButton);
-        window.draw(mainReturnText);
-        window.draw(returnToOptionsButton);
-        window.draw(optionsReturnText);
-        window.draw(game1Select);
-        window.draw(game2Select);
     }
 	else if (state == m_GameState::Options)
     {
@@ -348,12 +341,6 @@ void Game::update()
         if (returnToMainButton.getGlobalBounds().contains(sf::Vector2f(mousePosition)))
         {
             state = m_GameState::Menu;
-        }
-
-        // Clicked options
-        else if (returnToOptionsButton.getGlobalBounds().contains(sf::Vector2f(mousePosition)))
-        {
-            state = m_GameState::Options;
         }
 
         // Clicked game 1
@@ -882,6 +869,7 @@ void Game::eventHandler()
             {
                 clickHeld = false;
             }
+            std::cout << mousePosition.x << " " << mousePosition.y << std::endl;
 		}
         // Game 2 specific for drag & drop selection
         else if (clickHeld)
@@ -932,15 +920,13 @@ void Game::loadMenuAndOptionsAssets()
     mainOptionsButton.setSize(sf::Vector2f (395.f, 85.f));
 
     // Set game selection screen assets
-    gameSelectTexture.loadFromFile("./graphics/gameSelection.png");
+    gameSelectTexture.loadFromFile("./graphics/gameSelect.png");
     gameSelectSprite.setTexture(gameSelectTexture);
     gameSelectSprite.setScale(4.0f, 4.0f);
-    game1Select.setSize(sf::Vector2f(256.f, 256.f));
-    game1Select.setPosition(400, 400);
-    game1Select.setFillColor(sf::Color(255, 128, 0, 255));
-    game2Select.setSize(sf::Vector2f(256.f, 256.f));
-    game2Select.setPosition(1250, 400);
-    game2Select.setFillColor(sf::Color(255, 128, 0, 255));
+    game1Select.setPosition(607, 263);
+    game1Select.setSize(sf::Vector2f(708.f, 348.f));
+    game2Select.setPosition(607, 650);
+    game2Select.setSize(sf::Vector2f(708.f, 348.f));
 
     // For options menu - change level button
     changeLevel.setSize(sf::Vector2f(800.f, 150.f));
