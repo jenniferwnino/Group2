@@ -105,11 +105,15 @@ private:
     void draw();
     void loadSave();
     void updateSave();
-
-    // Menus, options, and general settings functions
+    
+    // Menus, options, and general settings
     void setGlobalButtons();
-    void loadMenuAndOptionsAssets();
     void loadSounds();
+    void loadMenuAndOptionsAssets();
+    void setOptionsMenu_mainMenuButton();
+    void setOptionsMenu_optionsMenuButton();
+    void setOptionsMenu_levelButtons();
+    void displayHint();
 
     // Game 1 loading and helper functions
     void loadGame1Assets();
@@ -118,15 +122,6 @@ private:
 
     // Game 2 loading functions
     void loadGame2Assets();
-
-
-    // Menus, options, and general settings
-    void loadMenuAndOptionsAssets();
-    void setOptionsMenu_mainMenuButton();
-    void setOptionsMenu_optionsMenuButton();
-    void setOptionsMenu_levelButtons();
-    void loadSounds();
-    void displayHint();
 
 public:
     // Constructor
