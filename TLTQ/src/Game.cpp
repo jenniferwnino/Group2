@@ -919,15 +919,6 @@ void Game::loadMenuAndOptionsAssets()
     mainOptionsButton.setPosition(30.f, 250.f);
     mainOptionsButton.setSize(sf::Vector2f (395.f, 85.f));
 
-    // Set game selection screen assets
-    gameSelectTexture.loadFromFile("./graphics/gameSelect.png");
-    gameSelectSprite.setTexture(gameSelectTexture);
-    gameSelectSprite.setScale(4.0f, 4.0f);
-    game1Select.setPosition(607, 263);
-    game1Select.setSize(sf::Vector2f(708.f, 348.f));
-    game2Select.setPosition(607, 650);
-    game2Select.setSize(sf::Vector2f(708.f, 348.f));
-
     // For options menu - change level button
     changeLevel.setSize(sf::Vector2f(800.f, 150.f));
     changeLevel.setFillColor(sf::Color(255, 128, 0, 255));
@@ -996,6 +987,20 @@ void Game::setWinLoseScreens()
     // Create play again button seen on win/lose screen
     winLosePlayAgainButton.setPosition(755, 580);
     winLosePlayAgainButton.setSize(sf::Vector2f(405, 145));
+}
+
+void Game::setGameSelectionScreen()
+{
+    // Add background
+    gameSelectTexture.loadFromFile("./graphics/gameSelect.png");
+    gameSelectSprite.setTexture(gameSelectTexture);
+    gameSelectSprite.setScale(4.0f, 4.0f);
+
+    // Create hidden button rectangles
+    game1Select.setPosition(607, 263);
+    game1Select.setSize(sf::Vector2f(708.f, 348.f));
+    game2Select.setPosition(607, 650);
+    game2Select.setSize(sf::Vector2f(708.f, 348.f));
 }
 
 void Game::loadGame1Assets() {

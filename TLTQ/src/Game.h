@@ -139,6 +139,7 @@ private:
     void setOptionsMenu_optionsMenuButton();
     void setOptionsMenu_levelButtons();
     void setWinLoseScreens();
+    void setGameSelectionScreen();
     void displayHint();
 
     // Game 1 loading and helper functions
@@ -162,6 +163,7 @@ public:
         setGlobalButtons();
         loadMenuAndOptionsAssets();
         setWinLoseScreens();
+        setGameSelectionScreen();
         loadGame1Assets();
         loadGame2Assets();
     }
