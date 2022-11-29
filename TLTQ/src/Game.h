@@ -90,6 +90,9 @@ private:
     sf::Sprite game2BackgroundSprite;
     sf::Text game2Prompt;
     sf::Vector2i clickPos;
+    // Sun sprites
+    sf::Texture game2Sun1Texture, game2Sun2Texture, game2Sun3Texture;
+    sf::Sprite game2Sun1Sprite, game2Sun2Sprite, game2Sun3Sprite;
     // For setting locations for item boxes
     sf::RectangleShape game2StartSq1, game2StartSq2, game2StartSq3, game2StartSq4, game2StartSq5, game2StartSq6, game2StartSq7, game2StartSq8;
     sf::RectangleShape game2RecycleSq1, game2RecycleSq2, game2RecycleSq3, game2RecycleSq4;

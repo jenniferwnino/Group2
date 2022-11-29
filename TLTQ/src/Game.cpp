@@ -236,6 +236,20 @@ void Game::draw()
             {
                 window.draw(toSort[i].sortableSprite);
             }
+
+            // Display sun sprite depending on attempt number
+            if (game2AttemptNum == 1)
+            {
+                window.draw(game2Sun1Sprite);
+            }
+            else if (game2AttemptNum == 2)
+            {
+                window.draw(game2Sun2Sprite);
+            }
+            else
+            {
+                window.draw(game2Sun3Sprite);
+            }
         }
 
         // If game finished and all questions were sorted correctly - show win screen
@@ -1076,6 +1090,20 @@ void Game::loadGame2Assets() {
     game2Prompt.setCharacterSize(36U);
     game2Prompt.setFillColor(sf::Color::White);
 
+    // Create sun sprites
+    game2Sun1Texture.loadFromFile("./graphics/sunSprite4of7.png");
+    game2Sun1Sprite.setTexture(game2Sun1Texture);
+    game2Sun1Sprite.setPosition(1512.5f, 15.5f);
+    game2Sun1Sprite.setScale(4.0f, 4.05f);
+    game2Sun2Texture.loadFromFile("./graphics/sunSprite3of7.png");
+    game2Sun2Sprite.setTexture(game2Sun2Texture);
+    game2Sun2Sprite.setPosition(1512.5f, 15.5f);
+    game2Sun2Sprite.setScale(4.0f, 4.05f);
+    game2Sun3Texture.loadFromFile("./graphics/sunSprite2of7.png");
+    game2Sun3Sprite.setTexture(game2Sun3Texture);
+    game2Sun3Sprite.setPosition(1512.5f, 15.5f);
+    game2Sun3Sprite.setScale(4.0f, 4.05f);
+
     // Set square positions of initial grid
     game2StartSq1.setPosition(828.f, 268.f);
     game2StartSq1.setSize(sf::Vector2f(128.f, 128.f));
@@ -1196,7 +1224,6 @@ void Game::loadGame2Assets() {
     toSort[7].unsortPos = game2StartSq8.getPosition();
     toSort[7].sortableSprite.setPosition(toSort[7].unsortPos);
     toSort[7].recyclable = true;
-
 }
 
 void Game::resetGame2Soft()
