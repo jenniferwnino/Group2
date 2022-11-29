@@ -175,6 +175,9 @@ void Game::draw()
                 {
                     window.draw(incorrectAnswer);
                     updateProgressSprite();
+                    // If they got two or more wrong in a row && if its not the last question
+                    if (numWrong >= 2 && questionNum != 3)
+                        displayHint();
                 }
 
                 window.draw(progressSprite);
@@ -361,6 +364,7 @@ void Game::update()
             questionNum = 0;
             numCorrect = 0;
             winLoseSoundHasPlayed = false;
+            numWrong = 0;
             for (int i = 0; i < questions.size(); i++)
             {
                 questions[i].answered = false;
@@ -494,6 +498,7 @@ void Game::update()
                     questions[questionNum].answered = true;
                     numCorrect++;
                     questions[questionNum].answeredCorrect = true;
+                    numWrong = 0;
                     if (!answerSoundHasPlayed)
                         correctSound.play();
                 }
@@ -502,6 +507,7 @@ void Game::update()
                 {
                     questions[questionNum].answered = true;
                     questions[questionNum].answeredCorrect = false;
+                    numWrong++;
                     if (!answerSoundHasPlayed)
                         wrongSound.play();
                 }
@@ -544,6 +550,10 @@ void Game::update()
                         {
                             questions[questionNum].answered = true;
                             questions[questionNum].answeredCorrect = false;
+                            numWrong++;
+                            // If they got two or more wrong in a row && if its not the last question
+                            if (numWrong >= 2 && questionNum != 3)
+                                displayHint();
                         }
                     }
                     // Reset positions once question is answered
@@ -571,6 +581,7 @@ void Game::update()
                     questionNum = 0;
                     numCorrect = 0;
                     winLoseSoundHasPlayed = false;
+                    numWrong = 0;
                     for (int i = 0; i < questions.size(); i++)
                     {
                         questions[i].answered = false;
@@ -954,6 +965,30 @@ void Game::loadMenuAndOptionsAssets()
     tutorial3Texture.loadFromFile("./graphics/tutorial3.png");
     tutorial3Sprite.setTexture(tutorial3Texture);
     tutorial3Sprite.setScale(4.f, 4.f);
+
+    // Set nextButton rectangle
+    nextButton.setSize(sf::Vector2f (190.f, 75.f));
+    nextButton.setPosition(1696.f, 978.f);
+    nextButton.setFillColor(sf::Color::Green);
+
+    // Setting the hint message
+    bubble.setRadius(120.0);
+    bubble.setPosition(1400.f, 450.f);
+    bubble.setFillColor(sf::Color::White);
+    bubble.setOutlineThickness(5);
+    bubble.setOutlineColor(sf::Color::Black);
+    bubble.setScale(2, 1);
+    triangle.setPointCount(3);
+    triangle.setRadius(120.0);
+    triangle.setPosition(1600.f, 400.f);
+    triangle.setFillColor(sf::Color::White);
+    triangle.setOutlineThickness(5);
+    triangle.setOutlineColor(sf::Color::Black);
+    hint.setFont(mainFont);
+    hint.setPosition(1450.f, 500.f);
+    hint.setCharacterSize(24);
+    hint.setFillColor(sf::Color::Black);
+
 }
 
 void Game::setWinLoseScreens()
@@ -1411,4 +1446,15 @@ void Game::loadSounds()
 
     music.setVolume(50.0f);
     music.play();
+}
+
+void Game::displayHint()
+{
+    window.draw(triangle);
+    window.draw(bubble);
+    if (questionNum == 1)
+        hint.setString("Want a hint for the next one?\nRemember that plastic is one of\nour planet's worst enemies!");
+    if (questionNum == 2)
+        hint.setString("Want a hint for the next one?\nRemember that oil does not get\nalong well with the fishies!");
+    window.draw(hint);
 }

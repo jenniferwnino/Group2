@@ -117,6 +117,12 @@ private:
     sf::Sound clickSound, correctSound, wrongSound, winSound, loseSound;
     sf::Music music;
 
+    // Hints
+    uint32_t numWrong{ 0 }; // number of questions wrong (in a row)
+    sf::CircleShape bubble;
+    sf::CircleShape triangle;
+    sf::Text hint;
+
 private:
     // General Game Functions
     void eventHandler();
@@ -124,12 +130,15 @@ private:
     void draw();
     void loadSave();
     void updateSave();
-
-    // Menus, options, and general settings functions
+    
+    // Menus, options, and general settings
     void setGlobalButtons();
-    void loadMenuAndOptionsAssets();
-    void setWinLoseScreens();
     void loadSounds();
+    void loadMenuAndOptionsAssets();
+    void setOptionsMenu_mainMenuButton();
+    void setOptionsMenu_optionsMenuButton();
+    void setOptionsMenu_levelButtons();
+    void displayHint();
 
     // Game 1 loading and helper functions
     void loadGame1Assets();
