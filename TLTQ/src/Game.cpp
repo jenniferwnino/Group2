@@ -223,18 +223,52 @@ void Game::draw()
         {
             window.draw(tutorial2Sprite);
         }
-        // Show the game if tutorials have been watched
-        else {
-            window.draw(game2BackgroundSprite);
-            window.draw(returnToMainButton);
-            window.draw(mainReturnText);
 
-            window.draw(recycleSprite);
-            window.draw(trashSprite);
+        // Display game background until all questions are sorted
+        else if (!game2Finished) {
+            window.draw(game2BackgroundSprite);
+
+            // Display prompt based on attempt number
+            if (game2AttemptNum != 1)
+            {
+                game2Prompt.setString("You did not sort all of the items correctly. Try again! \n"
+                                      "Once sorted, the item will not be movable again. \n"
+                                      "After you have sorted all the items, click the next button");
+            }
+            window.draw(game2Prompt);
 
             // Draw the temp shapes to sort
-            for (int i = 0; i < 8; i++) {
+            for (int i = 0; i < 8; i++)
+            {
                 window.draw(toSort[i].tempShape);
+            }
+        }
+
+        // If game finished and all questions were sorted correctly - show win screen
+        else if (game2Finished && game2Score == 8)
+        {
+            winTexture.loadFromFile("./graphics/winScreen.png");
+            winSprite.setTexture(winTexture);
+            winSprite.setScale(4.0f, 4.0f);
+            window.draw(winSprite);
+            if (!winLoseSoundHasPlayed)
+            {
+                winLoseSoundHasPlayed = true;
+                winSound.play();
+            }
+        }
+
+        // If game finished and all questions were NOT sorted correctly - show lose screen
+        else
+        {
+            loseTexture.loadFromFile("./graphics/loseScreen.png");
+            loseSprite.setTexture(loseTexture);
+            loseSprite.setScale(4.0f, 4.0f);
+            window.draw(loseSprite);
+            if (!winLoseSoundHasPlayed)
+            {
+                winLoseSoundHasPlayed = true;
+                loseSound.play();
             }
         }
     }
@@ -362,7 +396,7 @@ void Game::update()
             loadGame1Assets();
 
             // CHANGES FOR GAME 2 SETTINGS
-            // TO BE COMPLETED
+            game2MaxAttempts = 3;
         }
         else if (optionsL2.getGlobalBounds().contains(sf::Vector2f(mousePosition)))
         {
@@ -379,7 +413,7 @@ void Game::update()
             loadGame1Assets();
 
             // CHANGES FOR GAME 2 SETTINGS
-            // TO BE COMPLETED
+            game2MaxAttempts = 3;
         }
         else if (optionsL3.getGlobalBounds().contains(sf::Vector2f(mousePosition)))
         {
@@ -395,7 +429,7 @@ void Game::update()
             loadGame1Assets();
 
             // CHANGES FOR GAME 2 SETTINGS
-            // TO BE COMPLETED
+            game2MaxAttempts = 2;
         }
         else if (returnToMainButton.getGlobalBounds().contains(sf::Vector2f(mousePosition)))
         {
@@ -536,32 +570,205 @@ void Game::update()
 	}
     else if (state == m_GameState::Game2)
     {
-        // On tutorial 2a screen
+        // On tutorial screens
         if (!tutorial2aWatched)
         {
             if (nextButton.getGlobalBounds().contains(sf::Vector2f(mousePosition)))
             {
                 tutorial2aWatched = true;
-                mousePosition = sf::Vector2i (0, 0);
+                mousePosition = sf::Vector2i(0, 0);
             }
         }
-        // On tutorial 2b screen
         else if (!tutorial2bWatched)
         {
             if (nextButton.getGlobalBounds().contains(sf::Vector2f(mousePosition)))
             {
                 tutorial2bWatched = true;
-                mousePosition = sf::Vector2i (0, 0);
+                mousePosition = sf::Vector2i(0, 0);
             }
         }
 
-        // In Game
+        // On Game screen
         else {
-            if (clickHeld) {
+            // Update position if object is being dragged & not already marked as sorted
+            if (clickHeld && !toSort[spriteMoving].sorted) {
                 toSort[spriteMoving].tempShape.setPosition(mousePosition.x, mousePosition.y);
             }
-                // Clicked menu
-            else if (returnToMainButton.getGlobalBounds().contains(sf::Vector2f(mousePosition))) {
+
+            // Mouse released and sprite dragged to recycling square 1 && position not already occupied
+            else if (game2RecycleDragArea1.getGlobalBounds().contains(toSort[spriteMoving].tempShape.getPosition()) && !game2RecycleSq1Occupied)
+            {
+                // Snap into place & mark as sorted
+                toSort[spriteMoving].tempShape.setPosition(game2RecycleSq1.getPosition());
+                toSort[spriteMoving].sorted = true;
+                // Mark position as occupied
+                game2RecycleSq1Occupied = true;
+                // If recyclable item, store as sorted correctly
+                if (toSort[spriteMoving].recyclable)
+                {
+                    toSort[spriteMoving].sortedCorrectly = true;
+                }
+            }
+
+            // Mouse released and sprite dragged to recycling square 2 && position not already occupied
+            else if (game2RecycleDragArea2.getGlobalBounds().contains(toSort[spriteMoving].tempShape.getPosition()) && !game2RecycleSq2Occupied)
+            {
+                // Snap into place & mark as sorted
+                toSort[spriteMoving].tempShape.setPosition(game2RecycleSq2.getPosition());
+                toSort[spriteMoving].sorted = true;
+                // Mark position as occupied
+                game2RecycleSq2Occupied = true;
+                // If recyclable item, store as sorted correctly
+                if (toSort[spriteMoving].recyclable)
+                {
+                    toSort[spriteMoving].sortedCorrectly = true;
+                }
+            }
+
+            // Mouse released and sprite dragged to recycling square 3 && position not already occupied
+            else if (game2RecycleDragArea3.getGlobalBounds().contains(toSort[spriteMoving].tempShape.getPosition()) && !game2RecycleSq3Occupied)
+            {
+                // Snap into place & mark as sorted
+                toSort[spriteMoving].tempShape.setPosition(game2RecycleSq3.getPosition());
+                toSort[spriteMoving].sorted = true;
+                // Mark position as occupied
+                game2RecycleSq3Occupied = true;
+                // If recyclable item, store as sorted correctly
+                if (toSort[spriteMoving].recyclable)
+                {
+                    toSort[spriteMoving].sortedCorrectly = true;
+                }
+            }
+
+            // Mouse released and sprite dragged to recycling square 4 && position not already occupied
+            else if (game2RecycleDragArea4.getGlobalBounds().contains(toSort[spriteMoving].tempShape.getPosition()) && !game2RecycleSq4Occupied)
+            {
+                // Snap into place & mark as sorted
+                toSort[spriteMoving].tempShape.setPosition(game2RecycleSq4.getPosition());
+                toSort[spriteMoving].sorted = true;
+                // Mark position as occupied
+                game2RecycleSq4Occupied = true;
+                // If recyclable item, store as sorted correctly
+                if (toSort[spriteMoving].recyclable)
+                {
+                    toSort[spriteMoving].sortedCorrectly = true;
+                }
+            }
+
+            // Mouse released and sprite dragged to trash square 1 && position not already occupied
+            else if (game2TrashDragArea1.getGlobalBounds().contains(toSort[spriteMoving].tempShape.getPosition()) && !game2TrashSq1Occupied)
+            {
+                // Snap into place & mark as sorted
+                toSort[spriteMoving].tempShape.setPosition(game2TrashSq1.getPosition());
+                toSort[spriteMoving].sorted = true;
+                // Mark position as occupied
+                game2TrashSq1Occupied = true;
+                // If trash item, store as sorted correctly
+                if (!toSort[spriteMoving].recyclable)
+                {
+                    toSort[spriteMoving].sortedCorrectly = true;
+                }
+            }
+
+            // Mouse released and sprite dragged to trash square 2 && position not already occupied
+            else if (game2TrashDragArea2.getGlobalBounds().contains(toSort[spriteMoving].tempShape.getPosition()) && !game2TrashSq2Occupied)
+            {
+                // Snap into place & mark as sorted
+                toSort[spriteMoving].tempShape.setPosition(game2TrashSq2.getPosition());
+                toSort[spriteMoving].sorted = true;
+                // Mark position as occupied
+                game2TrashSq2Occupied = true;
+                // If trash item, store as sorted correctly
+                if (!toSort[spriteMoving].recyclable)
+                {
+                    toSort[spriteMoving].sortedCorrectly = true;
+                }
+            }
+
+            // Mouse released and sprite dragged to trash square 3 && position not already occupied
+            else if (game2TrashDragArea3.getGlobalBounds().contains(toSort[spriteMoving].tempShape.getPosition()) && !game2TrashSq3Occupied)
+            {
+                // Snap into place & mark as sorted
+                toSort[spriteMoving].tempShape.setPosition(game2TrashSq3.getPosition());
+                toSort[spriteMoving].sorted = true;
+                // Mark position as occupied
+                game2TrashSq3Occupied = true;
+                // If trash item, store as sorted correctly
+                if (!toSort[spriteMoving].recyclable)
+                {
+                    toSort[spriteMoving].sortedCorrectly = true;
+                }
+            }
+
+            // Mouse released and sprite dragged to trash square 4 && position not already occupied
+            else if (game2TrashDragArea4.getGlobalBounds().contains(toSort[spriteMoving].tempShape.getPosition()) && !game2TrashSq4Occupied)
+            {
+                // Snap into place & mark as sorted
+                toSort[spriteMoving].tempShape.setPosition(game2TrashSq4.getPosition());
+                toSort[spriteMoving].sorted = true;
+                // Mark position as occupied
+                game2TrashSq4Occupied = true;
+                // If trash item, store as sorted correctly
+                if (!toSort[spriteMoving].recyclable)
+                {
+                    toSort[spriteMoving].sortedCorrectly = true;
+                }
+            }
+
+            // Reset numSorted to recount
+            numSorted = 0;
+            // Check if all items have been sorted
+            for (int i = 0; i < 8; i++)
+            {
+                if (toSort[i].sorted)
+                {
+                    numSorted++;
+                }
+            }
+
+            // If all sorted & clicked next button
+            if (numSorted == 8 && nextButton.getGlobalBounds().contains(sf::Vector2f(mousePosition)))
+            {
+                // Reset mousePosition to avoid running up counters
+                mousePosition = sf::Vector2i(0, 0);
+
+                // Reset game2Score to recount
+                game2Score = 0;
+                // Count up number of objects sorted correctly
+                for (int i = 0; i < toSort.size(); i++)
+                {
+                    if (toSort[i].sortedCorrectly)
+                    {
+                        game2Score++;
+                    }
+                }
+
+                // Update the high score if current score is higher
+                if (game2Score > game2HighScore)
+                {
+                    game2HighScore = game2Score;
+                }
+
+                // Add one to the number of attempts
+                game2AttemptNum++;
+
+                // If all objects are sorted correctly or if over maxAttempts
+                if (game2Score == 8 || game2AttemptNum > game2MaxAttempts)
+                {
+                    // Mark the game as finished to display win/lose screen
+                    game2Finished = true;
+                }
+
+                // If not all sorted correctly and maxAttemps not reached
+                else
+                {
+                    resetGame2();
+                }
+            }
+
+            // Clicked menu button
+            if (returnToMainButton.getGlobalBounds().contains(sf::Vector2f(mousePosition)) && !clickHeld)
+            {
                 state = m_GameState::Menu;
             }
         }
@@ -807,22 +1014,79 @@ void Game::textWrapper(std::string& s){
 }
 
 void Game::loadGame2Assets() {
-    // Background
-    game2BackgroundTexture.loadFromFile("./graphics/game2Screen.png");
+    // Load background
+    game2BackgroundTexture.loadFromFile("./graphics/inGameSortingSprites.png");
     game2BackgroundSprite.setTexture(game2BackgroundTexture);
     game2BackgroundSprite.setScale(4.0f, 4.0f);
 
-    // Add sprites
-    recycleTexture.loadFromFile("./graphics/recyclingBin.png");
-    recycleSprite.setTexture(recycleTexture);
-    recycleSprite.setScale(4.0f, 4.0f);
-    recycleSprite.setPosition(175.f, 150.f);
-    trashTexture.loadFromFile("./graphics/trashCan.png");
-    trashSprite.setTexture(trashTexture);
-    trashSprite.setScale(4.0f, 4.0f);
-    trashSprite.setPosition(1475.f, 150.f);
+    // Create prompt text
+    game2Prompt.setString("Sort each of the items as either recylable or as trash. \n"
+                          "Once sorted, the item will not be movable again. \n"
+                          "After you have sorted all the items, click the next button");
+    game2Prompt.setFont(mainFont);
+    game2Prompt.setPosition(428.f, 900.f);
+    game2Prompt.setCharacterSize(36U);
+    game2Prompt.setFillColor(sf::Color::White);
 
-    // This whole section is a bit of a hot mess for the temp setup
+    // Set square positions of initial grid
+    game2StartSq1.setPosition(828.f, 268.f);
+    game2StartSq1.setSize(sf::Vector2f(128.f, 128.f));
+    game2StartSq2.setPosition(964.f, 268.f);
+    game2StartSq2.setSize(sf::Vector2f(128.f, 128.f));
+    game2StartSq3.setPosition(828.f, 404.f);
+    game2StartSq3.setSize(sf::Vector2f(128.f, 128.f));
+    game2StartSq4.setPosition(964.f, 404.f);
+    game2StartSq4.setSize(sf::Vector2f(128.f, 128.f));
+    game2StartSq5.setPosition(828.f, 540.f);
+    game2StartSq5.setSize(sf::Vector2f(128.f, 128.f));
+    game2StartSq6.setPosition(964.f, 540.f);
+    game2StartSq6.setSize(sf::Vector2f(128.f, 128.f));
+    game2StartSq7.setPosition(828.f, 675.f);
+    game2StartSq7.setSize(sf::Vector2f(128.f, 128.f));
+    game2StartSq8.setPosition(964.f, 675.f);
+    game2StartSq8.setSize(sf::Vector2f(128.f, 128.f));
+
+    // Set square positions for recycle sorted squares
+    game2RecycleSq1.setPosition(47.f, 499.f);
+    game2RecycleSq1.setSize(sf::Vector2f(128.f, 128.f));
+    game2RecycleSq2.setPosition(229.f, 499.f);
+    game2RecycleSq2.setSize(sf::Vector2f(128.f, 128.f));
+    game2RecycleSq3.setPosition(47.f, 679.f);
+    game2RecycleSq3.setSize(sf::Vector2f(128.f, 128.f));
+    game2RecycleSq4.setPosition(229.f, 679.f);
+    game2RecycleSq4.setSize(sf::Vector2f(128.f, 128.f));
+
+    // Set drag areas for recycle squares
+    game2RecycleDragArea1.setPosition(28.f, 480.f);
+    game2RecycleDragArea1.setSize(sf::Vector2f(168.f, 168.f));
+    game2RecycleDragArea2.setPosition(214.f, 480.f);
+    game2RecycleDragArea2.setSize(sf::Vector2f(168.f, 168.f));
+    game2RecycleDragArea3.setPosition(28.f, 660.f);
+    game2RecycleDragArea3.setSize(sf::Vector2f(168.f, 168.f));
+    game2RecycleDragArea4.setPosition(214.f, 660.f);
+    game2RecycleDragArea4.setSize(sf::Vector2f(168.f, 168.f));
+
+    // Set square positions for trash sorted squares
+    game2TrashSq1.setPosition(1564.f, 499.f);
+    game2TrashSq1.setSize(sf::Vector2f(128.f, 128.f));
+    game2TrashSq2.setPosition(1744.f, 499.f);
+    game2TrashSq2.setSize(sf::Vector2f(128.f, 128.f));
+    game2TrashSq3.setPosition(1564.f, 679.f);
+    game2TrashSq3.setSize(sf::Vector2f(128.f, 128.f));
+    game2TrashSq4.setPosition(1744.f, 679.f);
+    game2TrashSq4.setSize(sf::Vector2f(128.f, 128.f));
+
+    // Set drag areas for trash squares
+    game2TrashDragArea1.setPosition(1548.f, 480.f);
+    game2TrashDragArea1.setSize(sf::Vector2f(168.f, 168.f));
+    game2TrashDragArea2.setPosition(1728.f, 480.f);
+    game2TrashDragArea2.setSize(sf::Vector2f(168.f, 168.f));
+    game2TrashDragArea3.setPosition(1548.f, 660.f);
+    game2TrashDragArea3.setSize(sf::Vector2f(168.f, 168.f));
+    game2TrashDragArea4.setPosition(1728.f, 660.f);
+    game2TrashDragArea4.setSize(sf::Vector2f(168.f, 168.f));
+
+    // This whole section is a bit of a hot mess for the temp setup until sprites added
     for (int i = 0; i < 8; i++)
     {
         toSort.emplace_back(m_Sortables());
@@ -837,29 +1101,89 @@ void Game::loadGame2Assets() {
         toSort[i].recyclable = true;
         toSort[i].tempShape.setFillColor(sf::Color::Green);
     }
-    float tempX = 700;
-    for (int i = 0; i < 3; i++) {
-        toSort[i].unsortPos.x = tempX;
-        toSort[i].unsortPos.y = 150.f;
-        tempX += 200;
-    }
-    tempX = 700;
-    for (int i = 3; i < 6; i++)
-    {
-        toSort[i].unsortPos.x = tempX;
-        toSort[i].unsortPos.y = 350.f;
-        tempX += 200;
-    }
-    tempX = 700;
-    for (int i = 6; i < 8; i++)
-    {
-        toSort[i].unsortPos.x = tempX;
-        toSort[i].unsortPos.y = 550.f;
-        tempX += 200;
-    }
+
+    toSort[0].unsortPos = game2StartSq1.getPosition();
+    toSort[1].unsortPos = game2StartSq2.getPosition();
+    toSort[2].unsortPos = game2StartSq3.getPosition();
+    toSort[3].unsortPos = game2StartSq4.getPosition();
+    toSort[4].unsortPos = game2StartSq5.getPosition();
+    toSort[5].unsortPos = game2StartSq6.getPosition();
+    toSort[6].unsortPos = game2StartSq7.getPosition();
+    toSort[7].unsortPos = game2StartSq8.getPosition();
+
     for (int i = 0; i < 8; i++)
     {
         toSort[i].tempShape.setPosition(toSort[i].unsortPos);
+    }
+}
+
+void Game::resetGame2()
+{
+    // Reset according to difficulty level
+    if (difficultyLevel == 1)
+    {
+        // Move only the items sorted incorrectly back to their original position
+        for (int i = 0; i < 8; i++)
+        {
+            if (!toSort[i].sortedCorrectly)
+            {
+                // Mark the position it was in as unoccupied
+                if (game2RecycleDragArea1.getGlobalBounds().contains(toSort[i].tempShape.getPosition()))
+                {
+                    game2RecycleSq1Occupied = false;
+                }
+                else if (game2RecycleDragArea2.getGlobalBounds().contains(toSort[i].tempShape.getPosition()))
+                {
+                    game2RecycleSq2Occupied = false;
+                }
+                else if (game2RecycleDragArea3.getGlobalBounds().contains(toSort[i].tempShape.getPosition()))
+                {
+                    game2RecycleSq3Occupied = false;
+                }
+                else if (game2RecycleDragArea4.getGlobalBounds().contains(toSort[i].tempShape.getPosition()))
+                {
+                    game2RecycleSq4Occupied = false;
+                }
+                else if (game2TrashDragArea1.getGlobalBounds().contains(toSort[i].tempShape.getPosition()))
+                {
+                    game2TrashSq1Occupied = false;
+                }
+                else if (game2TrashDragArea2.getGlobalBounds().contains(toSort[i].tempShape.getPosition()))
+                {
+                    game2TrashSq2Occupied = false;
+                }
+                else if (game2TrashDragArea3.getGlobalBounds().contains(toSort[i].tempShape.getPosition()))
+                {
+                    game2TrashSq3Occupied = false;
+                }
+                else if (game2TrashDragArea4.getGlobalBounds().contains(toSort[i].tempShape.getPosition()))
+                {
+                    game2TrashSq4Occupied = false;
+                }
+
+                // Return to original position
+                toSort[i].tempShape.setPosition(toSort[i].unsortPos);
+                toSort[i].sorted = false;
+            }
+        }
+    }
+    else
+    {
+        // Move all items back to their original position
+        for (int i = 0; i < 8; i++)
+        {
+            toSort[i].tempShape.setPosition(toSort[i].unsortPos);
+            toSort[i].sorted = false;
+        }
+        // Mark all positions as unoccupied
+        game2RecycleSq1Occupied = false;
+        game2RecycleSq2Occupied = false;
+        game2RecycleSq3Occupied = false;
+        game2RecycleSq4Occupied = false;
+        game2TrashSq1Occupied = false;
+        game2TrashSq2Occupied = false;
+        game2TrashSq3Occupied = false;
+        game2TrashSq4Occupied = false;
     }
 }
 
