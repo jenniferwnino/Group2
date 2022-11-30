@@ -3,6 +3,7 @@
 #include <fstream>
 #include <sstream>
 
+// General Game Functions
 void Game::draw()
 {
 	window.clear();
@@ -14,7 +15,7 @@ void Game::draw()
     {
         window.draw(gameSelectSprite);
     }
-	else if (state == m_GameState::Options)
+	else if (state == m_GameState::OptionsMenu)
     {
         // TEMP FOR OPTIONS - NEED A NICER SCREEN DESIGN
         // CODE WILL CHANGE WITH NEW SCREEN DESIGN
@@ -28,7 +29,7 @@ void Game::draw()
         selectLevelText.setPosition(680.f, 545.f);
         window.draw(selectLevelText);
     }
-    else if (state == m_GameState::Options_Level)
+    else if (state == m_GameState::DifficultySelect)
     {
         window.draw(difficultyChoiceSprite);
 
@@ -308,7 +309,7 @@ void Game::update()
        // Options button is clicked
        if (mainOptionsButton.getGlobalBounds().contains(sf::Vector2f(mousePosition)))
        {
-           state = m_GameState::Options;
+           state = m_GameState::OptionsMenu;
        }
 	}
     else if (state == m_GameState::GameSelection)
@@ -343,7 +344,7 @@ void Game::update()
             state = m_GameState::Game2;
         }
     }
-    else if (state == m_GameState::Options)
+    else if (state == m_GameState::OptionsMenu)
     {
         if (returnToMainButton.getGlobalBounds().contains(sf::Vector2f(mousePosition)))
         {
@@ -351,10 +352,10 @@ void Game::update()
         }
         else if (changeLevel.getGlobalBounds().contains(sf::Vector2f(mousePosition)))
         {
-            state = m_GameState::Options_Level;
+            state = m_GameState::DifficultySelect;
         }
     }
-    else if (state == m_GameState::Options_Level)
+    else if (state == m_GameState::DifficultySelect)
     {
         // Difficulty level 1 clicked (not already selected)
         if (difficulty1SelectedSprite.getGlobalBounds().contains(sf::Vector2f(mousePosition)) && difficultyLevel != 1)
@@ -420,7 +421,7 @@ void Game::update()
         }
         else if (returnToOptionsButton.getGlobalBounds().contains(sf::Vector2f(mousePosition)))
         {
-            state = m_GameState::Options;
+            state = m_GameState::OptionsMenu;
         }
     }
 	else if (state == m_GameState::MainGame)
@@ -885,11 +886,55 @@ void Game::eventHandler()
 	}
 }
 
-void Game::loadMenuAndOptionsAssets()
+// Menus, options, and general settings
+void Game::loadSounds()
 {
+    correctSoundBuffer.loadFromFile("./sounds/correctAnswer.wav");
+    clickSoundBuffer.loadFromFile("./sounds/clicking.wav");
+    wrongSoundBuffer.loadFromFile("./sounds/wrongAnswer.wav");
+    winSoundBuffer.loadFromFile("./sounds/winGame.wav");
+    loseSoundBuffer.loadFromFile("./sounds/loseGame.wav");
+    music.openFromFile("./sounds/backgroundMusic.wav");
+
+    clickSound.setBuffer(clickSoundBuffer);
+    correctSound.setBuffer(correctSoundBuffer);
+    wrongSound.setBuffer(wrongSoundBuffer);
+    winSound.setBuffer(winSoundBuffer);
+    loseSound.setBuffer(loseSoundBuffer);
+
+    music.setVolume(50.0f);
+    music.play();
+}
+
+void Game::loadGlobalAssets() {
     // Set mainFont
     mainFont.loadFromFile("./fonts/Square.ttf");
 
+    // Set up "Main" button rectangle
+    returnToMainButton.setPosition(30, 25);
+    returnToMainButton.setSize(sf::Vector2f(395.f, 85.f));
+    returnToMainButton.setFillColor(sf::Color(255, 128, 0, 255));
+
+    // TEMPORARY TEXT - REMOVE ONCE OPTIONS MENU BACKGROUND CREATED
+    mainReturnText.setString("Menu");
+    mainReturnText.setFont(mainFont);
+    mainReturnText.setCharacterSize(48U);
+    mainReturnText.setFillColor(sf::Color::White);
+    mainReturnText.setPosition(150.f, 40.f);
+
+    // Set up "Next" button
+    nextButton.setSize(sf::Vector2f (190.f, 75.f));
+    nextButton.setPosition(1696.f, 978.f);
+    nextButton.setFillColor(sf::Color(255, 128, 0, 255));
+
+    // Set up "Options" button
+    returnToOptionsButton.setPosition(30.f, 130.f);
+    returnToOptionsButton.setSize(sf::Vector2f(395.f, 85.f));
+    returnToOptionsButton.setFillColor(sf::Color(255, 128, 0, 255));
+}
+
+void Game::loadMainMenuAssets()
+{
     // Load main menu background
     mainTexture.loadFromFile("./graphics/mainMenu.png");
     mainSprite.setTexture(mainTexture);
@@ -902,66 +947,9 @@ void Game::loadMenuAndOptionsAssets()
     mainLoadGameButton.setSize(sf::Vector2f (395.f, 85.f));
     mainOptionsButton.setPosition(30.f, 250.f);
     mainOptionsButton.setSize(sf::Vector2f (395.f, 85.f));
-
-
-
-    // Load tutorial sprites
-    tutorial1Texture.loadFromFile("./graphics/tutorial1.png");
-    tutorial1Sprite.setTexture(tutorial1Texture);
-    tutorial1Sprite.setScale(4.f, 4.f);
-    tutorial2Texture.loadFromFile("./graphics/tutorial2.png");
-    tutorial2Sprite.setTexture(tutorial2Texture);
-    tutorial2Sprite.setScale(4.f, 4.f);
-    tutorial3Texture.loadFromFile("./graphics/tutorial3.png");
-    tutorial3Sprite.setTexture(tutorial3Texture);
-    tutorial3Sprite.setScale(4.f, 4.f);
-
-    // Set nextButton rectangle
-    nextButton.setSize(sf::Vector2f (190.f, 75.f));
-    nextButton.setPosition(1696.f, 978.f);
-    nextButton.setFillColor(sf::Color::Green);
-
-    // Setting the hint message
-    bubble.setRadius(120.0);
-    bubble.setPosition(1400.f, 450.f);
-    bubble.setFillColor(sf::Color::White);
-    bubble.setOutlineThickness(5);
-    bubble.setOutlineColor(sf::Color::Black);
-    bubble.setScale(2, 1);
-    triangle.setPointCount(3);
-    triangle.setRadius(120.0);
-    triangle.setPosition(1600.f, 400.f);
-    triangle.setFillColor(sf::Color::White);
-    triangle.setOutlineThickness(5);
-    triangle.setOutlineColor(sf::Color::Black);
-    hint.setFont(mainFont);
-    hint.setPosition(1450.f, 500.f);
-    hint.setCharacterSize(24);
-    hint.setFillColor(sf::Color::Black);
 }
 
-void Game::setWinLoseScreens()
-{
-    // Load win screen
-    winTexture.loadFromFile("./graphics/winScreen.png");
-    winSprite.setTexture(winTexture);
-    winSprite.setScale(4.0f, 4.0f);
-
-    // Load lose screen
-    loseTexture.loadFromFile("./graphics/loseScreen.png");
-    loseSprite.setTexture(loseTexture);
-    loseSprite.setScale(4.0f, 4.0f);
-
-    // Create menu button seen on win/lose screen
-    winLoseMenuButton.setPosition(757, 749);
-    winLoseMenuButton.setSize(sf::Vector2f(405, 90));
-
-    // Create play again button seen on win/lose screen
-    winLosePlayAgainButton.setPosition(755, 580);
-    winLosePlayAgainButton.setSize(sf::Vector2f(405, 145));
-}
-
-void Game::setGameSelectionScreen()
+void Game::loadGameSelectionAssets()
 {
     // Add background
     gameSelectTexture.loadFromFile("./graphics/gameSelect.png");
@@ -1020,6 +1008,42 @@ void Game::loadDifficultySelectionAssets()
     changeLevel.setPosition(550.f, 500.f);
 }
 
+void Game::loadWinLoseScreenAssets()
+{
+    // Load win screen
+    winTexture.loadFromFile("./graphics/winScreen.png");
+    winSprite.setTexture(winTexture);
+    winSprite.setScale(4.0f, 4.0f);
+
+    // Load lose screen
+    loseTexture.loadFromFile("./graphics/loseScreen.png");
+    loseSprite.setTexture(loseTexture);
+    loseSprite.setScale(4.0f, 4.0f);
+
+    // Create menu button seen on win/lose screen
+    winLoseMenuButton.setPosition(757, 749);
+    winLoseMenuButton.setSize(sf::Vector2f(405, 90));
+
+    // Create play again button seen on win/lose screen
+    winLosePlayAgainButton.setPosition(755, 580);
+    winLosePlayAgainButton.setSize(sf::Vector2f(405, 145));
+}
+
+void Game::loadTutorialAssets()
+{
+    // Load tutorial sprites
+    tutorial1Texture.loadFromFile("./graphics/tutorial1.png");
+    tutorial1Sprite.setTexture(tutorial1Texture);
+    tutorial1Sprite.setScale(4.f, 4.f);
+    tutorial2Texture.loadFromFile("./graphics/tutorial2.png");
+    tutorial2Sprite.setTexture(tutorial2Texture);
+    tutorial2Sprite.setScale(4.f, 4.f);
+    tutorial3Texture.loadFromFile("./graphics/tutorial3.png");
+    tutorial3Sprite.setTexture(tutorial3Texture);
+    tutorial3Sprite.setScale(4.f, 4.f);
+}
+
+// Game 1 loading and helper functions
 void Game::loadGame1Assets() {
     // Load backgrounds
     game1StaticTexture.loadFromFile("./graphics/inGame.png");
@@ -1050,6 +1074,24 @@ void Game::loadGame1Assets() {
     dropBoxSprite.setTexture(dropBoxTexture);
     dropBoxSprite.setScale(4.f, 4.f);
     dropBoxSprite.setPosition(sf::Vector2f(252, 680));
+
+    // Setting the hint message
+    bubble.setRadius(120.0);
+    bubble.setPosition(1400.f, 450.f);
+    bubble.setFillColor(sf::Color::White);
+    bubble.setOutlineThickness(5);
+    bubble.setOutlineColor(sf::Color::Black);
+    bubble.setScale(2, 1);
+    triangle.setPointCount(3);
+    triangle.setRadius(120.0);
+    triangle.setPosition(1600.f, 400.f);
+    triangle.setFillColor(sf::Color::White);
+    triangle.setOutlineThickness(5);
+    triangle.setOutlineColor(sf::Color::Black);
+    hint.setFont(mainFont);
+    hint.setPosition(1450.f, 500.f);
+    hint.setCharacterSize(24);
+    hint.setFillColor(sf::Color::Black);
 
     // Read the .csv file
     std::ifstream infile("./csv_files/game1input.csv");
@@ -1122,6 +1164,59 @@ void Game::textWrapper(std::string& s){
     s = wrappedString;
 }
 
+void Game::updateProgressSprite()
+{
+    std::string texturePath{ "./graphics/" };
+    float percentCorrect{ (static_cast<float>(numCorrect) / (questionNum + 1)) };
+
+    if (percentCorrect < 0.15f)
+    {
+        texturePath.append("sunSprite1of7.png");
+    }
+    else if (0.15f <= percentCorrect < 0.30f)
+    {
+        texturePath.append("sunSprite2of7.png");
+    }
+    else if (0.30f <= percentCorrect < 0.45f)
+    {
+        texturePath.append("sunSprite3of7.png");
+    }
+    else if (0.45f <= percentCorrect < 0.60f)
+    {
+        texturePath.append("sunSprite4of7.png");
+    }
+    else if (0.60f <= percentCorrect < 0.75f)
+    {
+        texturePath.append("sunSprite5of7.png");
+    }
+    else if (0.75f <= percentCorrect < 0.90f)
+    {
+        texturePath.append("sunSprite6of7.png");
+    }
+    else
+    {
+        texturePath.append("sunSprite7of7.png");
+    }
+
+    progressTexture.loadFromFile(texturePath);
+    progressSprite.setTexture(progressTexture);
+    progressSprite.setPosition(1512.5f, 15.5f);
+    progressSprite.setScale(4.0f, 4.05f);
+    window.draw(progressSprite);
+}
+
+void Game::displayHint()
+{
+    window.draw(triangle);
+    window.draw(bubble);
+    if (questionNum == 1)
+        hint.setString("Want a hint for the next one?\nRemember that plastic is one of\nour planet's worst enemies!");
+    if (questionNum == 2)
+        hint.setString("Want a hint for the next one?\nRemember that oil does not get\nalong well with the fishies!");
+    window.draw(hint);
+}
+
+// Game 2 loading and helper functions
 void Game::loadGame2Assets() {
     // Load background
     game2BackgroundTexture.loadFromFile("./graphics/inGameSortingSprites.png");
@@ -1363,106 +1458,4 @@ void Game::resetGame2Hard() {
 
     // Reset attempt number
     game2AttemptNum = 1;
-}
-
-void Game::updateProgressSprite()
-{
-    std::string texturePath{ "./graphics/" };
-    float percentCorrect{ (static_cast<float>(numCorrect) / (questionNum + 1)) };
-
-    if (percentCorrect < 0.15f)
-    {
-        texturePath.append("sunSprite1of7.png");
-    }
-    else if (0.15f <= percentCorrect < 0.30f)
-    {
-        texturePath.append("sunSprite2of7.png");
-    }
-    else if (0.30f <= percentCorrect < 0.45f)
-    {
-        texturePath.append("sunSprite3of7.png");
-    }
-    else if (0.45f <= percentCorrect < 0.60f)
-    {
-        texturePath.append("sunSprite4of7.png");
-    }
-    else if (0.60f <= percentCorrect < 0.75f)
-    {
-        texturePath.append("sunSprite5of7.png");
-    }
-    else if (0.75f <= percentCorrect < 0.90f)
-    {
-        texturePath.append("sunSprite6of7.png");
-    }
-    else
-    {
-        texturePath.append("sunSprite7of7.png");
-    }
-
-    progressTexture.loadFromFile(texturePath);
-    progressSprite.setTexture(progressTexture);
-    progressSprite.setPosition(1512.5f, 15.5f);
-    progressSprite.setScale(4.0f, 4.05f);
-    window.draw(progressSprite);
-}
-
-void Game::setGlobalButtons() {
-    // Set up "Main" button rectangle
-    returnToMainButton.setPosition(30, 25);
-    returnToMainButton.setSize(sf::Vector2f(395.f, 85.f));
-    returnToMainButton.setFillColor(sf::Color(255, 128, 0, 255));
-
-    // TEMPORARY TEXT - REMOVE ONCE OPTIONS MENU BACKGROUND CREATED
-    mainReturnText.setString("Menu");
-    mainReturnText.setFont(mainFont);
-    mainReturnText.setCharacterSize(48U);
-    mainReturnText.setFillColor(sf::Color::White);
-    mainReturnText.setPosition(150.f, 40.f);
-
-    // Set up "Next" button
-    nextButton.setSize(sf::Vector2f (190.f, 75.f));
-    nextButton.setPosition(1696.f, 978.f);
-    nextButton.setFillColor(sf::Color(255, 128, 0, 255));
-
-    // Set up "Options" button
-    returnToOptionsButton.setPosition(30.f, 130.f);
-    returnToOptionsButton.setSize(sf::Vector2f(395.f, 85.f));
-    returnToOptionsButton.setFillColor(sf::Color(255, 128, 0, 255));
-
-    // TEMPORARY TEXT - REMOVE ONCE OPTIONS MENU BACKGROUND CREATED
-    optionsReturnText.setString("Options");
-    optionsReturnText.setFont(mainFont);
-    optionsReturnText.setCharacterSize(48U);
-    optionsReturnText.setFillColor(sf::Color::White);
-    optionsReturnText.setPosition(150.f, 140.f);
-}
-
-void Game::loadSounds()
-{
-    correctSoundBuffer.loadFromFile("./sounds/correctAnswer.wav");
-    clickSoundBuffer.loadFromFile("./sounds/clicking.wav");
-    wrongSoundBuffer.loadFromFile("./sounds/wrongAnswer.wav");
-    winSoundBuffer.loadFromFile("./sounds/winGame.wav");
-    loseSoundBuffer.loadFromFile("./sounds/loseGame.wav");
-    music.openFromFile("./sounds/backgroundMusic.wav");
-
-    clickSound.setBuffer(clickSoundBuffer);
-    correctSound.setBuffer(correctSoundBuffer);
-    wrongSound.setBuffer(wrongSoundBuffer);
-    winSound.setBuffer(winSoundBuffer);
-    loseSound.setBuffer(loseSoundBuffer);
-
-    music.setVolume(50.0f);
-    music.play();
-}
-
-void Game::displayHint()
-{
-    window.draw(triangle);
-    window.draw(bubble);
-    if (questionNum == 1)
-        hint.setString("Want a hint for the next one?\nRemember that plastic is one of\nour planet's worst enemies!");
-    if (questionNum == 2)
-        hint.setString("Want a hint for the next one?\nRemember that oil does not get\nalong well with the fishies!");
-    window.draw(hint);
 }

@@ -10,7 +10,7 @@ private:
     sf::RenderWindow window;
     enum class m_GameState
     {
-        Menu = 0, GameSelection, Options, Options_Level, MainGame, Game2, Paused
+        Menu = 0, GameSelection, OptionsMenu, DifficultySelect, MainGame, Game2, Paused
     };
     m_GameState state;
     m_GameState returnTo{ m_GameState::Menu };
@@ -22,8 +22,8 @@ private:
     sf::Vector2i mousePosition;
     sf::Event event;
     sf::Font mainFont;
-    sf::Texture pauseTexture, tutorial1Texture, tutorial2Texture, tutorial3Texture;
-    sf::Sprite pauseSprite, tutorial1Sprite, tutorial2Sprite, tutorial3Sprite;
+    sf::Texture pauseTexture;
+    sf::Sprite pauseSprite;
     sf::RectangleShape returnToMainButton, returnToOptionsButton, nextButton;
 
     // For Main Menu
@@ -36,16 +36,24 @@ private:
     sf::Sprite gameSelectSprite;
     sf::RectangleShape game1Select, game2Select;
 
+    // For Options Menu
+    sf::RectangleShape changeLevel;         // TEMP - REMOVE ONCE FINAL BACKGROUND ADDED
+    sf::Text mainReturnText;            // TEMP - REMOVE ONCE FINAL BACKGROUND ADDED
+
     // For Difficulty Selection
     sf::Texture difficultyChoiceTexture, difficulty1SelectedTexture, difficulty1NotSelectedTexture;
     sf::Texture difficulty2SelectedTexture, difficulty2NotSelectedTexture, difficulty3SelectedTexture, difficulty3NotSelectedTexture;
     sf::Sprite difficultyChoiceSprite, difficulty1SelectedSprite, difficulty1NotSelectedSprite;
     sf::Sprite difficulty2SelectedSprite, difficulty2NotSelectedSprite, difficulty3SelectedSprite, difficulty3NotSelectedSprite;
 
+    // For Win and Lose Screens
+    sf::Texture winTexture, loseTexture;
+    sf::Sprite winSprite, loseSprite;
+    sf::RectangleShape winLoseMenuButton, winLosePlayAgainButton;
 
-    // For Options Settings
-    sf::RectangleShape changeLevel;
-    sf::Text mainReturnText, optionsReturnText;                     // TEMP - REMOVE ONCE FINAL BACKGROUND ADDED
+    // For Tutorials
+    sf::Texture tutorial1Texture, tutorial2Texture, tutorial3Texture;
+    sf::Sprite tutorial1Sprite, tutorial2Sprite, tutorial3Sprite;
 
     // For Game 1
     struct m_Questions
@@ -63,16 +71,21 @@ private:
     bool tutorial1bWatched { false };
     uint32_t numCorrect{ 0 };
     uint32_t questionNum{ 0 };
-    uint32_t difficultyLevel{ 1 };                          // Default difficulty is level 1
-    float winCondition{ 0.75f };                            // Default win condition for level 1
-    uint32_t charsPerLine{ 56 };                            // Default for difficult level 1
-    sf::Texture game1StaticTexture, game1FallingTexture, winTexture, loseTexture, correctImageTexture, incorrectImageTexture, progressTexture, dropBoxTexture;
-    sf::Sprite game1StaticSprite, game1FallingSprite, winSprite, loseSprite, correctImageSprite, incorrectImageSprite, progressSprite, dropBoxSprite;
+    uint32_t difficultyLevel{ 1 };          // Default difficulty is level 1
+    float winCondition{ 0.75f };            // Default win condition for level 1
+    uint32_t charsPerLine{ 56 };            // Default for difficult level 1
+    // Textures & sprites
+    sf::Texture game1StaticTexture, game1FallingTexture, correctImageTexture, incorrectImageTexture, progressTexture, dropBoxTexture;
+    sf::Sprite game1StaticSprite, game1FallingSprite, correctImageSprite, incorrectImageSprite, progressSprite, dropBoxSprite;
     sf::Text game1QuestionText;
-    sf::RectangleShape winLoseMenuButton, winLosePlayAgainButton;
-    sf::Vector2f answerPos {584.0f, 788.0f};        // Default for difficult level 1
-    sf::Vector2f leftPos {576.f, 456.f};               // Start position for left sprite
-    sf::Vector2f rightPos {1088.f, 456.f};            // Start position for right sprite
+    sf::Vector2f answerPos {584.0f, 788.0f};            // Default for difficult level 1
+    sf::Vector2f leftPos {576.f, 456.f};            // Start position for left sprite
+    sf::Vector2f rightPos {1088.f, 456.f};          // Start position for right sprite
+    // Hints
+    uint32_t numWrong{ 0 };         // Number of questions wrong (in a row)
+    sf::CircleShape bubble;
+    sf::CircleShape triangle;
+    sf::Text hint;
 
     // For Game 2
     struct m_Sortables
@@ -117,18 +130,12 @@ private:
     bool game2TrashSq3Occupied { false };
     bool game2TrashSq4Occupied { false };
 
-    // Sounds
+    // For Sounds
     bool winLoseSoundHasPlayed = false;
     bool answerSoundHasPlayed = false;
     sf::SoundBuffer clickSoundBuffer, correctSoundBuffer, wrongSoundBuffer, winSoundBuffer, loseSoundBuffer;
     sf::Sound clickSound, correctSound, wrongSound, winSound, loseSound;
     sf::Music music;
-
-    // Hints
-    uint32_t numWrong{ 0 }; // number of questions wrong (in a row)
-    sf::CircleShape bubble;
-    sf::CircleShape triangle;
-    sf::Text hint;
 
 private:
     // General Game Functions
@@ -139,21 +146,19 @@ private:
     void updateSave();
     
     // Menus, options, and general settings
-    void setGlobalButtons();
     void loadSounds();
-    void loadMenuAndOptionsAssets();
-    void setOptionsMenu_mainMenuButton();
-    void setOptionsMenu_optionsMenuButton();
-    void setOptionsMenu_levelButtons();
-    void setWinLoseScreens();
-    void setGameSelectionScreen();
+    void loadGlobalAssets();
+    void loadMainMenuAssets();
+    void loadGameSelectionAssets();
     void loadDifficultySelectionAssets();
-    void displayHint();
+    void loadWinLoseScreenAssets();
+    void loadTutorialAssets();
 
     // Game 1 loading and helper functions
     void loadGame1Assets();
     void textWrapper(std::string& s);
     void updateProgressSprite();
+    void displayHint();
 
     // Game 2 loading and helper functions
     void loadGame2Assets();
@@ -168,13 +173,14 @@ public:
         window.create({ 1920, 1080 }, "Climate Stompers");
         state = m_GameState::Menu;
 
-        // Load game assets
+        // Load all game assets
         loadSounds();
-        setGlobalButtons();
-        loadMenuAndOptionsAssets();
-        setWinLoseScreens();
+        loadGlobalAssets();
+        loadMainMenuAssets();
+        loadGameSelectionAssets();
         loadDifficultySelectionAssets();
-        setGameSelectionScreen();
+        loadWinLoseScreenAssets();
+        loadTutorialAssets();
         loadGame1Assets();
         loadGame2Assets();
     }
