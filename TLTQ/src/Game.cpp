@@ -1423,6 +1423,7 @@ void Game::resetGame2Soft()
         {
             toSort[i].sortableSprite.setPosition(toSort[i].unsortPos);
             toSort[i].sorted = false;
+            toSort[i].sortedCorrectly = false;
         }
         // Mark all positions as unoccupied
         game2RecycleSq1Occupied = false;
@@ -1435,16 +1436,19 @@ void Game::resetGame2Soft()
         game2TrashSq4Occupied = false;
     }
 
+    game2Score = 0;
+
     // Set the mouse position as the start position of the last sprite moved to avoid jumps
     mousePosition = sf::Vector2i(toSort[spriteMoving].unsortPos);
 }
 
 void Game::resetGame2Hard() {
-    // Move all items back to their original position
+    // Move all items back to their original position and mark all as sorted incorrectly
     for (int i = 0; i < 8; i++)
     {
         toSort[i].sortableSprite.setPosition(toSort[i].unsortPos);
         toSort[i].sorted = false;
+        toSort[i].sortedCorrectly = false;
     }
 
     // Mark all positions as unoccupied
@@ -1457,12 +1461,7 @@ void Game::resetGame2Hard() {
     game2TrashSq3Occupied = false;
     game2TrashSq4Occupied = false;
 
-    // Reset attempt number
+    // Reset game attributes
     game2AttemptNum = 1;
-
-    // Reset game finish
     game2Finished = false;
-
-    // Reset game score
-    game2Score = 0;
 }
