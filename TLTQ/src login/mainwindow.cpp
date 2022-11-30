@@ -33,7 +33,7 @@ MainWindow::~MainWindow()
 void MainWindow::connect()
 {
     QSqlDatabase db = QSqlDatabase::addDatabase("QMYSQL");
-        db.setHostName("161.35.189.167");
+        db.setHostName("");
         db.setConnectOptions("");
         db.setPort(3306);
         db.setDatabaseName("");
