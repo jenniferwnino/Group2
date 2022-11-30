@@ -17,17 +17,7 @@ void Game::draw()
     }
 	else if (state == m_GameState::OptionsMenu)
     {
-        // TEMP FOR OPTIONS - NEED A NICER SCREEN DESIGN
-        // CODE WILL CHANGE WITH NEW SCREEN DESIGN
-        window.draw(returnToMainButton);
-        window.draw(mainReturnText);
-        window.draw(changeLevel);
-
-        // Temp text - will be written in final background (?)
-        sf::Text selectLevelText ("Change difficulty level", mainFont, 48U);
-        selectLevelText.setFillColor(sf::Color::White);
-        selectLevelText.setPosition(680.f, 545.f);
-        window.draw(selectLevelText);
+        window.draw(optionsMenuSprite);
     }
     else if (state == m_GameState::DifficultySelect)
     {
@@ -350,7 +340,7 @@ void Game::update()
         {
             state = m_GameState::Menu;
         }
-        else if (changeLevel.getGlobalBounds().contains(sf::Vector2f(mousePosition)))
+        else if (changeLevelButton.getGlobalBounds().contains(sf::Vector2f(mousePosition)))
         {
             state = m_GameState::DifficultySelect;
         }
@@ -915,13 +905,6 @@ void Game::loadGlobalAssets() {
     returnToMainButton.setSize(sf::Vector2f(395.f, 85.f));
     returnToMainButton.setFillColor(sf::Color(255, 128, 0, 255));
 
-    // TEMPORARY TEXT - REMOVE ONCE OPTIONS MENU BACKGROUND CREATED
-    mainReturnText.setString("Menu");
-    mainReturnText.setFont(mainFont);
-    mainReturnText.setCharacterSize(48U);
-    mainReturnText.setFillColor(sf::Color::White);
-    mainReturnText.setPosition(150.f, 40.f);
-
     // Set up "Next" button
     nextButton.setSize(sf::Vector2f (190.f, 75.f));
     nextButton.setPosition(1696.f, 978.f);
@@ -963,6 +946,18 @@ void Game::loadGameSelectionAssets()
     game2Select.setSize(sf::Vector2f(708.f, 348.f));
 }
 
+void Game::loadOptionsMenuAssets()
+{
+    // Add background
+    optionsMenuTexture.loadFromFile("./graphics/optionsMenu.png");
+    optionsMenuSprite.setTexture(optionsMenuTexture);
+    optionsMenuSprite.setScale(4.0f, 4.0f);
+
+    // Create hidden button rectangle for button
+    changeLevelButton.setPosition(606.f, 262.f);
+    changeLevelButton.setSize(sf::Vector2f(705.f, 200.f));
+}
+
 void Game::loadDifficultySelectionAssets()
 {
     // Add background
@@ -999,13 +994,6 @@ void Game::loadDifficultySelectionAssets()
     difficulty3NotSelectedSprite.setTexture(difficulty3NotSelectedTexture);
     difficulty3NotSelectedSprite.setScale(4.f, 4.f);
     difficulty3NotSelectedSprite.setPosition(600.f, 756.f);
-
-
-
-    // For options menu - change level button
-    changeLevel.setSize(sf::Vector2f(800.f, 150.f));
-    changeLevel.setFillColor(sf::Color(255, 128, 0, 255));
-    changeLevel.setPosition(550.f, 500.f);
 }
 
 void Game::loadWinLoseScreenAssets()

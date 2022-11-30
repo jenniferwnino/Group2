@@ -37,8 +37,9 @@ private:
     sf::RectangleShape game1Select, game2Select;
 
     // For Options Menu
-    sf::RectangleShape changeLevel;         // TEMP - REMOVE ONCE FINAL BACKGROUND ADDED
-    sf::Text mainReturnText;            // TEMP - REMOVE ONCE FINAL BACKGROUND ADDED
+    sf::Texture optionsMenuTexture;
+    sf::Sprite optionsMenuSprite;
+    sf::RectangleShape changeLevelButton;
 
     // For Difficulty Selection
     sf::Texture difficultyChoiceTexture, difficulty1SelectedTexture, difficulty1NotSelectedTexture;
@@ -150,6 +151,7 @@ private:
     void loadGlobalAssets();
     void loadMainMenuAssets();
     void loadGameSelectionAssets();
+    void loadOptionsMenuAssets();
     void loadDifficultySelectionAssets();
     void loadWinLoseScreenAssets();
     void loadTutorialAssets();
@@ -178,6 +180,7 @@ public:
         loadGlobalAssets();
         loadMainMenuAssets();
         loadGameSelectionAssets();
+        loadOptionsMenuAssets();
         loadDifficultySelectionAssets();
         loadWinLoseScreenAssets();
         loadTutorialAssets();
