@@ -31,13 +31,20 @@ private:
     sf::Sprite mainSprite;
     sf::RectangleShape mainNewGameButton, mainLoadGameButton, mainOptionsButton;
 
-    // For Level Selection
+    // For Game Selection
     sf::Texture gameSelectTexture;
     sf::Sprite gameSelectSprite;
     sf::RectangleShape game1Select, game2Select;
 
+    // For Difficulty Selection
+    sf::Texture difficultyChoiceTexture, difficulty1SelectedTexture, difficulty1NotSelectedTexture;
+    sf::Texture difficulty2SelectedTexture, difficulty2NotSelectedTexture, difficulty3SelectedTexture, difficulty3NotSelectedTexture;
+    sf::Sprite difficultyChoiceSprite, difficulty1SelectedSprite, difficulty1NotSelectedSprite;
+    sf::Sprite difficulty2SelectedSprite, difficulty2NotSelectedSprite, difficulty3SelectedSprite, difficulty3NotSelectedSprite;
+
+
     // For Options Settings
-    sf::RectangleShape optionsL1, optionsL2, optionsL3, changeLevel;
+    sf::RectangleShape changeLevel;
     sf::Text mainReturnText, optionsReturnText;                     // TEMP - REMOVE ONCE FINAL BACKGROUND ADDED
 
     // For Game 1
@@ -140,6 +147,7 @@ private:
     void setOptionsMenu_levelButtons();
     void setWinLoseScreens();
     void setGameSelectionScreen();
+    void loadDifficultySelectionAssets();
     void displayHint();
 
     // Game 1 loading and helper functions
@@ -159,10 +167,13 @@ public:
         loadSave();
         window.create({ 1920, 1080 }, "Climate Stompers");
         state = m_GameState::Menu;
+
+        // Load game assets
         loadSounds();
         setGlobalButtons();
         loadMenuAndOptionsAssets();
         setWinLoseScreens();
+        loadDifficultySelectionAssets();
         setGameSelectionScreen();
         loadGame1Assets();
         loadGame2Assets();

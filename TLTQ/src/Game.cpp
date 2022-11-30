@@ -30,51 +30,27 @@ void Game::draw()
     }
     else if (state == m_GameState::Options_Level)
     {
-        // TEMP FOR SETTING LEVEL - NEED A NICER SCREEN DESIGN
-        // CODE WILL CHANGE WITH NEW SCREEN DESIGN
-        window.draw(returnToMainButton);
-        window.draw(mainReturnText);
-        window.draw(returnToOptionsButton);
-        window.draw(optionsReturnText);
+        window.draw(difficultyChoiceSprite);
 
         // Selected difficulty level shows blue, other levels show orange
         if (difficultyLevel == 1)
         {
-            optionsL1.setFillColor(sf::Color::Blue);
-            optionsL2.setFillColor(sf::Color(255, 128, 0, 255));
-            optionsL3.setFillColor(sf::Color(255, 128, 0, 255));
+            window.draw(difficulty1SelectedSprite);
+            window.draw(difficulty2NotSelectedSprite);
+            window.draw(difficulty3NotSelectedSprite);
         }
         else if (difficultyLevel == 2)
         {
-            optionsL1.setFillColor(sf::Color(255, 128, 0, 255));
-            optionsL2.setFillColor(sf::Color::Blue);
-            optionsL3.setFillColor(sf::Color(255, 128, 0, 255));
+            window.draw(difficulty1NotSelectedSprite);
+            window.draw(difficulty2SelectedSprite);
+            window.draw(difficulty3NotSelectedSprite);
         }
         else if (difficultyLevel == 3)
         {
-            optionsL1.setFillColor(sf::Color(255, 128, 0, 255));
-            optionsL2.setFillColor(sf::Color(255, 128, 0, 255));
-            optionsL3.setFillColor(sf::Color::Blue);
+            window.draw(difficulty1NotSelectedSprite);
+            window.draw(difficulty2NotSelectedSprite);
+            window.draw(difficulty3SelectedSprite);
         }
-
-        // Draw the three level rectangles
-        window.draw(optionsL1);
-        window.draw(optionsL2);
-        window.draw(optionsL3);
-
-        // Temp text - will be written in final background (?)
-        sf::Text level1Text ("Level 1", mainFont, 48U);
-        level1Text.setFillColor(sf::Color::White);
-        level1Text.setPosition(420.f, 420.f);
-        window.draw(level1Text);
-        sf::Text level2Text ("Level 2", mainFont, 48U);
-        level2Text.setFillColor(sf::Color::White);
-        level2Text.setPosition(820.f, 420.f);
-        window.draw(level2Text);
-        sf::Text level3Text ("Level 3", mainFont, 48U);
-        level3Text.setFillColor(sf::Color::White);
-        level3Text.setPosition(1220.f, 420.f);
-        window.draw(level3Text);
     }
     else if (state == m_GameState::MainGame)
 	{
@@ -380,8 +356,10 @@ void Game::update()
     }
     else if (state == m_GameState::Options_Level)
     {
-        if (optionsL1.getGlobalBounds().contains(sf::Vector2f(mousePosition)))
+        // Difficulty level 1 clicked (not already selected)
+        if (difficulty1SelectedSprite.getGlobalBounds().contains(sf::Vector2f(mousePosition)) && difficultyLevel != 1)
         {
+            // Set difficulty level
             difficultyLevel = 1;
 
             // CHANGES FOR GAME 1 SETTINGS
@@ -397,8 +375,11 @@ void Game::update()
             // CHANGES FOR GAME 2 SETTINGS
             game2MaxAttempts = 3;
         }
-        else if (optionsL2.getGlobalBounds().contains(sf::Vector2f(mousePosition)))
+
+        // Difficulty level 2 clicked (not already selected)
+        else if (difficulty2SelectedSprite.getGlobalBounds().contains(sf::Vector2f(mousePosition)) && difficultyLevel != 2)
         {
+            // Set difficulty level
             difficultyLevel = 2;
 
             // CHANGES FOR GAME 1 SETTINGS
@@ -414,8 +395,11 @@ void Game::update()
             // CHANGES FOR GAME 2 SETTINGS
             game2MaxAttempts = 3;
         }
-        else if (optionsL3.getGlobalBounds().contains(sf::Vector2f(mousePosition)))
+
+        // Difficulty level 3 clicked (not already selected)
+        else if (difficulty3SelectedSprite.getGlobalBounds().contains(sf::Vector2f(mousePosition)) && difficultyLevel != 3)
         {
+            // Set difficult level
             difficultyLevel = 3;
 
             // CHANGES FOR GAME 1 SETTINGS
@@ -919,18 +903,7 @@ void Game::loadMenuAndOptionsAssets()
     mainOptionsButton.setPosition(30.f, 250.f);
     mainOptionsButton.setSize(sf::Vector2f (395.f, 85.f));
 
-    // For options menu - change level button
-    changeLevel.setSize(sf::Vector2f(800.f, 150.f));
-    changeLevel.setFillColor(sf::Color(255, 128, 0, 255));
-    changeLevel.setPosition(550.f, 500.f);
 
-    // Create options menu level buttons
-    optionsL1.setSize(sf::Vector2f(256.f, 256.f));
-    optionsL1.setPosition(400, 400);
-    optionsL2.setSize(sf::Vector2f(256.f, 256.f));
-    optionsL2.setPosition(800, 400);
-    optionsL3.setSize(sf::Vector2f(256.f, 256.f));
-    optionsL3.setPosition(1200, 400);
 
     // Load tutorial sprites
     tutorial1Texture.loadFromFile("./graphics/tutorial1.png");
@@ -965,7 +938,6 @@ void Game::loadMenuAndOptionsAssets()
     hint.setPosition(1450.f, 500.f);
     hint.setCharacterSize(24);
     hint.setFillColor(sf::Color::Black);
-
 }
 
 void Game::setWinLoseScreens()
@@ -1001,6 +973,51 @@ void Game::setGameSelectionScreen()
     game1Select.setSize(sf::Vector2f(708.f, 348.f));
     game2Select.setPosition(607, 650);
     game2Select.setSize(sf::Vector2f(708.f, 348.f));
+}
+
+void Game::loadDifficultySelectionAssets()
+{
+    // Add background
+    difficultyChoiceTexture.loadFromFile("./graphics/difficultyChoice.png");
+    difficultyChoiceSprite.setTexture(difficultyChoiceTexture);
+    difficultyChoiceSprite.setScale(4.f, 4.f);
+
+    // Create level 1 button sprites
+    difficulty1SelectedTexture.loadFromFile("./graphics/difficulty1Selected.png");
+    difficulty1SelectedSprite.setTexture(difficulty1SelectedTexture);
+    difficulty1SelectedSprite.setScale(4.f, 4.f);
+    difficulty1SelectedSprite.setPosition(600.f, 308.f);
+    difficulty1NotSelectedTexture.loadFromFile("./graphics/difficulty1NotSelected.png");
+    difficulty1NotSelectedSprite.setTexture(difficulty1NotSelectedTexture);
+    difficulty1NotSelectedSprite.setScale(4.f, 4.f);
+    difficulty1NotSelectedSprite.setPosition(600.f, 308.f);
+
+    // Create level 2 button sprites
+    difficulty2SelectedTexture.loadFromFile("./graphics/difficulty2Selected.png");
+    difficulty2SelectedSprite.setTexture(difficulty2SelectedTexture);
+    difficulty2SelectedSprite.setScale(4.f, 4.f);
+    difficulty2SelectedSprite.setPosition(600.f, 532.f);
+    difficulty2NotSelectedTexture.loadFromFile("./graphics/difficulty2NotSelected.png");
+    difficulty2NotSelectedSprite.setTexture(difficulty2NotSelectedTexture);
+    difficulty2NotSelectedSprite.setScale(4.f, 4.f);
+    difficulty2NotSelectedSprite.setPosition(600.f, 532.f);
+
+    // Create level 3 button sprites
+    difficulty3SelectedTexture.loadFromFile("./graphics/difficulty3Selected.png");
+    difficulty3SelectedSprite.setTexture(difficulty3SelectedTexture);
+    difficulty3SelectedSprite.setScale(4.f, 4.f);
+    difficulty3SelectedSprite.setPosition(600.f, 756.f);
+    difficulty3NotSelectedTexture.loadFromFile("./graphics/difficulty3NotSelected.png");
+    difficulty3NotSelectedSprite.setTexture(difficulty3NotSelectedTexture);
+    difficulty3NotSelectedSprite.setScale(4.f, 4.f);
+    difficulty3NotSelectedSprite.setPosition(600.f, 756.f);
+
+
+
+    // For options menu - change level button
+    changeLevel.setSize(sf::Vector2f(800.f, 150.f));
+    changeLevel.setFillColor(sf::Color(255, 128, 0, 255));
+    changeLevel.setPosition(550.f, 500.f);
 }
 
 void Game::loadGame1Assets() {
