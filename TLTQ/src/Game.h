@@ -17,6 +17,7 @@ private:
     const uint32_t defaultFontSize{ 24 };
     uint32_t UID{ 0 };
     uint32_t game1Score{ 0 };
+    uint32_t game1HighScore { 0 };
     uint32_t game2Score{ 0 };
     uint32_t game2HighScore{ 0 };
     sf::Vector2i mousePosition;
@@ -70,7 +71,6 @@ private:
     std::vector<m_Questions> questions;
     bool tutorial1aWatched { false };
     bool tutorial1bWatched { false };
-    uint32_t numCorrect{ 0 };
     uint32_t questionNum{ 0 };
     uint32_t difficultyLevel{ 1 };          // Default difficulty is level 1
     float winCondition{ 0.75f };            // Default win condition for level 1

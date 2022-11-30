@@ -114,7 +114,7 @@ void Game::draw()
                 window.draw(game1QuestionText);
 
                 // For first question, start with sun sprite 4
-                if (questionNum == 0 && numCorrect == 0)
+                if (questionNum == 0 && game1Score == 0)
                 {
                     progressTexture.loadFromFile("./graphics/sunSprite4of7.png");
                     progressSprite.setTexture(progressTexture);
@@ -147,7 +147,7 @@ void Game::draw()
             else
             {
                 // Game won
-                if (numCorrect >= (questions.size()  * winCondition))
+                if (game1Score >= (questions.size()  * winCondition))
                 {
                     window.draw(winSprite);
                     if (!winLoseSoundHasPlayed)
@@ -264,9 +264,9 @@ void Game::loadSave()
         std::getline(file, temp);
         UID = std::stoi(temp);
         std::getline(file, temp);
-        game1Score = std::stoi(temp);
+        game1HighScore = std::stoi(temp);
         std::getline(file, temp);
-        game2Score = std::stoi(temp);
+        game2HighScore = std::stoi(temp);
     }
 
     file.close();
@@ -277,8 +277,8 @@ void Game::updateSave()
     std::ofstream oStream;
     oStream.open("save.dat", std::ios_base::out | std::ios_base::trunc);
     oStream << UID << "\n"
-            << game1Score << "\n"
-            << game2Score;
+            << game1HighScore << "\n"
+            << game2HighScore;
     oStream.close();
 }
 
@@ -316,7 +316,7 @@ void Game::update()
             // Reset all game 1 settings and launch
             state = m_GameState::MainGame;
             questionNum = 0;
-            numCorrect = 0;
+            game1Score = 0;
             winLoseSoundHasPlayed = false;
             numWrong = 0;
             for (int i = 0; i < questions.size(); i++)
@@ -458,7 +458,12 @@ void Game::update()
                 if (correctImageSprite.getGlobalBounds().contains(sf::Vector2f(mousePosition)) && !questions[questionNum].answered)
                 {
                     questions[questionNum].answered = true;
-                    numCorrect++;
+                    // Update game score and replace high score if applicable
+                    game1Score++;
+                    if (game1Score > game1HighScore)
+                    {
+                        game1HighScore = game1Score;
+                    }
                     questions[questionNum].answeredCorrect = true;
                     numWrong = 0;
                     if (!answerSoundHasPlayed)
@@ -541,7 +546,7 @@ void Game::update()
                 {
                     state = m_GameState::MainGame;
                     questionNum = 0;
-                    numCorrect = 0;
+                    game1Score = 0;
                     winLoseSoundHasPlayed = false;
                     numWrong = 0;
                     for (int i = 0; i < questions.size(); i++)
@@ -1154,7 +1159,7 @@ void Game::textWrapper(std::string& s){
 void Game::updateProgressSprite()
 {
     std::string texturePath{ "./graphics/" };
-    float percentCorrect{ (static_cast<float>(numCorrect) / (questionNum + 1)) };
+    float percentCorrect{ (static_cast<float>(game1Score) / (questionNum + 1)) };
 
     if (percentCorrect < 0.15f)
     {
