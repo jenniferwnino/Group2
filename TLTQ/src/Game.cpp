@@ -844,7 +844,6 @@ void Game::eventHandler()
             {
                 clickHeld = false;
             }
-            std::cout << mousePosition.x << " " << mousePosition.y << std::endl;
 		}
         // Game 2 specific for drag & drop selection
         else if (clickHeld)
