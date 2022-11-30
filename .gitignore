@@ -423,6 +423,7 @@ FodyWeavers.xsd
 *.sln
 *.vcxproj
 *.vcxproj.filters
+save.dat
 
 # Config Files
 config.php

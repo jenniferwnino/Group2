@@ -216,7 +216,7 @@ void Game::draw()
         }
 
         // If game finished and all questions were sorted correctly - show win screen
-        else if (game2Finished && game2Score == 8)
+        else if (game2Score == 8)
         {
             winTexture.loadFromFile("./graphics/winScreen.png");
             winSprite.setTexture(winTexture);
@@ -1464,5 +1464,4 @@ void Game::resetGame2Hard() {
     // Reset game attributes
     game2AttemptNum = 1;
     game2Finished = false;
-    game2Score = 0;
 }
