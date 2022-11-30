@@ -3,6 +3,7 @@
 #include <fstream>
 #include <sstream>
 
+// General Game Functions
 void Game::draw()
 {
 	window.clear();
@@ -12,76 +13,35 @@ void Game::draw()
 	}
     else if (state == m_GameState::GameSelection)
     {
-        // TEMP VERSION OF GAME SELECTIONS SCREEN - NEED FINAL BACKGROUND
         window.draw(gameSelectSprite);
-        window.draw(returnToMainButton);
-        window.draw(mainReturnText);
-        window.draw(returnToOptionsButton);
-        window.draw(optionsReturnText);
-        window.draw(game1Select);
-        window.draw(game2Select);
     }
-	else if (state == m_GameState::Options)
+	else if (state == m_GameState::OptionsMenu)
     {
-        // TEMP FOR OPTIONS - NEED A NICER SCREEN DESIGN
-        // CODE WILL CHANGE WITH NEW SCREEN DESIGN
-        window.draw(returnToMainButton);
-        window.draw(mainReturnText);
-        window.draw(changeLevel);
-
-        // Temp text - will be written in final background (?)
-        sf::Text selectLevelText ("Change difficulty level", mainFont, 48U);
-        selectLevelText.setFillColor(sf::Color::White);
-        selectLevelText.setPosition(680.f, 545.f);
-        window.draw(selectLevelText);
+        window.draw(optionsMenuSprite);
     }
-    else if (state == m_GameState::Options_Level)
+    else if (state == m_GameState::DifficultySelect)
     {
-        // TEMP FOR SETTING LEVEL - NEED A NICER SCREEN DESIGN
-        // CODE WILL CHANGE WITH NEW SCREEN DESIGN
-        window.draw(returnToMainButton);
-        window.draw(mainReturnText);
-        window.draw(returnToOptionsButton);
-        window.draw(optionsReturnText);
+        window.draw(difficultyChoiceSprite);
 
         // Selected difficulty level shows blue, other levels show orange
         if (difficultyLevel == 1)
         {
-            optionsL1.setFillColor(sf::Color::Blue);
-            optionsL2.setFillColor(sf::Color(255, 128, 0, 255));
-            optionsL3.setFillColor(sf::Color(255, 128, 0, 255));
+            window.draw(difficulty1SelectedSprite);
+            window.draw(difficulty2NotSelectedSprite);
+            window.draw(difficulty3NotSelectedSprite);
         }
         else if (difficultyLevel == 2)
         {
-            optionsL1.setFillColor(sf::Color(255, 128, 0, 255));
-            optionsL2.setFillColor(sf::Color::Blue);
-            optionsL3.setFillColor(sf::Color(255, 128, 0, 255));
+            window.draw(difficulty1NotSelectedSprite);
+            window.draw(difficulty2SelectedSprite);
+            window.draw(difficulty3NotSelectedSprite);
         }
         else if (difficultyLevel == 3)
         {
-            optionsL1.setFillColor(sf::Color(255, 128, 0, 255));
-            optionsL2.setFillColor(sf::Color(255, 128, 0, 255));
-            optionsL3.setFillColor(sf::Color::Blue);
+            window.draw(difficulty1NotSelectedSprite);
+            window.draw(difficulty2NotSelectedSprite);
+            window.draw(difficulty3SelectedSprite);
         }
-
-        // Draw the three level rectangles
-        window.draw(optionsL1);
-        window.draw(optionsL2);
-        window.draw(optionsL3);
-
-        // Temp text - will be written in final background (?)
-        sf::Text level1Text ("Level 1", mainFont, 48U);
-        level1Text.setFillColor(sf::Color::White);
-        level1Text.setPosition(420.f, 420.f);
-        window.draw(level1Text);
-        sf::Text level2Text ("Level 2", mainFont, 48U);
-        level2Text.setFillColor(sf::Color::White);
-        level2Text.setPosition(820.f, 420.f);
-        window.draw(level2Text);
-        sf::Text level3Text ("Level 3", mainFont, 48U);
-        level3Text.setFillColor(sf::Color::White);
-        level3Text.setPosition(1220.f, 420.f);
-        window.draw(level3Text);
     }
     else if (state == m_GameState::MainGame)
 	{
@@ -154,7 +114,7 @@ void Game::draw()
                 window.draw(game1QuestionText);
 
                 // For first question, start with sun sprite 4
-                if (questionNum == 0 && numCorrect == 0)
+                if (questionNum == 0 && game1Score == 0)
                 {
                     progressTexture.loadFromFile("./graphics/sunSprite4of7.png");
                     progressSprite.setTexture(progressTexture);
@@ -187,7 +147,7 @@ void Game::draw()
             else
             {
                 // Game won
-                if (numCorrect >= (questions.size()  * winCondition))
+                if (game1Score >= (questions.size()  * winCondition))
                 {
                     window.draw(winSprite);
                     if (!winLoseSoundHasPlayed)
@@ -256,7 +216,7 @@ void Game::draw()
         }
 
         // If game finished and all questions were sorted correctly - show win screen
-        else if (game2Finished && game2Score == 8)
+        else if (game2Score == 8)
         {
             winTexture.loadFromFile("./graphics/winScreen.png");
             winSprite.setTexture(winTexture);
@@ -304,9 +264,9 @@ void Game::loadSave()
         std::getline(file, temp);
         UID = std::stoi(temp);
         std::getline(file, temp);
-        game1Score = std::stoi(temp);
+        game1HighScore = std::stoi(temp);
         std::getline(file, temp);
-        game2Score = std::stoi(temp);
+        game2HighScore = std::stoi(temp);
     }
 
     file.close();
@@ -317,8 +277,8 @@ void Game::updateSave()
     std::ofstream oStream;
     oStream.open("save.dat", std::ios_base::out | std::ios_base::trunc);
     oStream << UID << "\n"
-            << game1Score << "\n"
-            << game2Score;
+            << game1HighScore << "\n"
+            << game2HighScore;
     oStream.close();
 }
 
@@ -339,7 +299,7 @@ void Game::update()
        // Options button is clicked
        if (mainOptionsButton.getGlobalBounds().contains(sf::Vector2f(mousePosition)))
        {
-           state = m_GameState::Options;
+           state = m_GameState::OptionsMenu;
        }
 	}
     else if (state == m_GameState::GameSelection)
@@ -350,19 +310,13 @@ void Game::update()
             state = m_GameState::Menu;
         }
 
-        // Clicked options
-        else if (returnToOptionsButton.getGlobalBounds().contains(sf::Vector2f(mousePosition)))
-        {
-            state = m_GameState::Options;
-        }
-
         // Clicked game 1
         else if (game1Select.getGlobalBounds().contains(sf::Vector2f(mousePosition)))
         {
             // Reset all game 1 settings and launch
             state = m_GameState::MainGame;
             questionNum = 0;
-            numCorrect = 0;
+            game1Score = 0;
             winLoseSoundHasPlayed = false;
             numWrong = 0;
             for (int i = 0; i < questions.size(); i++)
@@ -380,21 +334,23 @@ void Game::update()
             state = m_GameState::Game2;
         }
     }
-    else if (state == m_GameState::Options)
+    else if (state == m_GameState::OptionsMenu)
     {
         if (returnToMainButton.getGlobalBounds().contains(sf::Vector2f(mousePosition)))
         {
             state = m_GameState::Menu;
         }
-        else if (changeLevel.getGlobalBounds().contains(sf::Vector2f(mousePosition)))
+        else if (changeLevelButton.getGlobalBounds().contains(sf::Vector2f(mousePosition)))
         {
-            state = m_GameState::Options_Level;
+            state = m_GameState::DifficultySelect;
         }
     }
-    else if (state == m_GameState::Options_Level)
+    else if (state == m_GameState::DifficultySelect)
     {
-        if (optionsL1.getGlobalBounds().contains(sf::Vector2f(mousePosition)))
+        // Difficulty level 1 clicked (not already selected)
+        if (difficulty1SelectedSprite.getGlobalBounds().contains(sf::Vector2f(mousePosition)) && difficultyLevel != 1)
         {
+            // Set difficulty level
             difficultyLevel = 1;
 
             // CHANGES FOR GAME 1 SETTINGS
@@ -410,8 +366,11 @@ void Game::update()
             // CHANGES FOR GAME 2 SETTINGS
             game2MaxAttempts = 3;
         }
-        else if (optionsL2.getGlobalBounds().contains(sf::Vector2f(mousePosition)))
+
+        // Difficulty level 2 clicked (not already selected)
+        else if (difficulty2SelectedSprite.getGlobalBounds().contains(sf::Vector2f(mousePosition)) && difficultyLevel != 2)
         {
+            // Set difficulty level
             difficultyLevel = 2;
 
             // CHANGES FOR GAME 1 SETTINGS
@@ -427,8 +386,11 @@ void Game::update()
             // CHANGES FOR GAME 2 SETTINGS
             game2MaxAttempts = 3;
         }
-        else if (optionsL3.getGlobalBounds().contains(sf::Vector2f(mousePosition)))
+
+        // Difficulty level 3 clicked (not already selected)
+        else if (difficulty3SelectedSprite.getGlobalBounds().contains(sf::Vector2f(mousePosition)) && difficultyLevel != 3)
         {
+            // Set difficult level
             difficultyLevel = 3;
 
             // CHANGES FOR GAME 1 SETTINGS
@@ -449,7 +411,7 @@ void Game::update()
         }
         else if (returnToOptionsButton.getGlobalBounds().contains(sf::Vector2f(mousePosition)))
         {
-            state = m_GameState::Options;
+            state = m_GameState::OptionsMenu;
         }
     }
 	else if (state == m_GameState::MainGame)
@@ -496,7 +458,12 @@ void Game::update()
                 if (correctImageSprite.getGlobalBounds().contains(sf::Vector2f(mousePosition)) && !questions[questionNum].answered)
                 {
                     questions[questionNum].answered = true;
-                    numCorrect++;
+                    // Update game score and replace high score if applicable
+                    game1Score++;
+                    if (game1Score > game1HighScore)
+                    {
+                        game1HighScore = game1Score;
+                    }
                     questions[questionNum].answeredCorrect = true;
                     numWrong = 0;
                     if (!answerSoundHasPlayed)
@@ -579,7 +546,7 @@ void Game::update()
                 {
                     state = m_GameState::MainGame;
                     questionNum = 0;
-                    numCorrect = 0;
+                    game1Score = 0;
                     winLoseSoundHasPlayed = false;
                     numWrong = 0;
                     for (int i = 0; i < questions.size(); i++)
@@ -829,10 +796,8 @@ void Game::update()
             // Play again button clicked
             else if (winLosePlayAgainButton.getGlobalBounds().contains(sf::Vector2f(mousePosition)))
             {
-                mousePosition = sf::Vector2i(0, 0);
                 state = m_GameState::Game2;
                 winLoseSoundHasPlayed = false;
-                game2Finished = false;
                 resetGame2Hard();
             }
         }
@@ -861,12 +826,12 @@ void Game::eventHandler()
         else if (state == m_GameState::Game2 && !clickHeld && event.type == sf::Event::MouseButtonPressed)
         {
             clickHeld = true;
-            clickPos = sf::Mouse::getPosition(window);
+            mousePosition = sf::Mouse::getPosition(window);
 
             // Mark the correct sprite as moving
             for (int i = 0; i < toSort.size(); i++)
             {
-                if (toSort[i].sortableSprite.getGlobalBounds().contains(sf::Vector2f(clickPos)))
+                if (toSort[i].sortableSprite.getGlobalBounds().contains(sf::Vector2f(mousePosition)))
                 {
                     spriteMoving = i;
                 }
@@ -886,7 +851,16 @@ void Game::eventHandler()
         // Game 2 specific for drag & drop selection
         else if (clickHeld)
         {
-            mousePosition = sf::Mouse::getPosition(window);
+            // Don't let objects be dragged off screen
+            if (sf::Mouse::getPosition(window).x <= (window.getSize().x - 128)
+                && sf::Mouse::getPosition(window).y <= (window.getSize().y - 128))
+            {
+                // Don't let objects go behind the sun
+                if (!(sf::Mouse::getPosition(window).x > 1450 && sf::Mouse::getPosition(window).y < 425))
+                {
+                    mousePosition = sf::Mouse::getPosition(window);
+                }
+            }
         }
         // Keyboard commands
         else if (event.type == sf::Event::KeyPressed)
@@ -901,7 +875,6 @@ void Game::eventHandler()
                 else
                 {
                     state = returnTo;
-                    //state = m_GameState::MainGame;      // Will need to change how this works if more than 1 game
                 }
             }
             // Pressing escape key closes window
@@ -913,11 +886,48 @@ void Game::eventHandler()
 	}
 }
 
-void Game::loadMenuAndOptionsAssets()
+// Menus, options, and general settings
+void Game::loadSounds()
 {
+    correctSoundBuffer.loadFromFile("./sounds/correctAnswer.wav");
+    clickSoundBuffer.loadFromFile("./sounds/clicking.wav");
+    wrongSoundBuffer.loadFromFile("./sounds/wrongAnswer.wav");
+    winSoundBuffer.loadFromFile("./sounds/winGame.wav");
+    loseSoundBuffer.loadFromFile("./sounds/loseGame.wav");
+    music.openFromFile("./sounds/backgroundMusic.wav");
+
+    clickSound.setBuffer(clickSoundBuffer);
+    correctSound.setBuffer(correctSoundBuffer);
+    wrongSound.setBuffer(wrongSoundBuffer);
+    winSound.setBuffer(winSoundBuffer);
+    loseSound.setBuffer(loseSoundBuffer);
+
+    music.setVolume(50.0f);
+    music.play();
+}
+
+void Game::loadGlobalAssets() {
     // Set mainFont
     mainFont.loadFromFile("./fonts/Square.ttf");
 
+    // Set up "Main" button rectangle
+    returnToMainButton.setPosition(30, 25);
+    returnToMainButton.setSize(sf::Vector2f(395.f, 85.f));
+    returnToMainButton.setFillColor(sf::Color(255, 128, 0, 255));
+
+    // Set up "Next" button
+    nextButton.setSize(sf::Vector2f (190.f, 75.f));
+    nextButton.setPosition(1696.f, 978.f);
+    nextButton.setFillColor(sf::Color(255, 128, 0, 255));
+
+    // Set up "Options" button
+    returnToOptionsButton.setPosition(30.f, 130.f);
+    returnToOptionsButton.setSize(sf::Vector2f(395.f, 85.f));
+    returnToOptionsButton.setFillColor(sf::Color(255, 128, 0, 255));
+}
+
+void Game::loadMainMenuAssets()
+{
     // Load main menu background
     mainTexture.loadFromFile("./graphics/mainMenu.png");
     mainSprite.setTexture(mainTexture);
@@ -930,68 +940,73 @@ void Game::loadMenuAndOptionsAssets()
     mainLoadGameButton.setSize(sf::Vector2f (395.f, 85.f));
     mainOptionsButton.setPosition(30.f, 250.f);
     mainOptionsButton.setSize(sf::Vector2f (395.f, 85.f));
-
-    // Set game selection screen assets
-    gameSelectTexture.loadFromFile("./graphics/gameSelection.png");
-    gameSelectSprite.setTexture(gameSelectTexture);
-    gameSelectSprite.setScale(4.0f, 4.0f);
-    game1Select.setSize(sf::Vector2f(256.f, 256.f));
-    game1Select.setPosition(400, 400);
-    game1Select.setFillColor(sf::Color(255, 128, 0, 255));
-    game2Select.setSize(sf::Vector2f(256.f, 256.f));
-    game2Select.setPosition(1250, 400);
-    game2Select.setFillColor(sf::Color(255, 128, 0, 255));
-
-    // For options menu - change level button
-    changeLevel.setSize(sf::Vector2f(800.f, 150.f));
-    changeLevel.setFillColor(sf::Color(255, 128, 0, 255));
-    changeLevel.setPosition(550.f, 500.f);
-
-    // Create options menu level buttons
-    optionsL1.setSize(sf::Vector2f(256.f, 256.f));
-    optionsL1.setPosition(400, 400);
-    optionsL2.setSize(sf::Vector2f(256.f, 256.f));
-    optionsL2.setPosition(800, 400);
-    optionsL3.setSize(sf::Vector2f(256.f, 256.f));
-    optionsL3.setPosition(1200, 400);
-
-    // Load tutorial sprites
-    tutorial1Texture.loadFromFile("./graphics/tutorial1.png");
-    tutorial1Sprite.setTexture(tutorial1Texture);
-    tutorial1Sprite.setScale(4.f, 4.f);
-    tutorial2Texture.loadFromFile("./graphics/tutorial2.png");
-    tutorial2Sprite.setTexture(tutorial2Texture);
-    tutorial2Sprite.setScale(4.f, 4.f);
-    tutorial3Texture.loadFromFile("./graphics/tutorial3.png");
-    tutorial3Sprite.setTexture(tutorial3Texture);
-    tutorial3Sprite.setScale(4.f, 4.f);
-
-    // Set nextButton rectangle
-    nextButton.setSize(sf::Vector2f (190.f, 75.f));
-    nextButton.setPosition(1696.f, 978.f);
-    nextButton.setFillColor(sf::Color::Green);
-
-    // Setting the hint message
-    bubble.setRadius(120.0);
-    bubble.setPosition(1400.f, 450.f);
-    bubble.setFillColor(sf::Color::White);
-    bubble.setOutlineThickness(5);
-    bubble.setOutlineColor(sf::Color::Black);
-    bubble.setScale(2, 1);
-    triangle.setPointCount(3);
-    triangle.setRadius(120.0);
-    triangle.setPosition(1600.f, 400.f);
-    triangle.setFillColor(sf::Color::White);
-    triangle.setOutlineThickness(5);
-    triangle.setOutlineColor(sf::Color::Black);
-    hint.setFont(mainFont);
-    hint.setPosition(1450.f, 500.f);
-    hint.setCharacterSize(24);
-    hint.setFillColor(sf::Color::Black);
-
 }
 
-void Game::setWinLoseScreens()
+void Game::loadGameSelectionAssets()
+{
+    // Add background
+    gameSelectTexture.loadFromFile("./graphics/gameSelect.png");
+    gameSelectSprite.setTexture(gameSelectTexture);
+    gameSelectSprite.setScale(4.0f, 4.0f);
+
+    // Create hidden button rectangles
+    game1Select.setPosition(607, 263);
+    game1Select.setSize(sf::Vector2f(708.f, 348.f));
+    game2Select.setPosition(607, 650);
+    game2Select.setSize(sf::Vector2f(708.f, 348.f));
+}
+
+void Game::loadOptionsMenuAssets()
+{
+    // Add background
+    optionsMenuTexture.loadFromFile("./graphics/optionsMenu.png");
+    optionsMenuSprite.setTexture(optionsMenuTexture);
+    optionsMenuSprite.setScale(4.0f, 4.0f);
+
+    // Create hidden button rectangle for button
+    changeLevelButton.setPosition(606.f, 262.f);
+    changeLevelButton.setSize(sf::Vector2f(705.f, 200.f));
+}
+
+void Game::loadDifficultySelectionAssets()
+{
+    // Add background
+    difficultyChoiceTexture.loadFromFile("./graphics/difficultyChoice.png");
+    difficultyChoiceSprite.setTexture(difficultyChoiceTexture);
+    difficultyChoiceSprite.setScale(4.f, 4.f);
+
+    // Create level 1 button sprites
+    difficulty1SelectedTexture.loadFromFile("./graphics/difficulty1Selected.png");
+    difficulty1SelectedSprite.setTexture(difficulty1SelectedTexture);
+    difficulty1SelectedSprite.setScale(4.f, 4.f);
+    difficulty1SelectedSprite.setPosition(600.f, 308.f);
+    difficulty1NotSelectedTexture.loadFromFile("./graphics/difficulty1NotSelected.png");
+    difficulty1NotSelectedSprite.setTexture(difficulty1NotSelectedTexture);
+    difficulty1NotSelectedSprite.setScale(4.f, 4.f);
+    difficulty1NotSelectedSprite.setPosition(600.f, 308.f);
+
+    // Create level 2 button sprites
+    difficulty2SelectedTexture.loadFromFile("./graphics/difficulty2Selected.png");
+    difficulty2SelectedSprite.setTexture(difficulty2SelectedTexture);
+    difficulty2SelectedSprite.setScale(4.f, 4.f);
+    difficulty2SelectedSprite.setPosition(600.f, 532.f);
+    difficulty2NotSelectedTexture.loadFromFile("./graphics/difficulty2NotSelected.png");
+    difficulty2NotSelectedSprite.setTexture(difficulty2NotSelectedTexture);
+    difficulty2NotSelectedSprite.setScale(4.f, 4.f);
+    difficulty2NotSelectedSprite.setPosition(600.f, 532.f);
+
+    // Create level 3 button sprites
+    difficulty3SelectedTexture.loadFromFile("./graphics/difficulty3Selected.png");
+    difficulty3SelectedSprite.setTexture(difficulty3SelectedTexture);
+    difficulty3SelectedSprite.setScale(4.f, 4.f);
+    difficulty3SelectedSprite.setPosition(600.f, 756.f);
+    difficulty3NotSelectedTexture.loadFromFile("./graphics/difficulty3NotSelected.png");
+    difficulty3NotSelectedSprite.setTexture(difficulty3NotSelectedTexture);
+    difficulty3NotSelectedSprite.setScale(4.f, 4.f);
+    difficulty3NotSelectedSprite.setPosition(600.f, 756.f);
+}
+
+void Game::loadWinLoseScreenAssets()
 {
     // Load win screen
     winTexture.loadFromFile("./graphics/winScreen.png");
@@ -1012,6 +1027,21 @@ void Game::setWinLoseScreens()
     winLosePlayAgainButton.setSize(sf::Vector2f(405, 145));
 }
 
+void Game::loadTutorialAssets()
+{
+    // Load tutorial sprites
+    tutorial1Texture.loadFromFile("./graphics/tutorial1.png");
+    tutorial1Sprite.setTexture(tutorial1Texture);
+    tutorial1Sprite.setScale(4.f, 4.f);
+    tutorial2Texture.loadFromFile("./graphics/tutorial2.png");
+    tutorial2Sprite.setTexture(tutorial2Texture);
+    tutorial2Sprite.setScale(4.f, 4.f);
+    tutorial3Texture.loadFromFile("./graphics/tutorial3.png");
+    tutorial3Sprite.setTexture(tutorial3Texture);
+    tutorial3Sprite.setScale(4.f, 4.f);
+}
+
+// Game 1 loading and helper functions
 void Game::loadGame1Assets() {
     // Load backgrounds
     game1StaticTexture.loadFromFile("./graphics/inGame.png");
@@ -1042,6 +1072,24 @@ void Game::loadGame1Assets() {
     dropBoxSprite.setTexture(dropBoxTexture);
     dropBoxSprite.setScale(4.f, 4.f);
     dropBoxSprite.setPosition(sf::Vector2f(252, 680));
+
+    // Setting the hint message
+    bubble.setRadius(120.0);
+    bubble.setPosition(1400.f, 450.f);
+    bubble.setFillColor(sf::Color::White);
+    bubble.setOutlineThickness(5);
+    bubble.setOutlineColor(sf::Color::Black);
+    bubble.setScale(2, 1);
+    triangle.setPointCount(3);
+    triangle.setRadius(120.0);
+    triangle.setPosition(1600.f, 400.f);
+    triangle.setFillColor(sf::Color::White);
+    triangle.setOutlineThickness(5);
+    triangle.setOutlineColor(sf::Color::Black);
+    hint.setFont(mainFont);
+    hint.setPosition(1450.f, 500.f);
+    hint.setCharacterSize(24);
+    hint.setFillColor(sf::Color::Black);
 
     // Read the .csv file
     std::ifstream infile("./csv_files/game1input.csv");
@@ -1114,6 +1162,59 @@ void Game::textWrapper(std::string& s){
     s = wrappedString;
 }
 
+void Game::updateProgressSprite()
+{
+    std::string texturePath{ "./graphics/" };
+    float percentCorrect{ (static_cast<float>(game1Score) / (questionNum + 1)) };
+
+    if (percentCorrect < 0.15f)
+    {
+        texturePath.append("sunSprite1of7.png");
+    }
+    else if (0.15f <= percentCorrect < 0.30f)
+    {
+        texturePath.append("sunSprite2of7.png");
+    }
+    else if (0.30f <= percentCorrect < 0.45f)
+    {
+        texturePath.append("sunSprite3of7.png");
+    }
+    else if (0.45f <= percentCorrect < 0.60f)
+    {
+        texturePath.append("sunSprite4of7.png");
+    }
+    else if (0.60f <= percentCorrect < 0.75f)
+    {
+        texturePath.append("sunSprite5of7.png");
+    }
+    else if (0.75f <= percentCorrect < 0.90f)
+    {
+        texturePath.append("sunSprite6of7.png");
+    }
+    else
+    {
+        texturePath.append("sunSprite7of7.png");
+    }
+
+    progressTexture.loadFromFile(texturePath);
+    progressSprite.setTexture(progressTexture);
+    progressSprite.setPosition(1512.5f, 15.5f);
+    progressSprite.setScale(4.0f, 4.05f);
+    window.draw(progressSprite);
+}
+
+void Game::displayHint()
+{
+    window.draw(triangle);
+    window.draw(bubble);
+    if (questionNum == 1)
+        hint.setString("Want a hint for the next one?\nRemember that plastic is one of\nour planet's worst enemies!");
+    if (questionNum == 2)
+        hint.setString("Want a hint for the next one?\nRemember that oil does not get\nalong well with the fishies!");
+    window.draw(hint);
+}
+
+// Game 2 loading and helper functions
 void Game::loadGame2Assets() {
     // Load background
     game2BackgroundTexture.loadFromFile("./graphics/inGameSortingSprites.png");
@@ -1333,6 +1434,9 @@ void Game::resetGame2Soft()
         game2TrashSq3Occupied = false;
         game2TrashSq4Occupied = false;
     }
+
+    // Set the mouse position as the start position of the last sprite moved to avoid jumps
+    mousePosition = sf::Vector2i(toSort[spriteMoving].unsortPos);
 }
 
 void Game::resetGame2Hard() {
@@ -1355,106 +1459,10 @@ void Game::resetGame2Hard() {
 
     // Reset attempt number
     game2AttemptNum = 1;
-}
 
-void Game::updateProgressSprite()
-{
-    std::string texturePath{ "./graphics/" };
-    float percentCorrect{ (static_cast<float>(numCorrect) / (questionNum + 1)) };
+    // Reset game finish
+    game2Finished = false;
 
-    if (percentCorrect < 0.15f)
-    {
-        texturePath.append("sunSprite1of7.png");
-    }
-    else if (0.15f <= percentCorrect < 0.30f)
-    {
-        texturePath.append("sunSprite2of7.png");
-    }
-    else if (0.30f <= percentCorrect < 0.45f)
-    {
-        texturePath.append("sunSprite3of7.png");
-    }
-    else if (0.45f <= percentCorrect < 0.60f)
-    {
-        texturePath.append("sunSprite4of7.png");
-    }
-    else if (0.60f <= percentCorrect < 0.75f)
-    {
-        texturePath.append("sunSprite5of7.png");
-    }
-    else if (0.75f <= percentCorrect < 0.90f)
-    {
-        texturePath.append("sunSprite6of7.png");
-    }
-    else
-    {
-        texturePath.append("sunSprite7of7.png");
-    }
-
-    progressTexture.loadFromFile(texturePath);
-    progressSprite.setTexture(progressTexture);
-    progressSprite.setPosition(1512.5f, 15.5f);
-    progressSprite.setScale(4.0f, 4.05f);
-    window.draw(progressSprite);
-}
-
-void Game::setGlobalButtons() {
-    // Set up "Main" button rectangle
-    returnToMainButton.setPosition(30, 25);
-    returnToMainButton.setSize(sf::Vector2f(395.f, 85.f));
-    returnToMainButton.setFillColor(sf::Color(255, 128, 0, 255));
-
-    // TEMPORARY TEXT - REMOVE ONCE OPTIONS MENU BACKGROUND CREATED
-    mainReturnText.setString("Menu");
-    mainReturnText.setFont(mainFont);
-    mainReturnText.setCharacterSize(48U);
-    mainReturnText.setFillColor(sf::Color::White);
-    mainReturnText.setPosition(150.f, 40.f);
-
-    // Set up "Next" button
-    nextButton.setSize(sf::Vector2f (190.f, 75.f));
-    nextButton.setPosition(1696.f, 978.f);
-    nextButton.setFillColor(sf::Color(255, 128, 0, 255));
-
-    // Set up "Options" button
-    returnToOptionsButton.setPosition(30.f, 130.f);
-    returnToOptionsButton.setSize(sf::Vector2f(395.f, 85.f));
-    returnToOptionsButton.setFillColor(sf::Color(255, 128, 0, 255));
-
-    // TEMPORARY TEXT - REMOVE ONCE OPTIONS MENU BACKGROUND CREATED
-    optionsReturnText.setString("Options");
-    optionsReturnText.setFont(mainFont);
-    optionsReturnText.setCharacterSize(48U);
-    optionsReturnText.setFillColor(sf::Color::White);
-    optionsReturnText.setPosition(150.f, 140.f);
-}
-
-void Game::loadSounds()
-{
-    correctSoundBuffer.loadFromFile("./sounds/correctAnswer.wav");
-    clickSoundBuffer.loadFromFile("./sounds/clicking.wav");
-    wrongSoundBuffer.loadFromFile("./sounds/wrongAnswer.wav");
-    winSoundBuffer.loadFromFile("./sounds/winGame.wav");
-    loseSoundBuffer.loadFromFile("./sounds/loseGame.wav");
-    music.openFromFile("./sounds/backgroundMusic.wav");
-
-    clickSound.setBuffer(clickSoundBuffer);
-    correctSound.setBuffer(correctSoundBuffer);
-    wrongSound.setBuffer(wrongSoundBuffer);
-    winSound.setBuffer(winSoundBuffer);
-    loseSound.setBuffer(loseSoundBuffer);
-
-    music.setVolume(50.0f);
-    music.play();
-}
-
-void Game::displayHint()
-{
-    window.draw(triangle);
-    window.draw(bubble);
-    if (questionNum == 1)
-        hint.setString("Want a hint for the next one?\nRemember that plastic is one of\nour planet's worst enemies!");
-    if (questionNum == 2)
-        hint.setString("Want a hint for the next one?\nRemember that oil does not get\nalong well with the fishies!");
-    window.draw(hint);
+    // Reset game score
+    game2Score = 0;
 }
