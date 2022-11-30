@@ -110,7 +110,6 @@ private:
     sf::Texture game2BackgroundTexture;
     sf::Sprite game2BackgroundSprite;
     sf::Text game2Prompt;
-    sf::Vector2i clickPos;
     // Sun sprites
     sf::Texture game2Sun1Texture, game2Sun2Texture, game2Sun3Texture;
     sf::Sprite game2Sun1Sprite, game2Sun2Sprite, game2Sun3Sprite;

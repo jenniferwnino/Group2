@@ -796,10 +796,8 @@ void Game::update()
             // Play again button clicked
             else if (winLosePlayAgainButton.getGlobalBounds().contains(sf::Vector2f(mousePosition)))
             {
-                mousePosition = sf::Vector2i(0, 0);
                 state = m_GameState::Game2;
                 winLoseSoundHasPlayed = false;
-                game2Finished = false;
                 resetGame2Hard();
             }
         }
@@ -828,12 +826,12 @@ void Game::eventHandler()
         else if (state == m_GameState::Game2 && !clickHeld && event.type == sf::Event::MouseButtonPressed)
         {
             clickHeld = true;
-            clickPos = sf::Mouse::getPosition(window);
+            mousePosition = sf::Mouse::getPosition(window);
 
             // Mark the correct sprite as moving
             for (int i = 0; i < toSort.size(); i++)
             {
-                if (toSort[i].sortableSprite.getGlobalBounds().contains(sf::Vector2f(clickPos)))
+                if (toSort[i].sortableSprite.getGlobalBounds().contains(sf::Vector2f(mousePosition)))
                 {
                     spriteMoving = i;
                 }
@@ -853,7 +851,16 @@ void Game::eventHandler()
         // Game 2 specific for drag & drop selection
         else if (clickHeld)
         {
-            mousePosition = sf::Mouse::getPosition(window);
+            // Don't let objects be dragged off screen
+            if (sf::Mouse::getPosition(window).x <= (window.getSize().x - 128)
+                && sf::Mouse::getPosition(window).y <= (window.getSize().y - 128))
+            {
+                // Don't let objects go behind the sun
+                if (!(sf::Mouse::getPosition(window).x > 1450 && sf::Mouse::getPosition(window).y < 425))
+                {
+                    mousePosition = sf::Mouse::getPosition(window);
+                }
+            }
         }
         // Keyboard commands
         else if (event.type == sf::Event::KeyPressed)
@@ -868,7 +875,6 @@ void Game::eventHandler()
                 else
                 {
                     state = returnTo;
-                    //state = m_GameState::MainGame;      // Will need to change how this works if more than 1 game
                 }
             }
             // Pressing escape key closes window
@@ -1428,6 +1434,9 @@ void Game::resetGame2Soft()
         game2TrashSq3Occupied = false;
         game2TrashSq4Occupied = false;
     }
+
+    // Set the mouse position as the start position of the last sprite moved to avoid jumps
+    mousePosition = sf::Vector2i(toSort[spriteMoving].unsortPos);
 }
 
 void Game::resetGame2Hard() {
@@ -1450,4 +1459,7 @@ void Game::resetGame2Hard() {
 
     // Reset attempt number
     game2AttemptNum = 1;
+
+    // Reset game finish
+    game2Finished = false;
 }
