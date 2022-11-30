@@ -5,7 +5,7 @@ windows-build:
 	g++ main.cpp Game.h Game.cpp -mwindows -o ../bin/win/climategame.exe -I../Dependencies/SFML-Win/SFML-2.5.1-windows-gcc-7.3.0-mingw-64-bit/include -L../Dependencies/SFML-Win/SFML-2.5.1-windows-gcc-7.3.0-mingw-64-bit/lib -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio
 
 win-debug: 
-	g++ main.cpp Game.h Game.cpp -g -o ../bin/win/climategame.exe -I../Dependencies/SFML-Win/SFML-2.5.1-windows-gcc-7.3.0-mingw-64-bit/include -L../Dependencies/SFML-Win/SFML-2.5.1-windows-gcc-7.3.0-mingw-64-bit/lib -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio
+	g++ main.cpp Game.h Game.cpp -g -o ../bin/win/climategame-d.exe -I../Dependencies/SFML-Win/SFML-2.5.1-windows-gcc-7.3.0-mingw-64-bit/include -L../Dependencies/SFML-Win/SFML-2.5.1-windows-gcc-7.3.0-mingw-64-bit/lib -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio
 	
 linux-compile: 
 	g++ -c main.cpp Game.h Game.cpp -I../Dependencies/SFML-Linux/include
