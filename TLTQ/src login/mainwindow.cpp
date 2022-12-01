@@ -159,7 +159,7 @@ void MainWindow::on_button_login_clicked()
 
              createSave(username, q.value(2).toInt(), q.value(3).toInt());
 
-             QProcess::startDetached("cmd.exe", QStringList("/c cd ./game && app.exe"));
+             QProcess::startDetached("cmd.exe", QStringList("/c cd ./game && climategame.exe"));
 
              ui->UI_Password->clear();
         }
@@ -205,9 +205,9 @@ void MainWindow::on_button_register_clicked()
     {
         retryConnection();
     }
-	
-	uploadSave();
-	
+
+    uploadSave();
+
     qint32 username = ui->UI_Username->text().toInt();
     QString password = ui->UI_Password->text();
 
@@ -233,7 +233,7 @@ void MainWindow::on_button_register_clicked()
             //qDebug() << q.lastError().databaseText();
 
             createSave(username, 0, 0);
-            QProcess::startDetached("cmd.exe", QStringList("/c cd ./game && app.exe"));
+            QProcess::startDetached("cmd.exe", QStringList("/c cd ./game && climategame.exe"));
         }
     }
 
@@ -246,6 +246,11 @@ void MainWindow::on_button_register_clicked()
  */
 void MainWindow::on_UI_Password_textChanged(const QString &arg1)
 {
+   if(arg1.length() == 9)
+   {
+
+   }
+
    if(ui->UI_Password->text().isEmpty() || ui->UI_Username->text().isEmpty())
     {
         ui->button_login->setEnabled(false);
